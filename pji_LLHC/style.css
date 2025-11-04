@@ -1,0 +1,99 @@
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f0e6ff 0%, #d8e5ff 100%); 
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.caixa-form { 
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background: white; 
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.subtitulo {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.instrucao {
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.campo {
+    display: block;
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.campo-input, select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px; 
+    box-sizing: border-box; 
+    transition: border-color 0.3s;
+}
+
+.campo-input:focus, select:focus {
+    border-color: #8A4EF6; 
+    outline: none;
+}
+
+.botao {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 30px;
+    font-weight: bold;
+    color: white;
+    font-size: 1.1em;
+    cursor: pointer;
+    background: linear-gradient(90deg, #8A4EF6 0%, #D65AFA 100%);
+    border: none;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.botao:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(138, 78, 246, 0.4); 
+}
+
+.link-secundario {
+    margin-top: 20px;
+    color: #777;
+}
+.link-secundario a {
+    color: #5d36b2;
+    text-decoration: none;
+    font-weight: bold;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+@media (max-width: 500px) {
+    .caixa-form {
+        width: 90%;
+        max-width: 100%;
+        margin: 20px;
+    }
+}
