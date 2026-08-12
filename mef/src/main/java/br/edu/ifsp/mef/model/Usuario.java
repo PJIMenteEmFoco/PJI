@@ -1,12 +1,28 @@
 package br.edu.ifsp.mef.model;
 
+import java.time.LocalDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.MappedSuperclass;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)	
 public class Usuario {
 
+	@Id
+	@GeneratedValue
 	private Long id;
 	private String nome;
 	private String email;
 	private String senha;
 	private String telefone;
+	private String perfil;
+	private LocalDate dataNasci;
+	private boolean ativado;
 	
 	
 	public Long getId() {
@@ -42,5 +58,23 @@ public class Usuario {
 	}
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
+	}
+	public boolean isAtivado() {
+		return ativado;
+	}
+	public void setAtivado(boolean status) {
+		this.ativado = status;
+	}
+	public String getPerfil() {
+		return perfil;
+	}
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
+	}
+	public LocalDate getDataNasci() {
+		return dataNasci;
+	}
+	public void setDataNasci(LocalDate dataNasci) {
+		this.dataNasci = dataNasci;
 	}
 }

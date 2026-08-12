@@ -1,0 +1,181 @@
+/* RESET E ESTILOS GERAIS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #d1e2ec; /* Azul claro de fundo */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 900px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* LOGO NO CANTO SUPERIOR ESQUERDO */
+.header-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.logo-img {
+    width: 90px;
+    height: auto;
+}
+
+/* CONTAINER DO FORMULÁRIO CENTRALIZADO */
+.form-container {
+    width: 100%;
+    max-width: 380px;
+    margin-top: 10px;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* CAMPOS DE INPUT */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    color: #122c38;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: #eef3f6; /* Fundo levemente acinzentado */
+    font-size: 0.95rem;
+    color: #222;
+    outline: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.input-group input:focus {
+    box-shadow: 0 0 0 2px #122c38;
+}
+
+/* REGRAS DE SENHA (TEXTO LARANJA) */
+.password-rules {
+    margin-top: 6px;
+    font-size: 0.72rem;
+    color: #e39c29; /* Cor amarela/laranja do figma */
+    line-height: 1.35;
+    font-weight: 500;
+}
+
+.password-rules ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* SELEÇÃO DE FUNÇÃO (RADIO BUTTONS) */
+.role-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.role-title {
+    font-size: 0.9rem;
+    color: #122c38;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.options {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    color: #122c38;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.radio-option input[type="radio"] {
+    accent-color: #122c38;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* BOTÃO DE SUBMIT */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #122c38;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-submit:hover {
+    background-color: #1a3f50;
+}
+
+.erro { 
+    text-align: center;
+    color: #E69C2E;
+	display: none;
+}
+
+/* LINK DE RETORNO */
+.login-link {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #122c38;
+    text-decoration: underline;
+    margin-top: 14px;
+    font-weight: 500;
+}
+
+.login-link:hover {
+    color: #1a3f50;
+}
+
+/* RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS */
+@media (max-width: 600px) {
+    .header-logo {
+        position: static;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .page-container {
+        align-items: center;
+    }
+}

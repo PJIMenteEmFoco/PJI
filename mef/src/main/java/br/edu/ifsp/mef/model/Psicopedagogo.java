@@ -1,25 +1,23 @@
 package br.edu.ifsp.mef.model;
 
-import java.time.LocalDate;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
-public class Psicopedagogo extends Usuario{
+@Entity
+public class Psicopedagogo extends Usuario {
 	
-	private Long idInstituicao;
-	private LocalDate dataNasci;
+	/*
+	@ManyToOne
+	@JoinColumn(name = "id_instituicao")
+	private Instituicao instituicao;
 	
-	public Long getIdInstituicao() {
-		return idInstituicao;
+	public Instituicao getInstituicao() {
+	    return instituicao;
 	}
 
-	public void setIdInstituicao(Long idInstituicao) {
-		this.idInstituicao = idInstituicao;
+	public void setInstituicao(Instituicao instituicao) {
+	    this.instituicao = instituicao;
 	}
-
-	public LocalDate getDataNasci() {
-		return dataNasci;
-	}
-
-	public void setDataNasci(LocalDate dataNasci) {
-		this.dataNasci = dataNasci;
-	}
+*/
 }

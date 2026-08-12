@@ -1,12 +1,18 @@
 package br.edu.ifsp.mef.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Instituicao {
 	
+	@Id
+	@GeneratedValue
 	private Long id;
 	private String nome;
 	private String endereco;
 	private String telefone;
-	private Long idAdministrador;
 	
 	public Long getId() {
 		return id;
@@ -34,12 +40,5 @@ public class Instituicao {
 	}
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
-	}
-	
-	public Long getIdAdministrador() {
-		return idAdministrador;
-	}
-	public void setIdAdministrador(Long idAdministrador) {
-		this.idAdministrador = idAdministrador;
 	}
 }

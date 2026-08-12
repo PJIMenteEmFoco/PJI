@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Mente em Foco</title>
+    <link rel="stylesheet" th:href="@{css/cadastro.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="page-container">
+        <header class="header-logo">
+            <img th:src="@{img/logo_em_pe.svg}" alt="Mente em Foco Logo" class="logo-img">
+        </header>
+
+        <main class="form-container">
+            <form th:action="@{/cadastrar}" method="POST" id="register-form" class="register-form">
+                
+                <div class="input-group">
+                    <label for="nome">Nome completo</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" name="senha" required>
+                    
+                    <div class="password-rules">
+                        <p>A senha deve conter ao menos:</p>
+                        <ul>
+                            <li>• Uma letra maiúscula;</li>
+                            <li>• Uma letra minúscula;</li>
+                            <li>• Um número;</li>
+                            <li>• Um caractere especial e</li>
+                            <li>• Oito dígitos</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="repetir-senha">Repetir senha</label>
+                    <input type="password" id="repetir-senha" name="repetir-senha" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="telefone">Telefone</label>
+                    <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000">
+                </div>
+
+                <div class="input-group">
+                    <label for="data-nascimento">Data de nascimento</label>
+                    <input type="date" id="data-nascimento" name="dataNasci">
+                </div>
+
+                <div class="role-group">
+                    <span class="role-title">Função</span>
+                    <div class="options">
+                        <label class="radio-option">
+                            <input type="radio" name="perfil" value="PSICOPEDAGOGO" checked>
+                            <span class="custom-radio"></span>
+                            Psicopedagogo
+                        </label>
+                        
+                        <label class="radio-option">
+                            <input type="radio" name="perfil" value="PROFESSOR">
+                            <span class="custom-radio"></span>
+                            Professor
+                        </label>
+                        
+                        <label class="radio-option">
+                            <input type="radio" name="perfil" value="ALUNO">
+                            <span class="custom-radio"></span>
+                            Aluno
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Cadastrar-se</button>
+                <p id="mensagemErro" class="erro">As senhas não coincidem!</p>
+                <a href="login.html" class="login-link">Já é cadastrado? Clique aqui para entrar!</a>
+
+            </form>
+        </main>
+    </div>
+    <script>
+        const formulario = document.getElementById('register-form');
+        const senha = document.getElementById('senha');
+        const confirmarSenha = document.getElementById('repetir-senha');
+        const mensagemErro = document.getElementById('mensagemErro');
+
+        formulario.addEventListener('submit', function(event) {
+            if (senha.value !== confirmarSenha.value) {
+                event.preventDefault();
+                mensagemErro.style.display = 'block';
+            } else {
+                mensagemErro.style.display = 'none';
+                alert('Senhas validadas com sucesso!');
+            }
+        });
+    </script>
+</body>
+</html>

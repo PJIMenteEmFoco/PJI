@@ -1,9 +1,15 @@
 package br.edu.ifsp.mef.model;
 
 import java.time.LocalDate;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+@Entity
 public class Atividade {
-
+	
+	@Id
+	@GeneratedValue
 	private Long id;
 	private String nome;
 	private LocalDate prazo;
