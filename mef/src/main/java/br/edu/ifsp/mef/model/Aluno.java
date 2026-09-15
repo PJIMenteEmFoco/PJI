@@ -1,36 +1,24 @@
 package br.edu.ifsp.mef.model;
 
-import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Aluno extends Usuario {
 
-	/*
-	@ManyToOne
-	@JoinColumn(name = "id_instituicao")
-	private Instituicao instituicao;
-	*/
-	@ManyToOne
-	@JoinColumn(name = "id_psicopedagogo")
-	private Psicopedagogo psico;
 	private String desregulacao;
 	private String hiperfoco;
 	private float tempoFoco;
 	private String laudo;
-	
-	private LocalDate dataNasci;
+	@ManyToMany(mappedBy = "alunos")
+	private Set<Atividade> atividades = new HashSet<>();
+	@OneToOne(mappedBy = "aluno")
+	private Calendario calendario;
 
-	public LocalDate getDataNasci() {
-		return dataNasci;
-	}
-
-	public void setDataNasci(LocalDate dataNasci) {
-		this.dataNasci = dataNasci;
-	}
 
 	public String getDesregulacao() {
 		return desregulacao;
@@ -64,20 +52,12 @@ public class Aluno extends Usuario {
 		this.laudo = laudo;
 	}
 	
-	/*public Instituicao getInstituicao() {
-	    return instituicao;
-	}
-	
-	public void setInstituicao(Instituicao instituicao) {
-	    this.instituicao = instituicao;
-	}
-	*/
-	public Psicopedagogo getPsico() {
-	    return psico;
-	}
-	
-	public void setPsico(Psicopedagogo psico) {
-	    this.psico = psico;
+
+	public Set<Atividade> getAtividades() {
+	    return atividades;
 	}
 
+	public void setAtividades(Set<Atividade> atividades) {
+	    this.atividades = atividades;
+	}
 }

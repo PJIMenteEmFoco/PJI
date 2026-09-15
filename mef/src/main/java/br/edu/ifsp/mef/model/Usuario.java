@@ -1,13 +1,15 @@
 package br.edu.ifsp.mef.model;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)	
@@ -21,8 +23,11 @@ public class Usuario {
 	private String senha;
 	private String telefone;
 	private String perfil;
-	private LocalDate dataNasci;
+	private LocalDate dataNascimento;
+	private String caminhoFoto;
 	private boolean ativado;
+	@ManyToMany(mappedBy = "usuarios")
+	private Set<Turma> turmas = new HashSet<>();
 	
 	
 	public Long getId() {
@@ -65,16 +70,31 @@ public class Usuario {
 	public void setAtivado(boolean status) {
 		this.ativado = status;
 	}
+	
+	public String getCaminhoFoto() {
+		return caminhoFoto;
+	}
+	public void setCaminhoFoto(String caminhoFoto) {
+		this.caminhoFoto = caminhoFoto;
+	}
 	public String getPerfil() {
 		return perfil;
 	}
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
 	}
-	public LocalDate getDataNasci() {
-		return dataNasci;
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
 	}
-	public void setDataNasci(LocalDate dataNasci) {
-		this.dataNasci = dataNasci;
+	public void setDataNascimento(LocalDate dataNasci) {
+		this.dataNascimento = dataNasci;
+	}
+	
+	public Set<Turma> getTurmas() {
+	    return turmas;
+	}
+
+	public void setTurmas(Set<Turma> equipes) {
+	    this.turmas = equipes;
 	}
 }

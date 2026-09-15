@@ -3,6 +3,6 @@ package br.edu.ifsp.mef.model;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Professor extends Usuario {
-	
+public class Administrador extends Usuario {
+
 }

@@ -4,12 +4,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.stereotype.Service;
 import br.edu.ifsp.mef.model.Aluno;
 import br.edu.ifsp.mef.model.Professor;
@@ -23,19 +21,18 @@ public class UsuarioDetailsService implements UserDetailsService {
 	
 	@Autowired
 	UsuarioRepository usuarioRepository;
-	
-	@Autowired
+	CalendarioService calendarioService;
 	PasswordEncoder encoder;
 	
 	UsuarioDetails usuarioDetails;
 	
-	public void cadastrarUsuario(Usuario usuario, String perfil) {
+	public boolean cadastrarUsuario(Usuario usuario, String perfil) {
 
 	    Optional<Usuario> usuarioExistente =
 	            usuarioRepository.findByEmailIgnoreCase(usuario.getEmail());
 
 	    if (usuarioExistente.isPresent()) {
-	        return;
+	        return false;
 	    }
 
 	    Usuario novoUsuario;
@@ -43,6 +40,7 @@ public class UsuarioDetailsService implements UserDetailsService {
 	    switch (perfil) {
 	        case "ALUNO":
 	            novoUsuario = new Aluno();
+	            calendarioService.criarCalendario((Aluno) novoUsuario);
 	            break;
 
 	        case "PROFESSOR":
@@ -61,11 +59,12 @@ public class UsuarioDetailsService implements UserDetailsService {
 	    novoUsuario.setEmail(usuario.getEmail());
 	    novoUsuario.setSenha(encoder.encode(usuario.getSenha()));
 	    novoUsuario.setTelefone(usuario.getTelefone());
-	    novoUsuario.setDataNasci(usuario.getDataNasci());
+	    novoUsuario.setDataNascimento(usuario.getDataNascimento());
 	    novoUsuario.setPerfil(perfil);
 	    novoUsuario.setAtivado(true);
 
 	    usuarioRepository.save(novoUsuario);
+	    return true;
 	}
 	
 	    public boolean alterarStatusUsuario(Long id) {
@@ -90,6 +89,14 @@ public class UsuarioDetailsService implements UserDetailsService {
 			return byId.get();
 	}
 	
+		public Usuario getByEmail(String email) {
+			Optional<Usuario> byEmail = usuarioRepository.findByEmailIgnoreCase(email);
+			if(byEmail.isEmpty()) {
+				return null;
+			}
+			return byEmail.get();
+	}
+		
 	public boolean atualizarNome(long id, String nome) {
 		Usuario user = getById(id);
 		if (user == null) {

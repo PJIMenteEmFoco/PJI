@@ -1,23 +1,20 @@
 package br.edu.ifsp.mef.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Psicopedagogo extends Usuario {
 	
-	/*
-	@ManyToOne
-	@JoinColumn(name = "id_instituicao")
-	private Instituicao instituicao;
-	
-	public Instituicao getInstituicao() {
-	    return instituicao;
+	private String caminhoComprovante;
+
+	public String getCaminhoComprovante() {
+		return caminhoComprovante;
 	}
 
-	public void setInstituicao(Instituicao instituicao) {
-	    this.instituicao = instituicao;
+	public void setCaminhoComprovante(String caminhoConprovante) {
+		this.caminhoComprovante = caminhoConprovante;
 	}
-*/
+	
+	
+
 }
