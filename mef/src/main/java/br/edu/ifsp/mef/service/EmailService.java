@@ -18,9 +18,13 @@ public class EmailService {
 	
 	@Autowired
 	UsuarioRepository usuarioRepository;
+	@Autowired
 	CodigoVerificacaoRepository codigoVerificacaoRepository;
+	@Autowired
 	UsuarioDetailsService usuarioService;
+	@Autowired
 	JavaMailSender mailSender;
+	@Autowired
 	SecureRandom random;
 
     public EmailService(JavaMailSender mailSender) {

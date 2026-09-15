@@ -18,7 +18,9 @@ public class CalendarioService {
 
 	@Autowired
 	CalendarioRepository calendarioRepository;
+	@Autowired
 	EventoRepository eventoRepository;
+	@Autowired
 	AtividadeRepository atividadeRepository;
 
 	public CalendarioService() {

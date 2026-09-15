@@ -21,9 +21,11 @@ public class UsuarioDetailsService implements UserDetailsService {
 	
 	@Autowired
 	UsuarioRepository usuarioRepository;
+	@Autowired
 	CalendarioService calendarioService;
+	@Autowired
 	PasswordEncoder encoder;
-	
+	@Autowired	
 	UsuarioDetails usuarioDetails;
 	
 	public boolean cadastrarUsuario(Usuario usuario, String perfil) {

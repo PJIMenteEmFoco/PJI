@@ -5,15 +5,18 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 
 import br.edu.ifsp.mef.model.MensagemChat;
 import br.edu.ifsp.mef.model.MensagemChatEntity;
 import br.edu.ifsp.mef.repository.MensagemChatRepository;
 
+@Controller
 public class ChatController {
 
 	@Autowired
 	SimpMessagingTemplate templateMensagem;
+	@Autowired
 	MensagemChatRepository mensagemChatRepository;
 
 	public ChatController(SimpMessagingTemplate templateMensagem, MensagemChatRepository mensagemChatRepository) {

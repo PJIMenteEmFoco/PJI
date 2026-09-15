@@ -16,12 +16,13 @@ public class CalendarioController {
 
 	@Autowired
 	CalendarioService calendarioService;
+	@Autowired
 	UsuarioDetailsService usuarioService;
 
 	@GetMapping("/calendario/{id}")
 	public String visualizarCalendario(@PathVariable Long id, Model model) {
 		Usuario aluno = usuarioService.getById(id);
-		if (aluno.getPerfil()=="ALUNO") {
+		if (aluno.getPerfil().equals("ALUNO")) {
 			Calendario calendario = calendarioService.buscarPorAluno((Aluno) aluno);
 			model.addAttribute("calendario", calendario);
 		}

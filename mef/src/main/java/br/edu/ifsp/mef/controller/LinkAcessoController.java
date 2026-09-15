@@ -15,6 +15,7 @@ public class LinkAcessoController {
 
 	@Autowired
 	TurmaService turmaService;
+	@Autowired
 	ConviteService conviteService;
 	
 	@GetMapping("/convite/{token}")

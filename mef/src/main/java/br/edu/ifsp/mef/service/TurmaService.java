@@ -15,7 +15,9 @@ public class TurmaService {
 
 	@Autowired
 	TurmaRepository turmaRepository;
+	@Autowired
 	UsuarioRepository usuarioRepository;
+	@Autowired
 	ConviteService conviteService;
 
 	public Turma criarTurma(String nome) {
