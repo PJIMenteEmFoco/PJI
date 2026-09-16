@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email de verificação - Mente em Foco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style/style.css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+    <div class="top-logo">
+    <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class=""/>
+    </div>
+
+  <main class="verify-container">
+    <h1 class="verify-title">
+      Enviaremos um código de validação<br>por E-Mail para você.
+    </h1>
+
+    <form class="verify-form" onsubmit="enviarCodigo(event)">
+      <div class="form-group">
+        <label for="recoveryEmail">Email de recuperação</label>
+        <input 
+          type="email" 
+          id="recoveryEmail" 
+          class="form-control" 
+          autocomplete="off" 
+          required 
+        />
+      </div>
+
+      <a href="#" class="alternative-link">Tentar de outro jeito.</a>
+
+      <button type="submit" class="btn btn-secondary">Email</button>
+    </form>
+  </main>
+
+  <script>
+    function enviarCodigo(event) {
+      event.preventDefault();
+      const email = document.getElementById('recoveryEmail').value.trim();
+      if (email) {
+        alert("Código de verificação enviado para " + email);
+      }
+    }
+  </script>
+</body>
+</html>

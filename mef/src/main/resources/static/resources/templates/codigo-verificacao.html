@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Código de verificação - Mente em Foco</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+  <div class="top-logo">
+    <img th:src="@{/img/Captura de tela 2026-09-06 145230.png}" alt="Mente em Foco" class="" />
+  </div>
+
+  <main class="verify-container">
+    <h1 class="verify-title">
+      Digite o código enviado para o seu E-Mail
+    </h1>
+
+    <form class="verify-form" onsubmit="validarCodigo(event)">
+      <div class="form-group">
+        <label for="verificationCode">Código de verificação</label>
+        <input 
+          type="text" 
+          id="verificationCode" 
+          class="form-control" 
+          autocomplete="one-time-code"
+          required 
+        />
+      </div>
+
+      <a href="#" class="alternative-link">Tentar de outro jeito.</a>
+
+      <button type="submit" class="btn btn-secondary">Email</button>
+    </form>
+  </main>
+
+  <script>
+    function validarCodigo(event) {
+      event.preventDefault();
+      const code = document.getElementById('verificationCode').value.trim();
+      if (code) {
+        alert("Código enviado para verificação: " + code);
+      }
+    }
+  </script>
+</body>
+</html>

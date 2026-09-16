@@ -42,7 +42,7 @@ public class Turma {
 	    return usuarios;
 	}
 
-	public void setUsuario(Set<Usuario> usuarios) {
+	public void setUsuarios(Set<Usuario> usuarios) {
 	    this.usuarios = usuarios;
 	}
 	

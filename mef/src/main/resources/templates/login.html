@@ -1,44 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mente em Foco</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Mente em Foco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 
-    <main class="login-container">
-        <section class="brand-section">
-            <img th:src="@{/img/logo_em_pe.svg}" alt="Logo do mente em foco" class="brand-logo">
-        </section>
+  <main class="login-container">
+    <img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" class="brand-logo" />
 
-        <section class="form-section">
-            <form th:action="@{/login}" method="POST" class="login-form">
-                
-                <div class="input-group">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" name="username" required>
-                </div>
+    <form class="login-form" id="loginForm" th:action="@{/login}" method="POST">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <div class="input-wrapper">
+          <input type="text" id="email" name="username" class="form-control" autocomplete="off" />
+        </div>
+      </div>
 
-                <div class="input-group">
-                    <label for="senha">Senha</label>
-                    <input type="password" id="senha" name="password" required>
-                </div>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="password" class="form-control" />
+          <button type="button" class="password-toggle" onclick="togglePassword('password')" aria-label="Mostrar senha">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <div class="error-message" id="errorMessage" th:classappend="${param.error} ? ' show' : ''">Atenção! Login ou senha incorretos!</div>
+      </div>
 
-                <a th:href="@{#}" class="forgot-password">Esqueceu a senha? Clique aqui!</a>
+      <a th:href="@{/email-verificacao}" class="form-link">Esqueceu a senha? Clique aqui!</a>
 
-                <div class="button-group">
-                    <button type="submit" class="btn btn-primary">Entrar</button>
-                    <a th:href="@{/cadastro}" class="btn btn-secondary">Cadastrar-se</a>
-                </div>
+      <button type="submit" class="btn btn-primary">Entrar</button>
+      <a th:href="@{/cadastro}" class="btn btn-secondary">Cadastrar-se</a>
+    </form>
+  </main>
 
-            </form>
-        </section>
-    </main>
-
+  <script>
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      field.type = field.type === 'password' ? 'text' : 'password';
+    }
+  </script>
 </body>
 </html>

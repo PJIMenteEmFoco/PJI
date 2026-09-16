@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividades - Psicopedagogo | Mente em Foco</title>
+    <link rel="stylesheet" href="../style/tarefas_psico.css" th:href="@{/css/tarefas_psico.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- SIDEBAR IDENTICA AO PROFESSOR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-right"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard_psico.html" th:href="@{/psicopedagogo/dashboard_psico}" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a href="#" class="nav-link active">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_psico.html" th:href="@{/psicopedagogo/chat_psico}" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_psico.html" th:href="@{/psicopedagogo/calendario_psico}" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+                <a href="turmas_psico.html" th:href="@{/psicopedagogo/turmas_psico}" class="nav-link">
+                    <i data-lucide="users"></i>
+                    <span class="nav-title">Turmas</span>
+                </a>
+            </nav>
+
+       <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+            <div class="sidebar-footer">
+                <a href="configuracoes_psico.html" th:href="@{/psicopedagogo/configuracoes_psico}" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ÁREA PRINCIPAL -->
+        <main class="main-content">
+            <div class="tasks-container">
+                <h1 class="page-title">Acompanhamento de Atividades</h1>
+
+                <!-- BLOCO 1: RESUMO DE RELATÓRIOS E DESEMPENHO (SEM CRIAR TAREFA) -->
+                <div class="section-block">
+                    <h2 class="section-title">Relatórios de Desempenho dos Alunos</h2>
+                    <div class="psico-stats-row">
+                        <div class="psico-stat-card">
+                            <div class="stat-icon-box orange">
+                                <i data-lucide="check-circle-2"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>14 Atividades</h3>
+                                <span>Concluídas este mês</span>
+                            </div>
+                        </div>
+
+                        <div class="psico-stat-card">
+                            <div class="stat-icon-box blue">
+                                <i data-lucide="clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>12 min</h3>
+                                <span>Tempo médio de atenção</span>
+                            </div>
+                        </div>
+
+                        <div class="psico-stat-card">
+                            <div class="stat-icon-box dark">
+                                <i data-lucide="alert-triangle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>2 Alunos</h3>
+                                <span>Necessitam de readequação de tempo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOCO 2: VISUALIZAÇÃO E MONITORAMENTO DAS ATIVIDADES DOS PROFESSORES -->
+                <div class="section-block">
+                    <div class="controls-header">
+                        <h2 class="section-title">Atividades Passadas pelos Professores</h2>
+                        <div class="controls-group">
+                            <div class="search-box">
+                                <i data-lucide="search"></i>
+                                <input type="text" placeholder="Buscar por título ou aluno...">
+                            </div>
+                            <div class="filter-pills">
+                                <button class="pill-btn active">Todas</button>
+                                <button class="pill-btn">Pendentes de Leitura</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="previous-tasks-grid">
+                        <div class="task-card">
+                            <div class="task-card-header">
+                                <span class="task-type-tag memory">Jogo da Memória</span>
+                                <span class="task-status-dot active"></span>
+                            </div>
+                            <h3 class="task-card-title">Ortografia: Ç e S</h3>
+                            <div class="task-card-meta">
+                                <div class="task-meta-row">
+                                    <i data-lucide="user"></i>
+                                    <span>Aluno: Cauê (Turma 2)</span>
+                                </div>
+                                <div class="task-meta-row">
+                                    <i data-lucide="file-bar-chart"></i>
+                                    <span>Taxa de Acertos: 85%</span>
+                                </div>
+                            </div>
+                            <button class="btn-view-report">Ver Relatório do Aluno</button>
+                        </div>
+
+                        <div class="task-card">
+                            <div class="task-card-header">
+                                <span class="task-type-tag comic">Leitura Guiada</span>
+                                <span class="task-status-dot pending"></span>
+                            </div>
+                            <h3 class="task-card-title">Interpretação Curta em Quadrinhos</h3>
+                            <div class="task-card-meta">
+                                <div class="task-meta-row">
+                                    <i data-lucide="user"></i>
+                                    <span>Aluno: Lucas (Turma 1)</span>
+                                </div>
+                                <div class="task-meta-row">
+                                    <i data-lucide="alert-circle"></i>
+                                    <span>Tempo excedido (Texto longo)</span>
+                                </div>
+                            </div>
+                            <button class="btn-view-report orange-btn">Ver Detalhes do Tempo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script th:inline="javascript">
+        lucide.createIcons();
+        const sidebar = document.getElementById('sidebar');
+        document.getElementById('toggle-btn').addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const logoutModal = document.getElementById('logout-modal');
+        document.getElementById('btn-open-logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+        document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = /*[[@{/login/login}]]*/ '../login.html');
+    </script>
+</body>
+</html>

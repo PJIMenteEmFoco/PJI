@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turmas - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/turmas-professor.css" th:href="@{/css/turmas-professor.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard_psico.html" th:href="@{/psicopedagogo/dashboard_psico}" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                 <a href="tarefas_psico.html" th:href="@{/psicopedagogo/tarefas_psico}" class="nav-link">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_psico.html" th:href="@{/psicopedagogo/chat_psico}" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_psico.html" th:href="@{/psicopedagogo/calendario_psico}" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+                <a href="turmas_psico.html" th:href="@{/psicopedagogo/turmas_psico}" class="nav-link active">
+                    <i data-lucide="users"></i>
+                    <span class="nav-title">Turmas</span>
+                </a>
+            </nav>
+    
+       <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+            <div class="sidebar-footer">
+                <a href="../psicopedagogo/configuracoes_psico.html" th:href="@{/psicopedagogo/configuracoes_psico}" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="teams-container">
+                
+                <h1 class="page-title">Turmas</h1>
+
+                <div class="header-actions-row">
+                    <button class="btn-create-team">
+                        <i data-lucide="plus"></i> Criar turma
+                    </button>
+
+                    <div class="search-filter-group">
+                        <div class="search-input-box">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="search-teams" placeholder="Pesquisar turmas...">
+                        </div>
+                        <select class="select-filter" id="filter-psico">
+                            <option value="">Todos os Psicopedagogos</option>
+                            <option value="lucas">Psicopedagogo Lucas Bonetti</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2 class="section-title">Turmas</h2>
+
+                <div class="teams-grid" id="teams-grid">
+                    
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=1'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=1)} + '\''">
+                        <h3 class="team-card-title">Turma 1</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">LV</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">HO</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 2 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=2'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=2)} + '\''">
+                        <h3 class="team-card-title">Turma 2</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">CC</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">LB</div>
+                                <div class="avatar-circle" style="background-color:#e3f2fd;">HO</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 6 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=3'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=3)} + '\''">
+                        <h3 class="team-card-title">Turma 3</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">MA</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">PR</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 3 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=4'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=4)} + '\''">
+                        <h3 class="team-card-title">Turma 4</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">GA</div>
+                                <div class="avatar-circle" style="background-color:#e3f2fd;">TL</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 3 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=5'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=5)} + '\''">
+                        <h3 class="team-card-title">Turma 5</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">FB</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">JS</div>
+                                <div class="avatar-circle" style="background-color:#e3f2fd;">RC</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 9 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=6'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=6)} + '\''">
+                        <h3 class="team-card-title">Turma 6</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">AP</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">VT</div>
+                                <div class="avatar-circle" style="background-color:#e3f2fd;">DR</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 18 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=7'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=7)} + '\''">
+                        <h3 class="team-card-title">Turma 7</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">SL</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">NK</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 7 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=8'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=8)} + '\''">
+                        <h3 class="team-card-title">Turma 8</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">BM</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">CR</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 8 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                    <div class="team-card" onclick="window.location.href='detalhes-turma.html?id=9'" th:onclick="'window.location.href=\'' + @{/professor/detalhes-turma(id=9)} + '\''">
+                        <h3 class="team-card-title">Turma 9</h3>
+                        <div class="team-card-body">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle">JL</div>
+                                <div class="avatar-circle" style="background-color:#f7edd8;">MN</div>
+                            </div>
+                            <div class="avatar-more-badge">
+                                <i data-lucide="users" style="width:13px; height:13px;"></i> 2 Alunos
+                            </div>
+                        </div>
+                        <div class="team-card-footer">
+                            <span><strong>Professor:</strong> Levi Viana</span>
+                            <span><strong>Psicopedagogo:</strong> Lucas Bonetti</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('expanded');
+        });
+
+        const logoutModal = document.getElementById('logout-modal');
+        const btnOpenLogout = document.getElementById('btn-open-logout');
+        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+
+        btnOpenLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+
+        btnCancelLogout.addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+        });
+
+        const searchInput = document.getElementById('search-teams');
+        const teamCards = document.querySelectorAll('.team-card');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            teamCards.forEach(card => {
+                const title = card.querySelector('.team-card-title').textContent.toLowerCase();
+                const footer = card.querySelector('.team-card-footer').textContent.toLowerCase();
+                if (title.includes(query) || footer.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

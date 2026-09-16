@@ -14,10 +14,6 @@ public class EmailController {
 	@Autowired
 	EmailService emailService;
 
-	public EmailController(EmailService emailService) {
-		this.emailService = emailService;
-	}
-
 	@GetMapping("/email-recuperacao")
 	public String emailRecuperacao(@RequestParam("email") String email, @RequestParam("nome") String nome) {
 		emailService.enviarCodigoRecuperacao(email, emailService.gerarCodigo(), nome);

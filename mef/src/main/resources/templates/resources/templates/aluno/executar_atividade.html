@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executar Atividade - Mente em Foco</title>
+    <link rel="stylesheet" th:href="@{/css/executar_atividade.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img th:src="@{/img/logo.png}" alt="Mente em Foco" class="logo-symbol-only">
+                <img th:src="@{/img/logo.png}" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/aluno/dashboard}" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a th:href="@{/aluno/tarefas}" class="nav-link active">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a th:href="@{/aluno/chat}" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a th:href="@{/aluno/configuracoes}" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="activity-container">
+                <div class="activity-header">
+                    <a th:href="@{/aluno/tarefas}" class="btn-back">
+                        <i data-lucide="arrow-left"></i>
+                        <span>Voltar para Tarefas</span>
+                    </a>
+
+                    <div class="activity-info-group">
+                        <div class="stat-badge">
+                            <i data-lucide="clock"></i>
+                            <span id="timer-display">00:00</span>
+                        </div>
+                        <div class="stat-badge">
+                            <i data-lucide="award"></i>
+                            <span>+50 XP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-board-card">
+                    <div class="game-title-box">
+                        <h2>Jogo da Memória: Ortografia Ç e S</h2>
+                        <p>Encontre os pares de palavras grafadas corretamente!</p>
+                    </div>
+
+                    <div class="cards-grid" id="memory-board">
+                        <div class="memory-card" data-word="Coração">?</div>
+                        <div class="memory-card" data-word="Cabeça">?</div>
+                        <div class="memory-card" data-word="Sapato">?</div>
+                        <div class="memory-card" data-word="Coração">?</div>
+                        <div class="memory-card" data-word="Sapo">?</div>
+                        <div class="memory-card" data-word="Cabeça">?</div>
+                        <div class="memory-card" data-word="Sapato">?</div>
+                        <div class="memory-card" data-word="Sapo">?</div>
+                    </div>
+
+                    <div class="action-footer-row">
+                        <button class="btn-submit-task" id="btn-finish-manual">
+                            <span>Entregar Atividade</span>
+                            <i data-lucide="check-circle-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        let secondsPassed = 0;
+        const timerDisplay = document.getElementById('timer-display');
+        
+        const timerInterval = setInterval(() => {
+            secondsPassed++;
+            const mins = String(Math.floor(secondsPassed / 60)).padStart(2, '0');
+            const secs = String(secondsPassed % 60).padStart(2, '0');
+            timerDisplay.textContent = `${mins}:${secs}`;
+        }, 1000);
+
+        const cards = document.querySelectorAll('.memory-card');
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+        let matchedPairsCount = 0;
+        let totalMistakes = 0;
+        const totalPairs = cards.length / 2;
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                if (lockBoard) return;
+                if (card === firstCard) return;
+                if (card.classList.contains('matched')) return;
+
+                card.classList.add('flipped');
+                card.textContent = card.getAttribute('data-word');
+
+                if (!firstCard) {
+                    firstCard = card;
+                } else {
+                    secondCard = card;
+                    checkMatch();
+                }
+            });
+        });
+
+        function checkMatch() {
+            const isMatch = firstCard.getAttribute('data-word') === secondCard.getAttribute('data-word');
+
+            if (isMatch) {
+                disableCards();
+            } else {
+                totalMistakes++;
+                unflipCards();
+            }
+        }
+
+        function disableCards() {
+            firstCard.classList.remove('flipped');
+            secondCard.classList.remove('flipped');
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+
+            matchedPairsCount++;
+            resetBoardState();
+
+            if (matchedPairsCount === totalPairs) {
+                finishActivity();
+            }
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            firstCard.classList.add('wrong');
+            secondCard.classList.add('wrong');
+
+            setTimeout(() => {
+                firstCard.classList.remove('flipped', 'wrong');
+                secondCard.classList.remove('flipped', 'wrong');
+                firstCard.textContent = '?';
+                secondCard.textContent = '?';
+                resetBoardState();
+            }, 900);
+        }
+
+        function resetBoardState() {
+            [firstCard, secondCard] = [null, null];
+            lockBoard = false;
+        }
+
+        function finishActivity() {
+            clearInterval(timerInterval);
+
+            let scorePercentage = 100 - (totalMistakes * 15);
+            if (scorePercentage < 40) scorePercentage = 40;
+
+            const activityData = {
+                timeFormatted: timerDisplay.textContent,
+                timeSeconds: secondsPassed,
+                mistakes: totalMistakes,
+                score: scorePercentage,
+                xpGained: 50
+            };
+
+            localStorage.setItem('menteEmFoco_lastResult', JSON.stringify(activityData));
+
+            setTimeout(() => {
+                window.location.href = '/aluno/desempenho';
+            }, 600);
+        }
+
+        document.getElementById('btn-finish-manual').addEventListener('click', () => {
+            finishActivity();
+        });
+    </script>
+</body>
+</html>

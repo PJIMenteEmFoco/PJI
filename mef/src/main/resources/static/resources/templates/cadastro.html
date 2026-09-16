@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro - Mente em Foco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+  <div class="top-logo">
+    <img th:src="@{/img/Captura de tela 2026-09-06 145230.png}" alt="Mente em Foco" class="" />
+  </div>
+  <main class="register-container">
+    <form class="register-form" th:action="@{/cadastrar}" method="POST">
+
+      <div class="form-group">
+        <label for="fullName">Nome completo</label>
+        <input type="text" id="fullName" name="nome" class="form-control" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" name="senha" class="form-control" />
+          <button type="button" class="password-toggle" onclick="togglePassword('password')" aria-label="Mostrar senha">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <div class="password-rules">
+          A senha deve conter ao menos:
+          <ul>
+            <li>Uma letra maiúscula;</li>
+            <li>Uma letra minúscula;</li>
+            <li>Um número;</li>
+            <li>Um carecter especial e</li>
+            <li>Oito dígitos</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Repetir senha</label>
+        <div class="input-wrapper">
+          <input type="password" id="confirmPassword" class="form-control" />
+          <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')" aria-label="Mostrar senha">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Telefone</label>
+        <input type="tel" id="phone" name="telefone" class="form-control" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="birthDate">Data de nascimento</label>
+        <input type="date" id="birthDate" name="dataNascimento" class="form-control" />
+      </div>
+
+      <div class="role-group">
+        <label>Função</label>
+        <div class="role-options">
+          <label class="role-label">
+            <input type="radio" name="perfil" value="PSICOPEDAGOGO" checked />
+            Psicopedagogo
+          </label>
+          <label class="role-label">
+            <input type="radio" name="perfil" value="PROFESSOR" />
+            Professor
+          </label>
+          <label class="role-label">
+            <input type="radio" name="perfil" value="ALUNO" />
+            Aluno
+          </label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Cadastrar-se</button>
+      <a th:href="@{/login}" class="form-link">Já é cadastrado? Clique aqui para entrar!</a>
+    </form>
+  </main>
+
+  <script>
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      field.type = field.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>

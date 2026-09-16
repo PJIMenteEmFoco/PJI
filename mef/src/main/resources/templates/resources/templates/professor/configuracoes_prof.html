@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/configuracoes.css" th:href="@{/css/configuracoes.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-layout">
+    
+        <!-- SIDEBAR PADRÃO COM 4 ÍCONES -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard_prof.html" th:href="@{/professor/dashboard_prof}" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                 <a href="tarefas_prof.html" th:href="@{/professor/tarefas_prof}" class="nav-link">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_prof.html" th:href="@{/professor/chat_prof}" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_prof.html" th:href="@{/professor/calendario_prof}" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+                <a href="turmas-prof.html" th:href="@{/professor/turmas-prof}" class="nav-link">
+                    <i data-lucide="users"></i>
+                    <span class="nav-title">Turmas</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../professor/configuracoes_prof.html" th:href="@{/professor/configuracoes_prof}" class="nav-link active">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="settings-container">
+                <h1 class="page-title">Configurações</h1>
+                
+                <div class="config-section">
+                    <h2 class="section-title">Informações Pessoais</h2>
+                    <div class="config-card-group">
+                        
+                        <div class="config-item">
+                            <div class="config-info-text">
+                                <span class="config-label">Foto de Perfil</span>
+                                <div class="profile-avatar-large" style="margin-top: 6px;">
+                                    <i data-lucide="user"></i>
+                                </div>
+                            </div>
+                            <button class="btn-config-edit" onclick="openEditModal('Foto de Perfil', '')">Editar</button>
+                        </div>
+
+                        <div class="config-item">
+                            <div class="config-info-text">
+                                <span class="config-label">Telefone</span>
+                                <span class="config-value" id="val-phone">+55 11 98765-4321</span>
+                            </div>
+                            <button class="btn-config-edit" onclick="openEditModal('Telefone', 'val-phone')">Editar</button>
+                        </div>
+
+                        <div class="config-item">
+                            <div class="config-info-text">
+                                <span class="config-label">Nome</span>
+                                <span class="config-value" id="val-name">Cauê Campos Fraga</span>
+                            </div>
+                            <button class="btn-config-edit" onclick="openEditModal('Nome', 'val-name')">Editar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h2 class="section-title">Aparência</h2>
+                    <div class="config-card-group">
+                        <div class="config-item">
+                            <span class="config-label">Esquema de cores</span>
+                            
+                            <div class="custom-dropdown" id="theme-dropdown">
+                                <button class="custom-dropdown-btn" onclick="toggleThemeDropdown()">
+                                    <span id="theme-btn-label">Claro</span>
+                                    <i data-lucide="chevron-down"></i>
+                                </button>
+                                <div class="custom-dropdown-menu">
+                                    <div class="custom-dropdown-option selected" id="opt-claro" onclick="selectTheme('claro')">
+                                        <span>Claro</span>
+                                    </div>
+                                    <div class="custom-dropdown-option" id="opt-escuro" onclick="selectTheme('escuro')">
+                                        <span>Escuro</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h2 class="section-title">Notificações</h2>
+                    <div class="config-card-group">
+                        <div class="config-item">
+                            <span class="config-label">Notificações gerais</span>
+                            <button class="btn-toggle-status" onclick="toggleStatus(this)">Ativado</button>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Status de atividades</span>
+                            <button class="btn-toggle-status" onclick="toggleStatus(this)">Ativado</button>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Novidades do Mente em Foco</span>
+                            <button class="btn-toggle-status disabled" onclick="toggleStatus(this)">Desativado</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <h2 class="section-title">Segurança</h2>
+                    <div class="config-card-group">
+                        <div class="config-item">
+                            <span class="config-label">Senha</span>
+                            <button class="btn-config-edit" onclick="openEditModal('Senha', '')">Editar</button>
+                        </div>
+                        <div class="config-item">
+                            <span class="config-label">Excluir conta</span>
+                            <button class="btn-config-delete" onclick="openDeleteModal()">Excluir</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DE LOGOUT -->
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE EDIÇÃO -->
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal-card">
+            <h3 class="modal-title" id="modal-title-text">Editar Informação</h3>
+            <input type="text" class="modal-input" id="modal-field-input" placeholder="Digite aqui...">
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" onclick="closeEditModal()">Cancelar</button>
+                <button class="btn-modal btn-modal-save" onclick="saveEditModal()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE EXCLUSÃO DE CONTA -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="delete-modal-card">
+            <h3 class="delete-modal-title">Tem certeza que deseja excluir a conta?</h3>
+            <p class="delete-modal-subtitle">Todos seus dados serão perdidos.</p>
+            <div class="delete-modal-actions">
+                <button class="btn-delete-cancel" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="btn-delete-confirm" onclick="confirmDeleteAccount()">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        lucide.createIcons();
+
+        // Toggle da Sidebar
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        // Modal de Logout
+        const logoutModal = document.getElementById('logout-modal');
+        const btnOpenLogout = document.getElementById('btn-open-logout');
+        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+        const btnConfirmLogout = document.getElementById('btn-confirm-logout');
+
+        btnOpenLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+
+        btnCancelLogout.addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+        });
+
+        btnConfirmLogout.addEventListener('click', () => {
+            window.location.href = /*[[@{/login/login}]]*/ '../login.html';
+        });
+
+        // Dropdown de Tema
+        const themeDropdown = document.getElementById('theme-dropdown');
+        const themeBtnLabel = document.getElementById('theme-btn-label');
+
+        function toggleThemeDropdown() {
+            themeDropdown.classList.toggle('open');
+        }
+
+        function selectTheme(theme) {
+            themeDropdown.classList.remove('open');
+            document.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            
+            if (theme === 'escuro') {
+                document.getElementById('opt-escuro').classList.add('selected');
+                themeBtnLabel.textContent = 'Escuro';
+                document.body.classList.add('dark-mode');
+            } else {
+                document.getElementById('opt-claro').classList.add('selected');
+                themeBtnLabel.textContent = 'Claro';
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        window.addEventListener('click', (e) => {
+            if (!themeDropdown.contains(e.target)) {
+                themeDropdown.classList.remove('open');
+            }
+        });
+
+        // Status de Notificações
+        function toggleStatus(btn) {
+            if (btn.classList.contains('disabled')) {
+                btn.classList.remove('disabled');
+                btn.textContent = 'Ativado';
+            } else {
+                btn.classList.add('disabled');
+                btn.textContent = 'Desativado';
+            }
+        }
+
+        // Modal de Edição
+        const editModal = document.getElementById('edit-modal');
+        const modalTitleText = document.getElementById('modal-title-text');
+        const modalFieldInput = document.getElementById('modal-field-input');
+        let currentTargetId = '';
+
+        function openEditModal(label, targetId) {
+            currentTargetId = targetId;
+            modalTitleText.textContent = `Editar ${label}`;
+            
+            if (targetId) {
+                const currentVal = document.getElementById(targetId).textContent;
+                modalFieldInput.value = currentVal;
+            } else {
+                modalFieldInput.value = '';
+            }
+            
+            editModal.classList.add('active');
+        }
+
+        function closeEditModal() {
+            editModal.classList.remove('active');
+        }
+
+        function saveEditModal() {
+            if (currentTargetId && modalFieldInput.value.trim() !== '') {
+                document.getElementById(currentTargetId).textContent = modalFieldInput.value.trim();
+            }
+            closeEditModal();
+        }
+
+        // Modal de Exclusão
+        const deleteModal = document.getElementById('delete-modal');
+
+        function openDeleteModal() {
+            deleteModal.classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            deleteModal.classList.remove('active');
+        }
+
+        function confirmDeleteAccount() {
+            closeDeleteModal();
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 300);
+        }
+    </script>
+</body>
+</html>

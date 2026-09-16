@@ -78,7 +78,7 @@ public class EmailService {
    
     public boolean verificarCodigo(String codigo, String email) {
     	Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email).orElse(null);
-    	CodigoVerificacao verificacao = codigoVerificacaoRepository.findbyUsuario(usuario).orElse(null);
+    	CodigoVerificacao verificacao = codigoVerificacaoRepository.findByUsuario(usuario).orElse(null);
 
     	if (verificacao == null) {
     	    return false;

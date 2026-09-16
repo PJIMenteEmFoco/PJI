@@ -8,5 +8,5 @@ import br.edu.ifsp.mef.model.Usuario;
 
 public interface CodigoVerificacaoRepository extends JpaRepository<CodigoVerificacao, Long> {
 
-	Optional <CodigoVerificacao> findbyUsuario(Usuario usuario);
+	Optional <CodigoVerificacao> findByUsuario(Usuario usuario);
 }

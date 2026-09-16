@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redefinir Senha - Mente em Foco</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../style/style.css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+  <div class="top-logo">
+    <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class=""/>
+  </div>
+
+  <main class="register-container">
+    <form class="register-form" onsubmit="handlePasswordChange(event)">
+      
+      <div class="form-group">
+        <label for="newPassword">Nova senha</label>
+        <div class="input-wrapper">
+          <input type="password" id="newPassword" class="form-control" required />
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 24px;">
+        <label for="confirmNewPassword">Repetir senha</label>
+        <div class="input-wrapper">
+          <input type="password" id="confirmNewPassword" class="form-control" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-secondary">Trocar senha</button>
+    </form>
+  </main>
+
+  <script th:inline="javascript">
+    function handlePasswordChange(event) {
+      event.preventDefault();
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+      if (newPassword !== confirmNewPassword) {
+        alert("As senhas não coincidem!");
+        return;
+      }
+
+      alert("Senha alterada com sucesso!");
+      window.location.href = /*[[@{/login/login}]]*/ "login.html";
+    }
+  </script>
+</body>
+</html>
