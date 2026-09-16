@@ -1,5 +1,6 @@
 package br.edu.ifsp.mef.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -40,7 +41,6 @@ public class UsuarioDetailsService implements UserDetailsService {
 	    switch (perfil) {
 	        case "ALUNO":
 	            novoUsuario = new Aluno();
-	            calendarioService.criarCalendario((Aluno) novoUsuario);
 	            break;
 
 	        case "PROFESSOR":
@@ -64,6 +64,9 @@ public class UsuarioDetailsService implements UserDetailsService {
 	    novoUsuario.setAtivado(true);
 
 	    usuarioRepository.save(novoUsuario);
+	    if (perfil.equals("ALUNO")) {
+	    	calendarioService.criarCalendario((Aluno) novoUsuario);
+	    }
 	    return true;
 	}
 	
@@ -151,4 +154,9 @@ public class UsuarioDetailsService implements UserDetailsService {
 
 	    	 return new UsuarioDetails(usuario);
 	    }
+	    
+	    public List<Usuario> buscarPsicopedagogos() {
+	        return usuarioRepository.findByPerfil("PSICOPEDAGOGO");
+	    }
+
 }	    

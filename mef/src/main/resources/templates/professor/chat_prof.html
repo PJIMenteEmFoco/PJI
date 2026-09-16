@@ -97,9 +97,9 @@
 		<!-- SIDEBAR DO PROFESSOR -->
 		<aside class="sidebar" id="sidebar">
 			<div class="sidebar-header">
-				<img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco"
+				<img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
 					class="logo-symbol-only">
-				<img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco"
+				<img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
 					class="logo-full-white">
 			</div>
 
@@ -153,17 +153,17 @@
 				<div class="contacts-list" id="contacts-list">
 
 					<div class="contact-item" th:each="aluno : ${alunos}"
-						th:onclick="|selectContact(this, '${aluno.id}', '${aluno.nome}')|">
+					    th:data-id="${aluno.id}"
+					    th:data-nome="${aluno.nome}"
+					    onclick="selectContact(this)">
 
-						<div class="avatar-box">
-							<i data-lucide="user"></i>
-						</div>
+					    <div class="avatar-box">
+					        <i data-lucide="user"></i>
+					    </div>
 
-						<div class="contact-info">
-							<span class="contact-name" th:text="${aluno.nome}">
-							</span>
-						</div>
-
+					    <div class="contact-info">
+					        <span class="contact-name" th:text="${aluno.nome}"></span>
+					    </div>
 					</div>
 
 				</div>
@@ -213,16 +213,6 @@
 		</div>
 	</div>
 
-	<div class="modal-overlay" id="logout-modal">
-		<div class="modal-card">
-			<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-			<div class="modal-actions">
-				<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-				<button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
-			</div>
-		</div>
-	</div>
-
 	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 
@@ -245,52 +235,28 @@
 		// =====================================================
 
 		const stompClient = new StompJs.Client({
-
-			webSocketFactory: () =>
-				new SockJS('/ws'),
-
-			reconnectDelay: 5000,
-
-			onConnect: () => {
-
-				console.log(
-					'WebSocket conectado!'
-				);
-
-				stompClient.subscribe(
-					'/user/queue/messages',
-					function (message) {
-
-						const mensagem =
-							JSON.parse(message.body);
-
-						console.log(
-							'Mensagem recebida:',
-							mensagem
-						);
-
-						receberMensagem(
-							mensagem
-						);
-					}
-				);
-			},
-
-			onStompError: (frame) => {
-
-				console.error(
-					'Erro STOMP:',
-					frame
-				);
-			},
-
-			onWebSocketError: (error) => {
-
-				console.error(
-					'Erro WebSocket:',
-					error
-				);
-			}
+		    webSocketFactory: () => new SockJS('/ws'),
+		    reconnectDelay: 5000,
+		    onConnect: () => {
+		        console.log('WebSocket conectado!');
+		        
+		        // MUDANÇA AQUI: Trocamos '/user/queue/messages' 
+		        // por '/queue/messages/' + usuarioLogadoId
+		        stompClient.subscribe(
+		            '/queue/messages/' + usuarioLogadoId,
+		            function (message) {
+		                const mensagem = JSON.parse(message.body);
+		                console.log('Mensagem recebida:', mensagem);
+		                receberMensagem(mensagem);
+		            }
+		        );
+		    },
+		    onStompError: (frame) => {
+		        console.error('Erro STOMP:', frame);
+		    },
+		    onWebSocketError: (error) => {
+		        console.error('Erro WebSocket:', error);
+		    }
 		});
 
 		stompClient.activate();
@@ -661,17 +627,11 @@
 			}
 
 			const mensagem = {
-
-				sender:
-					String(usuarioLogadoId),
-
-				recipient:
-					String(usuarioSelecionadoId),
-
-				content:
-					messageText
-			};
-
+			        sender: String(usuarioLogadoId),
+			        recipient: String(usuarioSelecionadoId),
+			        content: messageText,
+			        timestamp: new Date().toISOString() // <--- Adicione esta linha aqui!
+			    };
 			stompClient.publish({
 
 				destination:
@@ -682,7 +642,8 @@
 						mensagem
 					)
 			});
-
+			
+			adicionarMensagemNaTela(mensagem)
 			input.value = '';
 		}
 

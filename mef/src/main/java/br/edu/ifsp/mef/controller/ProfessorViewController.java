@@ -60,6 +60,8 @@ public class ProfessorViewController {
 	public String turmas(Authentication authentication, Model model) {
 		Usuario professor = usuarioService.getByEmail(authentication.getName());
 	    List<Turma> turmas = turmaRepository.findByIdProfessor(professor.getId());
+	    List<Usuario> psicopedagogos = usuarioService.buscarPsicopedagogos();
+	    model.addAttribute("psicopedagogos", psicopedagogos);
 	    model.addAttribute("turmas", turmas);
 
 		return "professor/turmas-professor";

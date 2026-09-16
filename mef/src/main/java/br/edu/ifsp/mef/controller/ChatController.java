@@ -29,7 +29,8 @@ public class ChatController {
 	@Autowired
 	MensagemChatRepository mensagemChatRepository;
 
-	public ChatController(SimpMessagingTemplate templateMensagem, MensagemChatRepository mensagemChatRepository, MensagemChatService mensagemChatService) {
+	public ChatController(SimpMessagingTemplate templateMensagem, MensagemChatRepository mensagemChatRepository,
+			MensagemChatService mensagemChatService) {
 
 		this.templateMensagem = templateMensagem;
 		this.mensagemChatRepository = mensagemChatRepository;
@@ -39,30 +40,45 @@ public class ChatController {
 	@MessageMapping("/chat.privateMessage")
 	public void sendPrivateMessage(MensagemChat mensagemChat) {
 
-		MensagemChatEntity mensagem = new MensagemChatEntity();
+	    MensagemChatEntity mensagem = new MensagemChatEntity();
 
-		mensagem.setSender(mensagemChat.getSender());
-		mensagem.setRecipient(mensagemChat.getRecipient());
-		mensagem.setContent(mensagemChat.getContent());
-		mensagem.setTimestamp(LocalDateTime.now());
+	    mensagem.setSender(mensagemChat.getSender());
+	    mensagem.setRecipient(mensagemChat.getRecipient());
+	    mensagem.setContent(mensagemChat.getContent());
+	    mensagem.setTimestamp(LocalDateTime.now());
 
-		mensagemChatRepository.save(mensagem);
+	    // 1. Salva no banco
+	    mensagemChatRepository.save(mensagem);
 
-		templateMensagem.convertAndSendToUser(mensagemChat.getRecipient(), "/queue/messages", mensagem);
+	    // 2. Envia em tempo real direto para a fila específica do destinatário baseada no ID
+	    templateMensagem.convertAndSend(
+	        "/queue/messages/" + mensagemChat.getRecipient(), 
+	        mensagem
+	    );
 	}
-	
+
 	@GetMapping("/chat/{idUsuario}")
 	@ResponseBody
-	public List<MensagemChatEntity> buscarConversa(
-	        @PathVariable Long idUsuario,
-	        Authentication authentication) {
+	public List<MensagemChatEntity> buscarConversa(@PathVariable Long idUsuario, Authentication authentication) {
 
-	    UsuarioDetails usuario = (UsuarioDetails) authentication.getPrincipal();
+		UsuarioDetails usuario = (UsuarioDetails) authentication.getPrincipal();
 
-	    return mensagemChatService.buscarConversa(
-	            String.valueOf(usuario.getId()),
-	            String.valueOf(idUsuario)
-	    );
+		return mensagemChatService.buscarConversa(String.valueOf(usuario.getId()), String.valueOf(idUsuario));
+	}
+
+	@GetMapping("/professor/chat/historico/{idUsuario}")
+	@ResponseBody
+	public List<MensagemChatEntity> buscarConversaProfessor(@PathVariable Long idUsuario,
+			Authentication authentication) {
+		UsuarioDetails usuario = (UsuarioDetails) authentication.getPrincipal();
+		return mensagemChatService.buscarConversa(String.valueOf(usuario.getId()), String.valueOf(idUsuario));
+	}
+
+	@GetMapping("/aluno/chat/historico/{idUsuario}")
+	@ResponseBody
+	public List<MensagemChatEntity> buscarConversaAluno(@PathVariable Long idUsuario, Authentication authentication) {
+		UsuarioDetails usuario = (UsuarioDetails) authentication.getPrincipal();
+		return mensagemChatService.buscarConversa(String.valueOf(usuario.getId()), String.valueOf(idUsuario));
 	}
 
 }

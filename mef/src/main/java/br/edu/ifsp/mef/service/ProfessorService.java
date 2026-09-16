@@ -15,13 +15,10 @@ import br.edu.ifsp.mef.repository.TurmaRepository;
 
 @Service
 public class ProfessorService {
-	private final AtividadeRepository atividadeRepository;
+	@Autowired
+	AtividadeRepository atividadeRepository;
 	@Autowired
 	TurmaRepository turmaRepository;
-
-	ProfessorService(AtividadeRepository atividadeRepository) {
-		this.atividadeRepository = atividadeRepository;
-	}
 
 	public long contarAlunos(Long idProfessor) {
 		return turmaRepository.countAlunosByIdProfessor(idProfessor);
