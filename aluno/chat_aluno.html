@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/chatAluno.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(15, 45, 60, 0.45);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .logout-outer-card {
+            background-color: #CBDDE6;
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+        }
+
+        .logout-inner-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 28px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .logout-inner-card h3 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0F2D3C;
+            line-height: 1.3;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .logout-btn-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-logout-cancel {
+            flex: 1;
+            background-color: #557D91;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-logout-cancel:hover {
+            background-color: #0F2D3C;
+        }
+
+        .btn-logout-confirm {
+            flex: 1;
+            background-color: #f1f5f8;
+            color: #557D91;
+            border: 1px solid #d9e3eb;
+            padding: 10px;
+            border-radius: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout-confirm:hover {
+            background-color: #e2ebf0;
+            color: #0F2D3C;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard_aluno.html" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a href="tarefas_aluno.html" class="nav-link">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_aluno.html" class="nav-link active">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_aluno.html" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../aluno/configuracoes_aluno.html" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="chat-container">
+            <div class="chat-sidebar">
+                <div class="chat-sidebar-header">
+                    <h2 class="chat-sidebar-title">Chat</h2>
+                    <i data-lucide="edit-3" style="color: #0F2D3C; cursor: pointer; width:20px; height:20px;"></i>
+                </div>
+
+                <div class="contacts-list" id="contacts-list">
+                    
+                    <div class="contact-item active" onclick="selectContact(this, 'lucas')">
+                        <div class="avatar-box">
+                            <i data-lucide="user-check"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Dr. Lucas Bonetti</span>
+                            <span class="contact-role-badge">Psicopedagogo</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item" onclick="selectContact(this, 'helena')">
+                        <div class="avatar-box">
+                            <i data-lucide="user"></i>
+                            <span class="unread-dot"></span>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Prof.ª Helena Souza</span>
+                            <span class="contact-role-badge">Língua Portuguesa</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item" onclick="selectContact(this, 'marcos')">
+                        <div class="avatar-box">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Prof. Marcos Andrade</span>
+                            <span class="contact-role-badge">Leitura & Escrita</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item" onclick="selectContact(this, 'suporte')">
+                        <div class="avatar-box">
+                            <i data-lucide="headphones"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Suporte Pedagógico</span>
+                            <span class="contact-role-badge">Ajuda & Dúvidas</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item" onclick="selectContact(this, 'camila')">
+                        <div class="avatar-box">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Prof.ª Camila Lima</span>
+                            <span class="contact-role-badge">Ortografia</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-item" onclick="selectContact(this, 'coordenacao')">
+                        <div class="avatar-box">
+                            <i data-lucide="award"></i>
+                        </div>
+                        <div class="contact-info">
+                            <span class="contact-name">Coordenação</span>
+                            <span class="contact-role-badge">Orientação</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="chat-main">
+                <div class="chat-main-header">
+                    <div class="active-user-info">
+                        <div class="avatar-box" style="width:38px; height:38px; border:none;" id="active-avatar-box">
+                            <i data-lucide="user-check"></i>
+                        </div>
+                        <div>
+                            <span class="active-contact-title" id="active-contact-name">Dr. Lucas Bonetti</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messages-wrapper" id="messages-wrapper"></div>
+
+                <div class="chat-input-bar">
+                    <div class="input-group">
+                        <button class="btn-plus-attach" title="Anexar arquivo ou imagem">
+                            <i data-lucide="plus"></i>
+                        </button>
+                        <input type="text" class="chat-text-input" id="chat-input" placeholder="Mensagem..." onkeypress="handleKeyPress(event)">
+                        <button class="btn-send-msg" onclick="sendMessage()" title="Enviar mensagem">
+                            <i data-lucide="send"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+        <div class="modal-overlay" id="logout-modal">
+            <div class="modal-card">
+                <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+                <div class="modal-actions">
+                    <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                    <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+                </div>
+            </div>
+        </div>
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const logoutModal = document.getElementById('logout-modal');
+        const btnOpenLogout = document.getElementById('btn-open-logout');
+        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+        const btnConfirmLogout = document.getElementById('btn-confirm-logout');
+
+        btnOpenLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+
+        btnCancelLogout.addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+        });
+
+        btnConfirmLogout.addEventListener('click', () => {
+            window.location.href = '../login.html';
+        });
+
+        const chatsDatabase = {
+            'lucas': {
+                name: 'Dr. Lucas Bonetti',
+                role: 'Psicopedagogo',
+                icon: 'user-check',
+                messages: [
+                    { type: 'received', text: 'Olá Levi! Como você se sentiu realizando a atividade do Jogo da Memória de Ortografia hoje?', time: '09:40' },
+                    { type: 'sent', text: 'Achei muito legal, consegui acertar os pares sem errar!', time: '09:42' },
+                    { type: 'sent', text: 'Olá, paizinho!', time: '09:43' },
+                    { type: 'sent', text: 'Eu amo o Levi! ❤️', time: '09:44' },
+                    { type: 'sent', text: 'Oie!', time: '09:44' }
+                ]
+            },
+            'helena': {
+                name: 'Prof.ª Helena Souza',
+                role: 'Língua Portuguesa',
+                icon: 'user',
+                messages: [
+                    { type: 'received', text: 'Oi Levi, lembre-se de entregar o exercício de separação silábica até amanhã!', time: '10:15' },
+                    { type: 'sent', text: 'Pode deixar professora, já estou terminando!', time: '10:18' }
+                ]
+            },
+            'marcos': {
+                name: 'Prof. Marcos Andrade',
+                role: 'Leitura & Escrita',
+                icon: 'user',
+                messages: [
+                    { type: 'received', text: 'Parabéns pela leitura da história de ontem! A pontuação foi excelente.', time: 'Ontem' },
+                    { type: 'sent', text: 'Muito obrigado, prof. Marcos!', time: 'Ontem' }
+                ]
+            },
+            'suporte': {
+                name: 'Suporte Pedagógico',
+                role: 'Ajuda & Dúvidas',
+                icon: 'headphones',
+                messages: [
+                    { type: 'received', text: 'Olá! Como podemos ajudar na plataforma hoje?', time: '08:00' }
+                ]
+            },
+            'camila': {
+                name: 'Prof.ª Camila Lima',
+                role: 'Ortografia',
+                icon: 'user',
+                messages: [
+                    { type: 'received', text: 'Dica da semana: Lembre-se que Ç nunca é usado no início de palavras!', time: '08:30' }
+                ]
+            },
+            'coordenacao': {
+                name: 'Coordenação',
+                role: 'Orientação',
+                icon: 'award',
+                messages: [
+                    { type: 'received', text: 'Aviso: Nossas oficinas de leitura acontecem nesta quinta-feira.', time: 'Seg' }
+                ]
+            }
+        };
+
+        let currentChatId = 'lucas';
+
+        function renderMessages(chatId) {
+            const wrapper = document.getElementById('messages-wrapper');
+            wrapper.innerHTML = '';
+
+            const chat = chatsDatabase[chatId];
+            if (!chat) return;
+
+            chat.messages.forEach(msg => {
+                const msgRow = document.createElement('div');
+                msgRow.className = `message-row ${msg.type}`;
+
+                if (msg.type === 'received') {
+                    msgRow.innerHTML = `
+                        <div class="avatar-box" style="width:36px; height:36px; border:none;">
+                            <i data-lucide="${chat.icon}"></i>
+                        </div>
+                        <div class="message-bubble">
+                            <span>${escapeHTML(msg.text)}</span>
+                            <div class="message-meta" style="color:#557D91;">${msg.time}</div>
+                        </div>
+                    `;
+                } else {
+                    msgRow.innerHTML = `
+                        <div class="message-bubble">
+                            <span>${escapeHTML(msg.text)}</span>
+                            <div class="message-meta">
+                                <span>${msg.time}</span>
+                                <i data-lucide="check-check" class="read-check"></i>
+                            </div>
+                        </div>
+                    `;
+                }
+                wrapper.appendChild(msgRow);
+            });
+
+            lucide.createIcons();
+            wrapper.scrollTop = wrapper.scrollHeight;
+        }
+
+        function selectContact(element, chatId) {
+            document.querySelectorAll('.contact-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            
+            currentChatId = chatId;
+            const chat = chatsDatabase[chatId];
+
+            document.getElementById('active-contact-name').textContent = chat.name;
+            document.getElementById('active-avatar-box').innerHTML = `<i data-lucide="${chat.icon}"></i>`;
+            
+            const unreadDot = element.querySelector('.unread-dot');
+            if (unreadDot) unreadDot.remove();
+
+            renderMessages(chatId);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messageText = input.value.trim();
+
+            if (messageText !== "") {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const timeString = `${hours}:${minutes}`;
+
+                chatsDatabase[currentChatId].messages.push({
+                    type: 'sent',
+                    text: messageText,
+                    time: timeString
+                });
+
+                renderMessages(currentChatId);
+                input.value = "";
+            }
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        renderMessages('lucas');
+    </script>
+</body>
+</html>

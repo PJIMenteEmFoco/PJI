@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Mente em Foco</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style/style.css" />
+</head>
+<body>
+
+  <main class="login-container">
+    <img src="../imagens/Captura de tela 2026-09-06 145230.png" alt="Mente em Foco" class="brand-logo" />
+
+    <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <div class="input-wrapper">
+          <input type="text" id="email" class="form-control" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <div class="input-wrapper">
+          <input type="password" id="password" class="form-control" />
+          <button type="button" class="password-toggle" onclick="togglePassword('password')" aria-label="Mostrar senha">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+        <div class="error-message" id="errorMessage">Atenção! Login ou senha incorretos!</div>
+      </div>
+
+      <a href="#" class="form-link">Esqueceu a senha? Clique aqui!</a>
+
+      <button type="submit" class="btn btn-primary">Entrar</button>
+      <a href="../cadastro.html" class="btn btn-secondary">Cadastrar-se</a>
+    </form>
+  </main>
+
+  <script>
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMessage = document.getElementById('errorMessage');
+
+      const correctEmail = "teste@exemplo.com";
+      const correctPassword = "123";
+
+      if (email !== correctEmail || password !== correctPassword) {
+        errorMessage.classList.add('show');
+      } else {
+        errorMessage.classList.remove('show');
+        alert("Login realizado com sucesso!");
+      }
+    }
+
+    function togglePassword(fieldId) {
+      const field = document.getElementById(fieldId);
+      field.type = field.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizar Atividade - Mente em Foco</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/fazer_tarefa.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="activity-container">
+        
+        <header class="activity-header">
+            <a href="tarefas_prof.html" class="btn-back">
+                <i data-lucide="arrow-left"></i> Sair da Atividade
+            </a>
+            <div class="header-titles">
+                <span class="badge-tipo" id="atividade-tipo">Atividade</span>
+                <h1 id="atividade-titulo">Título da Tarefa</h1>
+            </div>
+            <div class="user-badge">
+                <i data-lucide="user"></i>
+                <span id="atividade-aluno">Aluno</span>
+            </div>
+        </header>
+
+        <main class="activity-card">
+            
+            <div class="question-box">
+                <span class="question-number">Questão 1 de 1</span>
+                <h2 id="atividade-pergunta">Pergunta ou instrução principal aqui...</h2>
+            </div>
+
+            <div class="options-grid" id="options-container">
+            </div>
+
+            <div class="feedback-box hidden" id="feedback-box">
+                <div class="feedback-content">
+                    <i data-lucide="check-circle" id="feedback-icon"></i>
+                    <p id="feedback-text">Mensagem de feedback...</p>
+                </div>
+                <button class="btn-primary" id="btn-concluir">Voltar para Atividades</button>
+            </div>
+
+        </main>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const tarefa = JSON.parse(localStorage.getItem('tarefa_atual_para_realizar')) || {
+            titulo: "Ortografia: Ç e S",
+            tipo: "Quiz",
+            aluno: "Cauê Campos",
+            pergunta: "Assinale a opção em que a palavra está grafada corretamente:",
+            correta: "Açúcar",
+            incorreta: "Asúcar"
+        };
+
+        document.getElementById('atividade-titulo').textContent = tarefa.titulo;
+        document.getElementById('atividade-tipo').textContent = tarefa.tipo;
+        document.getElementById('atividade-aluno').textContent = tarefa.aluno;
+        document.getElementById('atividade-pergunta').textContent = tarefa.pergunta || "Leia a pergunta com atenção e escolha a alternativa correta:";
+
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackBox = document.getElementById('feedback-box');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackText = document.getElementById('feedback-text');
+
+        const alternativas = [
+            { texto: tarefa.correta || "Opção Correta", eCorreta: true },
+            { texto: tarefa.incorreta || "Opção Incorreta", eCorreta: false }
+        ].sort(() => Math.random() - 0.5);
+
+        alternativas.forEach(alt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-card';
+            btn.innerHTML = `<span>${alt.texto}</span>`;
+
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.option-card').forEach(b => b.disabled = true);
+
+                feedbackBox.classList.remove('hidden');
+
+                if (alt.eCorreta) {
+                    btn.classList.add('correct');
+                    feedbackBox.className = "feedback-box success";
+                    feedbackText.textContent = "Excelente! Você acertou a resposta! 🎉";
+                } else {
+                    btn.classList.add('wrong');
+                    feedbackBox.className = "feedback-box error";
+                    feedbackText.textContent = "Ops! Essa resposta está incorreta. Continue praticando! 💪";
+                }
+
+                lucide.createIcons();
+            });
+
+            optionsContainer.appendChild(btn);
+        });
+
+        document.getElementById('btn-concluir').addEventListener('click', () => {
+            window.location.href = 'tarefas_prof.html';
+        });
+    </script>
+</body>
+</html>

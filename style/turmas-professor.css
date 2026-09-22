@@ -1,0 +1,621 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .page-title, .turma-card-title {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: #f1f5f8;
+    color: #0F2D3C;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    overflow: hidden;
+}
+
+.app-layout {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 80px;
+    background-color: #0F2D3C;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 0 24px 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    flex-shrink: 0;
+    border-top-right-radius: 24px;
+    border-bottom-right-radius: 24px;
+    height: 100vh;
+    z-index: 100;
+    user-select: none;
+}
+
+.sidebar.expanded {
+    width: 200px;
+    padding: 32px 14px 24px 14px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    position: relative;
+}
+
+.logo-symbol-only { width: 44px; height: auto; position: absolute; transition: opacity 0.2s ease; }
+.logo-full-white { width: 58px; height: auto; position: absolute; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+
+.sidebar.expanded .logo-symbol-only { opacity: 0; pointer-events: none; }
+.sidebar.expanded .logo-full-white { opacity: 1; pointer-events: auto; }
+
+.sidebar-toggle-badge {
+    position: absolute;
+    right: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    background-color: #557D91;
+    border: 2px solid #f1f5f8;
+    border-radius: 50%;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 105;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.expanded .sidebar-toggle-badge { transform: translateY(-50%) rotate(180deg); }
+.sidebar-toggle-badge svg { width: 14px; height: 14px; stroke-width: 3; }
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: auto 0;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #8fa5b4;
+    border-radius: 14px;
+    transition: all 0.2s ease;
+    width: 48px;
+    height: 48px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.sidebar.expanded .nav-link { width: 100%; justify-content: flex-start; padding: 0 16px; }
+.nav-link:hover { color: #ffffff; background-color: rgba(255, 255, 255, 0.05); }
+.nav-link svg { width: 20px; height: 20px; stroke-width: 2.2; flex-shrink: 0; }
+
+.nav-title { display: none; font-size: 0.95rem; font-weight: 700; white-space: nowrap; }
+.sidebar.expanded .nav-title { display: inline; }
+
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 22px;
+    background-color: #E69C2E;
+    border-radius: 0 4px 4px 0;
+}
+
+.nav-link.active { color: #E69C2E; background-color: #1a3849; }
+.nav-link.active svg { color: #E69C2E; }
+
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    align-items: center;
+}
+
+/* CONTEÚDO PRINCIPAL E TURMAS */
+.main-content {
+    flex: 1;
+    height: 100vh;
+    padding: 36px 48px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1350px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 50px;
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0F2D3C;
+}
+
+.toolbar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn-criar-turma {
+    background-color: #E69C2E;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(230, 156, 46, 0.25);
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-criar-turma:hover {
+    background-color: #d48419;
+    transform: translateY(-1px);
+}
+
+.filters-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-box {
+    background-color: #ffffff;
+    border: 1px solid #d9e3eb;
+    border-radius: 12px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 240px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.85rem;
+    color: #0F2D3C;
+    width: 100%;
+}
+
+.select-filter {
+    background-color: #ffffff;
+    border: 1px solid #d9e3eb;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    color: #0F2D3C;
+    outline: none;
+    cursor: pointer;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #0F2D3C;
+    margin-top: 10px;
+}
+
+.turmas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.turma-card {
+    background-color: #557D91;
+    border-radius: 18px;
+    padding: 24px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(15, 39, 53, 0.08);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.turma-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(15, 39, 53, 0.18);
+}
+
+.turma-card-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.avatars-and-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.avatar-group {
+    display: flex;
+    align-items: center;
+}
+
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #0F2D3C;
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #557D91;
+    margin-left: -8px;
+}
+
+.avatar-circle.dark {
+    background-color: #CBDDE6;
+    color: #0F2D3C;
+    border: none;
+    margin-left: 0;
+}
+
+.avatar-circle:first-child {
+    margin-left: 0;
+}
+
+.badge-alunos {
+    background-color: #E69C2E;
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.turma-info-text {
+    font-size: 0.78rem;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+.turma-info-text strong {
+    font-weight: 700;
+}
+
+/* MODAIS */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 45, 60, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.create-turma-outer-card {
+    background-color: #CBDDE6;
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+
+.create-turma-outer-card.modal-large {
+    max-width: 600px;
+}
+
+.create-turma-inner-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-header h3, .modal-header-row h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0F2D3C;
+    margin-bottom: 4px;
+}
+
+.modal-header p, .modal-header-row p {
+    font-size: 0.82rem;
+    color: #557D91;
+    font-weight: 600;
+}
+
+.modal-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.btn-add-aluno {
+    background-color: #E69C2E;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-add-aluno:hover {
+    background-color: #d48419;
+}
+
+.alunos-section h4 {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #0F2D3C;
+    margin-bottom: 12px;
+}
+
+.alunos-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.aluno-item {
+    background-color: #f7f9fb;
+    border: 1px solid #e1e9f0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.aluno-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.aluno-nome {
+    display: block;
+    font-size: 0.88rem;
+    color: #0F2D3C;
+}
+
+.aluno-meta {
+    font-size: 0.75rem;
+    color: #557D91;
+    font-weight: 600;
+}
+
+.btn-remove-aluno {
+    background: none;
+    border: none;
+    color: #c0392b;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.add-aluno-form {
+    background-color: #f1f5f8;
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.add-aluno-form.hidden {
+    display: none;
+}
+
+#form-criar-turma {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #557D91;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #d9e3eb;
+    background-color: #f7f9fb;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0F2D3C;
+    outline: none;
+}
+
+.form-control.textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.modal-btn-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-turma-cancel {
+    flex: 1;
+    background-color: #557D91;
+    color: #ffffff;
+    border: none;
+    padding: 11px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-turma-cancel:hover {
+    background-color: #0F2D3C;
+}
+
+.btn-turma-save {
+    flex: 1;
+    background-color: #E69C2E;
+    color: #ffffff;
+    border: none;
+    padding: 11px;
+    border-radius: 20px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.btn-turma-save:hover {
+    background-color: #d48419;
+}
+
+/* MODAL LOGOUT */
+.logout-outer-card {
+    background-color: #CBDDE6;
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 460px;
+}
+
+.logout-inner-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.logout-inner-card h3 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0F2D3C;
+}
+
+.logout-btn-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn-logout-cancel {
+    flex: 1;
+    background-color: #557D91;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-logout-confirm {
+    flex: 1;
+    background-color: #f1f5f8;
+    color: #557D91;
+    border: 1px solid #d9e3eb;
+    padding: 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .turmas-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .turmas-grid { grid-template-columns: 1fr; }
+}

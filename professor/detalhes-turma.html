@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes da Turma - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/detalhes-turma.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard_prof.html" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a href="tarefas_prof.html" class="nav-link">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_prof.html" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_prof.html" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+                <a href="turmas-prof.html" class="nav-link active">
+                    <i data-lucide="users"></i>
+                    <span class="nav-title">Turmas</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="configuracoes_prof.html" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="details-container">
+                
+                <div class="team-header-card">
+                    <div class="team-title-group">
+                        <a href="turmas-prof.html" class="btn-back-link" title="Voltar para Turmas">
+                            <i data-lucide="arrow-left"></i>
+                        </a>
+                        <div class="team-header-info">
+                            <h1 id="turma-titulo">Turma</h1>
+                            <p id="turma-professores">Prof. -- | Psicopedagogo --</p>
+                        </div>
+                    </div>
+
+                    <div class="team-quick-stats">
+                        <div class="stat-badge">
+                            <span class="metric-val" id="total-alunos-val">0</span>
+                            <span class="metric-lbl">Alunos</span>
+                        </div>
+                        <div class="stat-badge">
+                            <span class="metric-val" id="total-atividades-val">0</span>
+                            <span class="metric-lbl">Atividades</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls-row">
+                    <div class="search-student-box">
+                        <i data-lucide="search"></i>
+                        <input type="text" id="search-student" placeholder="Buscar aluno nesta turma...">
+                    </div>
+
+                    <button class="btn-add-student" id="btn-open-vincular-aluno">
+                        <i data-lucide="user-plus"></i> Vincular Aluno
+                    </button>
+                </div>
+
+                <h2 class="section-title">Alunos em Acompanhamento</h2>
+
+                <div class="students-list-grid" id="students-grid">
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <div class="modal-overlay" id="relatorio-modal">
+        <div class="vincular-outer-card">
+            <div class="vincular-inner-card">
+                
+                <div class="modal-header">
+                    <h3 id="relatorio-aluno-nome">Relatório do Aluno</h3>
+                    <p id="relatorio-aluno-sub">1ª Série EM • TDAH</p>
+                </div>
+
+                <div class="relatorio-corpo">
+                    <div class="relatorio-block">
+                        <span class="relatorio-label">Hiperfoco:</span>
+                        <p id="relatorio-hiperfoco" class="relatorio-texto">-</p>
+                    </div>
+
+                    <div class="relatorio-block">
+                        <span class="relatorio-label">Tempo Médio de Foco:</span>
+                        <p id="relatorio-foco" class="relatorio-texto">-</p>
+                    </div>
+
+                    <div class="relatorio-block">
+                        <span class="relatorio-label">Observações Psicopedagógicas:</span>
+                        <p id="relatorio-obs-view" class="relatorio-texto">-</p>
+                        <textarea id="relatorio-obs-edit" class="form-control textarea hidden" rows="4" placeholder="Escreva as observações do relatório aqui..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-btn-row">
+                    <button type="button" class="btn-modal-cancel" id="btn-fechar-relatorio">Fechar</button>
+                    <button type="button" class="btn-modal-confirm" id="btn-editar-relatorio">Editar Relatório</button>
+                    <button type="button" class="btn-modal-confirm hidden" id="btn-salvar-relatorio">Salvar Alterações</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="vincular-aluno-modal">
+        <div class="vincular-outer-card">
+            <div class="vincular-inner-card">
+                
+                <div class="modal-header">
+                    <h3>Vincular Aluno à Turma</h3>
+                    <p>Preencha os dados abaixo para adicionar um novo aluno a esta turma.</p>
+                </div>
+
+                <form id="form-vincular-aluno">
+                    
+                    <div class="form-group">
+                        <label for="nome-aluno">Nome Completo do Aluno</label>
+                        <input type="text" id="nome-aluno" class="form-control" placeholder="Ex: Gabriel Souza" required>
+                    </div>
+
+                    <div class="form-row-two">
+                        <div class="form-group">
+                            <label for="serie-aluno">Série / Ano</label>
+                            <input type="text" id="serie-aluno" class="form-control" placeholder="Ex: 1ª Série EM" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="diagnostico-aluno">Diagnóstico / CID</label>
+                            <input type="text" id="diagnostico-aluno" class="form-control" placeholder="Ex: TDAH Combinado" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-two">
+                        <div class="form-group">
+                            <label for="hiperfoco-aluno">Hiperfoco</label>
+                            <input type="text" id="hiperfoco-aluno" class="form-control" placeholder="Ex: Desenho / Robótica" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="foco-aluno">Tempo Médio de Foco</label>
+                            <input type="text" id="foco-aluno" class="form-control" placeholder="Ex: 15 a 20 minutos" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="obs-aluno">Observações Psicopedagógicas (Relatório Inicial)</label>
+                        <textarea id="obs-aluno" class="form-control textarea" rows="3" placeholder="Insira o relatório psicopedagógico inicial do aluno..."></textarea>
+                    </div>
+
+                    <div class="modal-btn-row">
+                        <button type="button" class="btn-modal-cancel" id="btn-cancel-vincular">Cancelar</button>
+                        <button type="submit" class="btn-modal-confirm">Vincular Aluno</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const alunosPadraoTurma2 = [
+            { 
+                nome: "Cauê Campos", 
+                sub: "1ª Série EM • TDAH (CID-11: 6A05)", 
+                hiperfoco: "Jogos Digitais / HQs", 
+                foco: "15 a 20 minutos", 
+                obs: "O aluno apresenta um bom engajamento quando as atividades envolvem elementos visuais e de seu hiperfoco. Recomenda-se realizar pausas ativas a cada 15-20 minutos.",
+                inicial: "C", bg: "#CBDDE6", color: "#0F2D3C" 
+            },
+            { 
+                nome: "Lucas Bonetti", 
+                sub: "2ª Série EM • TDAH Predominante Desatento", 
+                hiperfoco: "Astronomia / Leitura", 
+                foco: "25 minutos", 
+                obs: "Apresenta facilidade em compreender conteúdos teóricos longos se forem divididos por blocos e tópicos curtos.",
+                inicial: "L", bg: "#f7edd8", color: "#E69C2E" 
+            },
+            { 
+                nome: "Heitor Oliveira", 
+                sub: "1ª Série EM • TDAH Combinado", 
+                hiperfoco: "Esportes / Lógica", 
+                foco: "10 a 15 minutos", 
+                obs: "Necessita de estímulos práticos e dinâmicos para manter a atenção durante os momentos de explicação.",
+                inicial: "H", bg: "#CBDDE6", color: "#0F2D3C" 
+            }
+        ];
+
+        const turmaNome = localStorage.getItem('turmaSelecionadaNome') || 'Turma 2 - Ensino Médio';
+        const turmaProf = localStorage.getItem('turmaSelecionadaProf') || 'Prof. Levi Viana';
+        const turmaPsico = localStorage.getItem('turmaSelecionadaPsico') || 'Psicopedagogo Lucas Bonetti';
+
+        document.getElementById('turma-titulo').textContent = turmaNome;
+        document.getElementById('turma-professores').textContent = `${turmaProf} | ${turmaPsico}`;
+
+        const ativStorageKey = `atividades_turma_${turmaNome.replace(/\s+/g, '_')}`;
+        let listaAtividades = JSON.parse(localStorage.getItem(ativStorageKey));
+
+        if (!listaAtividades) {
+            if (turmaNome.includes('Turma 2')) {
+                listaAtividades = new Array(12).fill({});
+            } else {
+                listaAtividades = [];
+            }
+            localStorage.setItem(ativStorageKey, JSON.stringify(listaAtividades));
+        }
+
+        document.getElementById('total-atividades-val').textContent = listaAtividades.length;
+
+        const storageKey = `alunos_turma_${turmaNome.replace(/\s+/g, '_')}`;
+        let listaAlunos = JSON.parse(localStorage.getItem(storageKey));
+
+        if (!listaAlunos) {
+            if (turmaNome.includes('Turma 2')) {
+                listaAlunos = alunosPadraoTurma2;
+                localStorage.setItem(storageKey, JSON.stringify(listaAlunos));
+            } else {
+                listaAlunos = [];
+            }
+        }
+
+        const studentsGrid = document.getElementById('students-grid');
+        const totalAlunosVal = document.getElementById('total-alunos-val');
+
+        const relatorioModal = document.getElementById('relatorio-modal');
+        const btnFecharRelatorio = document.getElementById('btn-fechar-relatorio');
+        const btnEditarRelatorio = document.getElementById('btn-editar-relatorio');
+        const btnSalvarRelatorio = document.getElementById('btn-salvar-relatorio');
+        const obsView = document.getElementById('relatorio-obs-view');
+        const obsEdit = document.getElementById('relatorio-obs-edit');
+
+        let alunoIndexEditando = null;
+
+        btnFecharRelatorio.addEventListener('click', () => {
+            relatorioModal.classList.remove('active');
+            resetarModoEdicaoRelatorio();
+        });
+
+        function resetarModoEdicaoRelatorio() {
+            obsView.classList.remove('hidden');
+            obsEdit.classList.add('hidden');
+            btnEditarRelatorio.classList.remove('hidden');
+            btnSalvarRelatorio.classList.add('hidden');
+        }
+
+        btnEditarRelatorio.addEventListener('click', () => {
+            obsEdit.value = obsView.textContent;
+            obsView.classList.add('hidden');
+            obsEdit.classList.remove('hidden');
+            btnEditarRelatorio.classList.add('hidden');
+            btnSalvarRelatorio.classList.remove('hidden');
+        });
+
+        btnSalvarRelatorio.addEventListener('click', () => {
+            if (alunoIndexEditando !== null && listaAlunos[alunoIndexEditando]) {
+                const novaObs = obsEdit.value.trim() || "Sem observações psicopedagógicas inseridas.";
+                listaAlunos[alunoIndexEditando].obs = novaObs;
+                localStorage.setItem(storageKey, JSON.stringify(listaAlunos));
+
+                obsView.textContent = novaObs;
+                resetarModoEdicaoRelatorio();
+            }
+        });
+
+        function RENDERIZAR_ALUNOS() {
+            studentsGrid.innerHTML = '';
+            totalAlunosVal.textContent = listaAlunos.length;
+
+            if (listaAlunos.length === 0) {
+                studentsGrid.innerHTML = `
+                    <div class="empty-state-card">
+                        <i data-lucide="users" class="empty-icon"></i>
+                        <h3>Nenhum aluno vinculado</h3>
+                        <p>Esta turma ainda não possui alunos cadastrados. Clique em <strong>"Vincular Aluno"</strong> acima para adicionar o primeiro aluno.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            listaAlunos.forEach((aluno, index) => {
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.innerHTML = `
+                    <div class="student-profile-group">
+                        <div class="student-avatar" style="background-color:${aluno.bg || '#CBDDE6'}; color:${aluno.color || '#0F2D3C'};">${aluno.inicial}</div>
+                        <div>
+                            <h3 class="student-name">${aluno.nome}</h3>
+                            <span class="student-sub">${aluno.sub}</span>
+                        </div>
+                    </div>
+
+                    <div class="student-info-pill">
+                        <span class="info-label">Hiperfoco</span>
+                        <span class="info-value">${aluno.hiperfoco}</span>
+                    </div>
+
+                    <div class="student-info-pill">
+                        <span class="info-label">Tempo Médio de Foco</span>
+                        <span class="info-value">${aluno.foco}</span>
+                    </div>
+
+                    <button class="btn-view-report" data-index="${index}">
+                        <i data-lucide="file-text"></i> Relatório
+                    </button>
+                `;
+                studentsGrid.appendChild(card);
+            });
+
+            lucide.createIcons();
+
+            document.querySelectorAll('.btn-view-report').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.currentTarget.getAttribute('data-index');
+                    alunoIndexEditando = idx;
+                    const aluno = listaAlunos[idx];
+
+                    if (aluno) {
+                        document.getElementById('relatorio-aluno-nome').textContent = `Relatório: ${aluno.nome}`;
+                        document.getElementById('relatorio-aluno-sub').textContent = aluno.sub;
+                        document.getElementById('relatorio-hiperfoco').textContent = aluno.hiperfoco;
+                        document.getElementById('relatorio-foco').textContent = aluno.foco;
+                        obsView.textContent = aluno.obs || "Sem observações psicopedagógicas inseridas.";
+                        
+                        resetarModoEdicaoRelatorio();
+                        relatorioModal.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        RENDERIZAR_ALUNOS();
+
+        // PESQUISA
+        const searchInput = document.getElementById('search-student');
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            const cards = studentsGrid.querySelectorAll('.student-card');
+            cards.forEach(card => {
+                const name = card.querySelector('.student-name')?.textContent.toLowerCase() || '';
+                const sub = card.querySelector('.student-sub')?.textContent.toLowerCase() || '';
+                if (name.includes(query) || sub.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        const vincularModal = document.getElementById('vincular-aluno-modal');
+        const btnOpenVincular = document.getElementById('btn-open-vincular-aluno');
+        const btnCancelVincular = document.getElementById('btn-cancel-vincular');
+        const formVincularAluno = document.getElementById('form-vincular-aluno');
+
+        btnOpenVincular.addEventListener('click', () => vincularModal.classList.add('active'));
+        btnCancelVincular.addEventListener('click', () => {
+            vincularModal.classList.remove('active');
+            formVincularAluno.reset();
+        });
+
+        formVincularAluno.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById('nome-aluno').value.trim();
+            const serie = document.getElementById('serie-aluno').value.trim();
+            const diagnostico = document.getElementById('diagnostico-aluno').value.trim();
+            const hiperfoco = document.getElementById('hiperfoco-aluno').value.trim();
+            const foco = document.getElementById('foco-aluno').value.trim();
+            const obs = document.getElementById('obs-aluno').value.trim();
+
+            if (!nome || !serie || !diagnostico) return;
+
+            const novoAluno = {
+                nome: nome,
+                sub: `${serie} • ${diagnostico}`,
+                hiperfoco: hiperfoco,
+                foco: foco,
+                obs: obs || "O aluno apresenta bom desempenho nas tarefas interativas. Acompanhar a evolução em atividades individuais.",
+                inicial: nome.charAt(0).toUpperCase(),
+                bg: '#CBDDE6',
+                color: '#0F2D3C'
+            };
+
+            listaAlunos.push(novoAluno);
+            localStorage.setItem(storageKey, JSON.stringify(listaAlunos));
+
+            RENDERIZAR_ALUNOS();
+
+            let turmas = JSON.parse(localStorage.getItem('lista_turmas_mef')) || [];
+            const indexTurma = turmas.findIndex(t => t.nome === turmaNome);
+            if (indexTurma !== -1) {
+                turmas[indexTurma].alunosQtd = listaAlunos.length;
+                localStorage.setItem('lista_turmas_mef', JSON.stringify(turmas));
+            }
+
+            formVincularAluno.reset();
+            vincularModal.classList.remove('active');
+        });
+
+        const logoutModal = document.getElementById('logout-modal');
+        document.getElementById('btn-open-logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+        document.getElementById('btn-cancel-logout').addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+        });
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => {
+            window.location.href = '../login.html';
+        });
+    </script>
+</body>
+</html>

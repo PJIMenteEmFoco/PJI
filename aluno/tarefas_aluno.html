@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarefas Aluno - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/tarefas_aluno.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../aluno/dashboard_aluno.html" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a href="../aluno/aluno/tarefas_aluno.html" class="nav-link active">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_aluno.html" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_aluno.html" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../aluno/configuracoes_aluno.html" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="modal-overlay" id="logout-modal">
+            <div class="modal-card">
+                <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+                <div class="modal-actions">
+                    <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                    <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+                </div>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div class="tasks-container">
+                
+                <h1 class="page-title">Tarefas</h1>
+
+                <div class="task-section">
+                    <h2 class="section-title">Tarefas pendentes</h2>
+                    <div class="cards-grid-row">
+                        <a href="#" class="task-card-full pending">
+                            <div class="card-header-bar">
+                                <span>ENTREGA</span>
+                                <span>23/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Jogo da Memória</h4>
+                                <span class="task-tag">Ortografia Ç / S</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="task-card-full pending">
+                            <div class="card-header-bar">
+                                <span>ENTREGA</span>
+                                <span>24/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Quiz Guiado</h4>
+                                <span class="task-tag">Interpretação</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="task-card-full pending">
+                            <div class="card-header-bar">
+                                <span>ENTREGA</span>
+                                <span>25/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Caça-Palavras</h4>
+                                <span class="task-tag">Gramática</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="task-card-full pending">
+                            <div class="card-header-bar">
+                                <span>ENTREGA</span>
+                                <span>27/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Formação de Frases</h4>
+                                <span class="task-tag">Sintaxe</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="task-section">
+                    <h2 class="section-title">Tarefas atrasadas</h2>
+                    <div class="cards-grid-row">
+                        <a href="#" class="task-card-full overdue">
+                            <div class="card-header-bar">
+                                <span>ATRASADA</span>
+                                <span>18/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Uso do M e N</h4>
+                                <span class="task-tag">Ortografia</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="task-card-full overdue">
+                            <div class="card-header-bar">
+                                <span>ATRASADA</span>
+                                <span>20/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Leitura Silenciosa</h4>
+                                <span class="task-tag">Compreensão</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="task-card-full overdue">
+                            <div class="card-header-bar">
+                                <span>ATRASADA</span>
+                                <span>21/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Encontro Vocálico</h4>
+                                <span class="task-tag">Fonética</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="task-section">
+                    <button class="toggle-section-btn" id="toggle-delivered-btn">
+                        <h2 class="section-title">Tarefas entregues</h2>
+                        <i data-lucide="chevron-down" id="arrow-icon"></i>
+                    </button>
+
+                    <div class="delivered-grid" id="delivered-grid">
+                        <div class="task-card-full delivered">
+                            <div class="card-header-bar">
+                                <span>CONCLUÍDA</span>
+                                <span>10/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Ortografia CH e X</h4>
+                                <span class="task-tag">Português</span>
+                            </div>
+                        </div>
+
+                        <div class="task-card-full delivered">
+                            <div class="card-header-bar">
+                                <span>CONCLUÍDA</span>
+                                <span>12/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Separação Silábica</h4>
+                                <span class="task-tag">Gramática</span>
+                            </div>
+                        </div>
+
+                        <div class="task-card-full delivered">
+                            <div class="card-header-bar">
+                                <span>CONCLUÍDA</span>
+                                <span>14/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Descubra a Palavra</h4>
+                                <span class="task-tag">Leitura</span>
+                            </div>
+                        </div>
+
+                        <div class="task-card-full delivered">
+                            <div class="card-header-bar">
+                                <span>CONCLUÍDA</span>
+                                <span>15/03</span>
+                            </div>
+                            <div class="card-body-content">
+                                <h4 class="task-title">Pontuação Básica</h4>
+                                <span class="task-tag">Escrita</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+       <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const toggleDeliveredBtn = document.getElementById('toggle-delivered-btn');
+        const deliveredGrid = document.getElementById('delivered-grid');
+
+        const logoutModal = document.getElementById('logout-modal');
+        document.getElementById('btn-open-logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+        document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login.html');
+
+        toggleDeliveredBtn.addEventListener('click', () => {
+            deliveredGrid.classList.toggle('open');
+            toggleDeliveredBtn.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>

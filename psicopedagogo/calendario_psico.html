@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário - Psicopedagogo | Mente em Foco</title>
+    <link rel="stylesheet" href="../style/calendario_psico.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-layout">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-right"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard_prof.html" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a href="tarefas_prof.html" class="nav-link">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_prof.html" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_prof.html" class="nav-link active">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+                <a href="turmas-prof.html" class="nav-link">
+                    <i data-lucide="users"></i>
+                    <span class="nav-title">Turmas</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="configuracoes_psico.html" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+       <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+        <main class="main-content">
+            <div class="dashboard-calendar-container">
+                
+                <div class="calendar-page-header">
+                    <div>
+                        <h1 class="page-title">Calendário de Acompanhamento</h1>
+                        <p class="page-subtitle">Acompanhe os prazos de relatórios, observações e reuniões dos alunos</p>
+                    </div>
+                </div>
+
+                <div class="stats-overview-row">
+                    <div class="stat-mini-card">
+                        <div class="stat-icon-wrapper orange">
+                            <i data-lucide="file-text"></i>
+                        </div>
+                        <div class="stat-text-group">
+                            <span class="stat-value" id="stat-relatorios">3</span>
+                            <span class="stat-label">Relatórios a emitir este mês</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-mini-card">
+                        <div class="stat-icon-wrapper blue">
+                            <i data-lucide="user-check"></i>
+                        </div>
+                        <div class="stat-text-group">
+                            <span class="stat-value" id="stat-acompanhados">12</span>
+                            <span class="stat-label">Alunos em acompanhamento</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-mini-card">
+                        <div class="stat-icon-wrapper dark">
+                            <i data-lucide="alert-circle"></i>
+                        </div>
+                        <div class="stat-text-group">
+                            <span class="stat-value" id="stat-prioritarios">1</span>
+                            <span class="stat-label">Alta prioridade</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-calendar-grid">
+                    
+                    <div class="calendar-card-panel">
+                        <div class="calendar-toolbar-header">
+                            <div class="month-navigation">
+                                <button class="btn-month-nav" id="btn-prev-month"><i data-lucide="chevron-left"></i></button>
+                                <h2 id="calendar-month-year">Setembro 2026</h2>
+                                <button class="btn-month-nav" id="btn-next-month"><i data-lucide="chevron-right"></i></button>
+                            </div>
+                            <div class="legend-inline">
+                                <span class="legend-chip high"><span class="dot-color"></span> Alta</span>
+                                <span class="legend-chip medium"><span class="dot-color"></span> Média</span>
+                                <span class="legend-chip low"><span class="dot-color"></span> Baixa</span>
+                            </div>
+                        </div>
+
+                        <table class="grid-calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="agenda-sidebar-panel">
+                        <div class="section-sub-header">
+                            <h3>Acompanhamentos do Mês</h3>
+                            <span id="agenda-month-label">Setembro</span>
+                        </div>
+
+                        <div class="events-stack-list" id="events-stack-list">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="modal-view-event">
+        <div class="wireframe-popup-card">
+            <div class="wireframe-popup-inner">
+                <div class="wireframe-field">
+                    <label>Título do acompanhamento</label>
+                    <div class="wireframe-box-text" id="view-title">--</div>
+                </div>
+
+                <div class="wireframe-field">
+                    <label>Observações / Resumo para o Relatório</label>
+                    <div class="wireframe-box-textarea" id="view-description">--</div>
+                </div>
+
+                <div class="wireframe-date-info">
+                    <strong id="view-date">10 de setembro de 2026</strong>
+                </div>
+
+                <div class="wireframe-actions">
+                    <button class="btn-wireframe-close" id="btn-close-view-event">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        document.getElementById('toggle-btn').addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const databaseEvents = [
+            { year: 2026, month: 8, day: 7, title: "Independência do Brasil", desc: "Feriado Nacional.", isHoliday: true, pillClass: "holiday", labelPill: "Feriado", time: "Dia Todo" },
+            { year: 2026, month: 8, day: 10, title: "Emissão de Relatório: Lucas Mendes", desc: "Finalização do relatório de acompanhamento do desenvolvimento psicopedagógico.", priority: "high", pillClass: "orange", labelPill: "Relatório Lucas", time: "14:00" },
+            { year: 2026, month: 8, day: 15, title: "Análise de Desempenho: Sofia R.", desc: "Revisão das métricas e evolução de aprendizagem da aluna no portal.", priority: "medium", pillClass: "dark", labelPill: "Análise Sofia", time: "16:30" },
+            { year: 2026, month: 8, day: 22, title: "Reunião de Devolutiva com Responsáveis", desc: "Apresentação do relatório de acompanhamento para os pais do aluno Mateus K.", priority: "low", pillClass: "blue", labelPill: "Devolutiva Pais", time: "11:00" },
+
+            { year: 2026, month: 9, day: 12, title: "Nossa Senhora Aparecida", desc: "Feriado Nacional.", isHoliday: true, pillClass: "holiday", labelPill: "Feriado", time: "Dia Todo" },
+            { year: 2026, month: 9, day: 18, title: "Emissão de Relatório: Gabriel B.", desc: "Elaboração do relatório trimestral de adaptação e evolução.", priority: "high", pillClass: "orange", labelPill: "Relatório Gabriel", time: "15:00" }
+        ];
+
+        const monthNames = [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
+
+        let currentYear = 2026;
+        let currentMonth = 8;
+
+        const calendarBody = document.getElementById('calendar-body');
+        const calendarHeader = document.getElementById('calendar-month-year');
+        const agendaMonthLabel = document.getElementById('agenda-month-label');
+        const eventsStackList = document.getElementById('events-stack-list');
+
+        function renderCalendar(year, month) {
+            calendarBody.innerHTML = '';
+            eventsStackList.innerHTML = '';
+
+            calendarHeader.textContent = `${monthNames[month]} ${year}`;
+            agendaMonthLabel.textContent = monthNames[month];
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+            let daysHtml = '';
+            let dayCounter = 1;
+            let nextMonthDayCounter = 1;
+
+            let relatoriosNoMes = 0;
+            let prioridadeAlta = 0;
+
+            for (let row = 0; row < 6; row++) {
+                let rowHtml = '<tr>';
+                
+                for (let col = 0; col < 7; col++) {
+                    const cellIndex = row * 7 + col;
+
+                    if (cellIndex < firstDayIndex) {
+                        const prevDay = prevMonthLastDay - (firstDayIndex - cellIndex - 1);
+                        rowHtml += `<td class="muted-day"><span class="num">${prevDay}</span></td>`;
+                    } else if (dayCounter > totalDaysInMonth) {
+                        rowHtml += `<td class="muted-day"><span class="num">${nextMonthDayCounter}</span></td>`;
+                        nextMonthDayCounter++;
+                    } else {
+                        const currentDayNum = dayCounter;
+                        const isToday = (dayCounter === 15 && month === 8 && year === 2026);
+                        const cellClass = isToday ? 'active-today' : '';
+                        const todayTag = isToday ? '<span class="day-tag">Hoje</span>' : '';
+
+                        const dayEvents = databaseEvents.filter(e => e.year === year && e.month === month && e.day === currentDayNum);
+                        let eventPillsHtml = '';
+                        let isClickable = dayEvents.length > 0 ? 'clickable-day' : '';
+
+                        if (dayEvents.length > 0) {
+                            dayEvents.forEach(evt => {
+                                eventPillsHtml += `<div class="event-pill-item ${evt.pillClass}">${evt.labelPill}</div>`;
+                                if (!evt.isHoliday) relatoriosNoMes++;
+                                if (evt.priority === 'high') prioridadeAlta++;
+                            });
+                        }
+
+                        rowHtml += `
+                            <td class="${cellClass} ${isClickable}" onclick="handleCellClick(${year}, ${month}, ${currentDayNum})">
+                                <span class="num">${currentDayNum}</span>
+                                ${todayTag}
+                                ${eventPillsHtml}
+                            </td>
+                        `;
+
+                        dayCounter++;
+                    }
+                }
+
+                rowHtml += '</tr>';
+                daysHtml += rowHtml;
+
+                if (dayCounter > totalDaysInMonth && (row + 1) * 7 >= firstDayIndex + totalDaysInMonth) {
+                    break;
+                }
+            }
+
+            calendarBody.innerHTML = daysHtml;
+            document.getElementById('stat-relatorios').textContent = relatoriosNoMes;
+            document.getElementById('stat-prioritarios').textContent = prioridadeAlta;
+
+            renderAgendaList(year, month);
+        }
+
+        function renderAgendaList(year, month) {
+            const monthEvents = databaseEvents.filter(e => e.year === year && e.month === month);
+
+            if (monthEvents.length === 0) {
+                eventsStackList.innerHTML = `<p style="font-size:0.85rem; color:#8fa5b4; text-align:center; padding:20px;">Nenhum evento registrado para este mês.</p>`;
+                return;
+            }
+
+            let stackHtml = '';
+            monthEvents.forEach(evt => {
+                if (evt.isHoliday) {
+                    stackHtml += `
+                        <div class="event-item-card is-holiday-card" onclick="openEventDetails('${evt.title}', '${evt.desc}', '${evt.day} de ${monthNames[month].toLowerCase()} de ${year}')">
+                            <div class="event-card-header">
+                                <span class="badge-holiday">Feriado Nacional</span>
+                                <span class="event-date-time">${evt.day} ${monthNames[month].substring(0,3).toUpperCase()} • ${evt.time}</span>
+                            </div>
+                            <h4>${evt.title}</h4>
+                            <p>${evt.desc}</p>
+                        </div>
+                    `;
+                } else {
+                    const priorityClass = evt.priority === 'high' ? 'high' : (evt.priority === 'medium' ? 'medium' : 'low');
+                    const priorityText = evt.priority === 'high' ? 'Alta Prioridade' : (evt.priority === 'medium' ? 'Média Prioridade' : 'Baixa Prioridade');
+
+                    stackHtml += `
+                        <div class="event-item-card priority-${priorityClass}" onclick="openEventDetails('${evt.title}', '${evt.desc}', '${evt.day} de ${monthNames[month].toLowerCase()} de ${year}')">
+                            <div class="event-card-header">
+                                <span class="badge-priority ${priorityClass}">${priorityText}</span>
+                                <span class="event-date-time">${evt.day} ${monthNames[month].substring(0,3).toUpperCase()} • ${evt.time}</span>
+                            </div>
+                            <h4>${evt.title}</h4>
+                            <p>${evt.desc}</p>
+                        </div>
+                    `;
+                }
+            });
+
+            eventsStackList.innerHTML = stackHtml;
+        }
+
+        function handleCellClick(year, month, day) {
+            const event = databaseEvents.find(e => e.year === year && e.month === month && e.day === day);
+            if (event) {
+                openEventDetails(event.title, event.desc, `${day} de ${monthNames[month].toLowerCase()} de ${year}`);
+            }
+        }
+
+        document.getElementById('btn-prev-month').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        document.getElementById('btn-next-month').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        const modalViewEvent = document.getElementById('modal-view-event');
+        function openEventDetails(title, description, date) {
+            document.getElementById('view-title').textContent = title;
+            document.getElementById('view-description').textContent = description;
+            document.getElementById('view-date').textContent = date;
+            modalViewEvent.classList.add('active');
+        }
+        document.getElementById('btn-close-view-event').addEventListener('click', () => modalViewEvent.classList.remove('active'));
+
+        const logoutModal = document.getElementById('logout-modal');
+        document.getElementById('btn-open-logout').addEventListener('click', (e) => { e.preventDefault(); logoutModal.classList.add('active'); });
+        document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login.html');
+
+        renderCalendar(currentYear, currentMonth);
+    </script>
+</body>
+</html>

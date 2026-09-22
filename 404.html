@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Não Encontrada | Mente em Foco</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/erro.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="error-container">
+        <div class="error-outer-card">
+            <div class="error-inner-card">
+                
+                <div class="error-badge">
+                    <i data-lucide="compass"></i>
+                </div>
+
+                <h1 class="error-code">404</h1>
+                <h2 class="error-title">Página não encontrada</h2>
+                <p class="error-message">
+                    Ops! A página que você tentou acessar não existe ou foi movida. Não se preocupe, você pode voltar ao seu painel em segurança.
+                </p>
+
+                <div class="error-actions">
+                    <button class="btn-error-primary" onclick="window.history.back()">
+                        <i data-lucide="arrow-left"></i> Voltar página
+                    </button>
+                    <a id="btn-go-home" href="dashboard_aluno.html" class="btn-error-secondary">
+                        <i data-lucide="home"></i> Ir para o Início
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const referrer = document.referrer.toLowerCase();
+        const currentUrl = window.location.href.toLowerCase();
+        const homeBtn = document.getElementById('btn-go-home');
+
+        if (referrer.includes('psico') || currentUrl.includes('psico')) {
+            homeBtn.href = 'dashboard_psico.html';
+        } else if (referrer.includes('prof') || currentUrl.includes('prof')) {
+            homeBtn.href = 'dashboard_prof.html';
+        } else {
+            homeBtn.href = 'dashboard_aluno.html';
+        }
+    </script>
+</body>
+</html>

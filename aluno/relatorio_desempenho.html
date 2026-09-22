@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desempenho da Atividade - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/relatorio_desempenho.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../aluno/dashboard_aluno.html" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a href="../aluno/tarefas_aluno.html" class="nav-link active">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_aluno.html" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../aluno/configuracoes_aluno.html" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="result-container">
+                <a href="../aluno/tarefas_aluno.html" class="btn-back">
+                    <i data-lucide="arrow-left"></i>
+                    <span>Voltar para Tarefas</span>
+                </a>
+
+                <div class="result-card">
+                    <div class="trophy-badge">
+                        <i data-lucide="trophy"></i>
+                    </div>
+
+                    <div>
+                        <h1 class="result-title" id="res-greeting">Excelente Trabalho, Levi!</h1>
+                        <p style="color:#637783; font-weight:700; font-size:0.9rem; margin-top:4px;">Atividade: Jogo da Memória (Ortografia Ç e S)</p>
+                    </div>
+
+                    <div class="result-stats-row">
+                        <div class="result-stat-box">
+                            <span>Pontuação</span>
+                            <div class="result-score" style="color:#E69C2E;" id="res-score">100%</div>
+                        </div>
+                        <div class="result-stat-box">
+                            <span>Tempo Gasto</span>
+                            <div class="result-score" id="res-time">00:00</div>
+                        </div>
+                        <div class="result-stat-box">
+                            <span>XP Ganho</span>
+                            <div class="result-score" style="color:#27ae60;" id="res-xp">+50 XP</div>
+                        </div>
+                    </div>
+
+                    <div class="feedback-box">
+                        <i data-lucide="message-square-quote"></i>
+                        <div class="feedback-text">
+                            <strong>Observação do Psicopedagogo (Lucas Bonetti):</strong>
+                            <p id="res-feedback">"Ótima evolução na identificação da regra do Ç antes das vogais A, O e U! Continue mantendo essa constância."</p>
+                        </div>
+                    </div>
+
+                    <div class="result-actions">
+                        <a href="../aluno/executar_atividade.html" class="btn-action btn-retry">
+                            <i data-lucide="rotate-ccw"></i>
+                            <span>Praticar Novamente</span>
+                        </a>
+                        <a href="../aluno/tarefas_aluno.html" class="btn-action btn-finish">
+                            <span>Concluir</span>
+                            <i data-lucide="check"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+       <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const savedData = localStorage.getItem('menteEmFoco_lastResult');
+
+        if (savedData) {
+            const data = JSON.parse(savedData);
+
+            document.getElementById('res-time').textContent = data.timeFormatted;
+            document.getElementById('res-xp').textContent = `+${data.xpGained} XP`;
+            document.getElementById('res-score').textContent = `${data.score}%`;
+
+            const greetingEl = document.getElementById('res-greeting');
+            const feedbackEl = document.getElementById('res-feedback');
+
+            if (data.score === 100) {
+                greetingEl.textContent = 'Desempenho Perfeito, Levi!';
+                feedbackEl.textContent = '"Incrível! Você acertou todos os pares sem cometer erros. Sua concentração na ortografia do Ç está excelente!"';
+            } else if (data.score >= 70) {
+                greetingEl.textContent = 'Excelente Trabalho, Levi!';
+                feedbackEl.textContent = `"Muito bom! Você completou em ${data.timeFormatted} cometendo apenas ${data.mistakes} tentativa(s) incorreta(s). Continue praticando!"`;
+            } else {
+                greetingEl.textContent = 'Bom Esforço, Levi!';
+                feedbackEl.textContent = '"Você concluiu o desafio! Que tal praticar mais uma vez para memorizar melhor as palavras com Ç e S?"';
+            }
+        }
+    </script>
+</body>
+</html>

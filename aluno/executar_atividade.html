@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executar Atividade - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/executar_atividade.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-left"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../aluno/dashboard_aluno.html" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a href="../aluno/tarefas_aluno.html" class="nav-link active">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_aluno.html" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../aluno/configuracoes_aluno.html" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="activity-container">
+                <div class="activity-header">
+                    <a href="../aluno/tarefas_aluno.html" class="btn-back">
+                        <i data-lucide="arrow-left"></i>
+                        <span>Voltar para Tarefas</span>
+                    </a>
+
+                    <div class="activity-info-group">
+                        <div class="stat-badge">
+                            <i data-lucide="clock"></i>
+                            <span id="timer-display">00:00</span>
+                        </div>
+                        <div class="stat-badge">
+                            <i data-lucide="award"></i>
+                            <span>+50 XP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-board-card">
+                    <div class="game-title-box">
+                        <h2 id="task-display-title">Carregando Atividade...</h2>
+                        <p id="task-display-instructions">Aguarde um momento.</p>
+                    </div>
+
+                    <div class="quiz-container" id="quiz-dynamic-container">
+                    </div>
+
+                    <div class="action-footer-row">
+                        <button class="btn-submit-task" id="btn-finish-quiz">
+                            <span>Entregar Atividade</span>
+                            <i data-lucide="check-circle-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const logoutModal = document.getElementById('logout-modal');
+        const btnOpenLogout = document.getElementById('btn-open-logout');
+        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+        
+        if (btnOpenLogout) {
+            btnOpenLogout.addEventListener('click', (e) => {
+                e.preventDefault();
+                logoutModal.classList.add('active');
+            });
+        }
+        if (btnCancelLogout) {
+            btnCancelLogout.addEventListener('click', () => {
+                logoutModal.classList.remove('active');
+            });
+        }
+
+        let secondsPassed = 0;
+        const timerDisplay = document.getElementById('timer-display');
+        const timerInterval = setInterval(() => {
+            secondsPassed++;
+            const mins = String(Math.floor(secondsPassed / 60)).padStart(2, '0');
+            const secs = String(secondsPassed % 60).padStart(2, '0');
+            timerDisplay.textContent = `${mins}:${secs}`;
+        }, 1000);
+
+        const tarefas = JSON.parse(localStorage.getItem('mente_em_foco_tarefas')) || [];
+        
+        const tarefaAtiva = tarefas.reverse().find(t => t.status === 'Ativa');
+
+        const titleEl = document.getElementById('task-display-title');
+        const instructionsEl = document.getElementById('task-display-instructions');
+        const containerEl = document.getElementById('quiz-dynamic-container');
+
+        if (!tarefaAtiva || !tarefaAtiva.perguntas || tarefaAtiva.perguntas.length === 0) {
+            titleEl.textContent = "Nenhuma atividade pendente";
+            instructionsEl.textContent = "Crie uma tarefa no painel do professor para visualizar aqui.";
+            containerEl.innerHTML = `<p style="text-align:center; color:#557D91;">Nenhuma pergunta disponível.</p>`;
+        } else {
+            titleEl.textContent = tarefaAtiva.titulo;
+            instructionsEl.textContent = tarefaAtiva.instrucoes || "Responda às questões abaixo com atenção.";
+
+            containerEl.innerHTML = '';
+
+            tarefaAtiva.perguntas.forEach((q, qIndex) => {
+                const qCard = document.createElement('div');
+                qCard.className = 'quiz-question-card';
+
+                let optionsHTML = '';
+                q.opcoes.forEach((optText, optIndex) => {
+                    optionsHTML += `
+                        <label class="quiz-option">
+                            <input type="radio" name="question_${qIndex}" value="${optIndex}">
+                            <span class="option-custom"></span>
+                            <span class="option-text">${optText}</span>
+                        </label>
+                    `;
+                });
+
+                qCard.innerHTML = `
+                    <div class="question-title">
+                        <span class="question-number">${qIndex + 1}</span>
+                        <h3>${q.pergunta}</h3>
+                    </div>
+                    <div class="options-group">
+                        ${optionsHTML}
+                    </div>
+                `;
+
+                containerEl.appendChild(qCard);
+            });
+        }
+
+        document.getElementById('btn-finish-quiz').addEventListener('click', () => {
+            clearInterval(timerInterval);
+
+            if (tarefaAtiva) {
+                let todasTarefas = JSON.parse(localStorage.getItem('mente_em_foco_tarefas')) || [];
+                todasTarefas = todasTarefas.map(t => {
+                    if (t.id === tarefaAtiva.id) {
+                        t.status = 'Concluída';
+                    }
+                    return t;
+                });
+                localStorage.setItem('mente_em_foco_tarefas', JSON.stringify(todasTarefas));
+            }
+
+            const activityData = {
+                timeFormatted: timerDisplay.textContent,
+                timeSeconds: secondsPassed,
+                score: 100,
+                xpGained: 50
+            };
+            localStorage.setItem('menteEmFoco_lastResult', JSON.stringify(activityData));
+
+            alert('Atividade entregue com sucesso!');
+            window.location.href = 'relatorio_desempenho.html';
+        });
+    </script>
+</body>
+</html>                                                                                                                                                                                                          

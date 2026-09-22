@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Psicopedagógico - Mente em Foco</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style/dashboard_psico.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-symbol-only">
+                <img src="../imagens/logo.png" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-right"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard_psico.html" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+
+                <a href="tarefas_psico.html" class="nav-link">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a href="chat_psico.html" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a href="calendario_psico.html" class="nav-link active">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+                <a href="turmas_psico.html" class="nav-link">
+                    <i data-lucide="users"></i>
+                    <span class="nav-title">Minhas Turmas</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="configuracoes_psico.html" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-container">
+                
+                <div>
+                    <h1 class="page-title">Painel Psicopedagógico</h1>
+                    <p class="page-subtitle">Acompanhamento e suporte em Língua Portuguesa para alunos com TDAH</p>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i data-lucide="user-check"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Alunos Vinculados (TDAH)</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i data-lucide="file-text"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Relatórios Pendentes</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon dark">
+                            <i data-lucide="trending-up"></i>
+                        </div>
+                        <div>
+                            <div class="stat-value">85%</div>
+                            <div class="stat-label">Taxa de Conclusão dos Jogos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-two-columns">
+                    
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3>Acompanhamento Individual (Português)</h3>
+                        </div>
+
+                        <div class="students-list">
+                            <div class="student-item-card">
+                                <div class="student-details">
+                                    <div class="student-name">
+                                        <span class="tag-cid">Hiperfoco: Jogos</span> Cauê Campos (Turma 2)
+                                    </div>
+                                    <div class="student-meta">CID F90.0 | Foco médio: 12 min | Dificuldade: Ortografia (Ç/S)</div>
+                                </div>
+                                <button class="btn-view-profile">Ver Relatório</button>
+                            </div>
+
+                            <div class="student-item-card">
+                                <div class="student-details">
+                                    <div class="student-name">
+                                        <span class="tag-cid">Hiperfoco: Jogos</span> Lucas Silva (Turma 1)
+                                    </div>
+                                    <div class="student-meta">CID F90.1 | Foco médio: 10 min | Dificuldade: Leitura Extensa</div>
+                                </div>
+                                <button class="btn-view-profile dark">Ver Relatório</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <div class="panel-header">
+                            <h3>Alertas de Aprendizagem</h3>
+                        </div>
+
+                        <div class="alerts-stack">
+                            
+                            <div class="alert-card orange">
+                                <i data-lucide="alert-circle" class="alert-icon"></i>
+                                <div class="alert-content">
+                                    <h4>Tempo excessivo na Leitura Guiada</h4>
+                                    <p>Aluno Lucas apresentou tempo de resposta elevado na atividade de Leitura Guiada de Português.</p>
+                                </div>
+                            </div>
+
+                            <div class="alert-card blue">
+                                <i data-lucide="check-circle-2" class="alert-icon"></i>
+                                <div class="alert-content">
+                                    <h4>Novo Relatório Gerado</h4>
+                                    <p>Relatório do Jogo da Memória de Substantivos do aluno Cauê está disponível.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="logout-modal">
+        <div class="logout-outer-card">
+            <div class="logout-inner-card">
+                <h3>Tem certeza que deseja sair da sua conta?</h3>
+                <div class="logout-btn-row">
+                    <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+                    <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const logoutModal = document.getElementById('logout-modal');
+        document.getElementById('btn-open-logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+        document.getElementById('btn-cancel-logout').addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+        });
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => {
+            window.location.href = '../login.html';
+        });
+    </script>
+</body>
+</html>
