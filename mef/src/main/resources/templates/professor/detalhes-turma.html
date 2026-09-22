@@ -20,8 +20,8 @@
         
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img th:src="@{/img/logo.png}" alt="Mente em Foco" class="logo-symbol-only">
-                <img th:src="@{/img/logo.png}" alt="Mente em Foco" class="logo-full-white">
+                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
             </div>
 
             <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
@@ -41,7 +41,7 @@
                     <i data-lucide="message-square"></i>
                     <span class="nav-title">Chat</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a th:href="@{/professor/calendario}" class="nav-link">
                     <i data-lucide="calendar"></i>
                     <span class="nav-title">Calendário</span>
                 </a>
@@ -52,7 +52,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-link">
+                <a th:href="@{/professor/configuracoes}" class="nav-link">
                     <i data-lucide="settings"></i>
                     <span class="nav-title">Ajustes</span>
                 </a>

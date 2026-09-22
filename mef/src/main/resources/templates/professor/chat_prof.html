@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Chat - Mente em Foco</title>
-	<link rel="stylesheet" href="../style/chat_professor.css" th:href="@{/css/chat_professor.css}">
+	<link rel="stylesheet" th:href="@{/css/chat_professor.css}">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link
@@ -97,10 +97,8 @@
 		<!-- SIDEBAR DO PROFESSOR -->
 		<aside class="sidebar" id="sidebar">
 			<div class="sidebar-header">
-				<img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
-					class="logo-symbol-only">
-				<img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
-					class="logo-full-white">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
 			</div>
 
 			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
@@ -108,30 +106,30 @@
 			</div>
 
 			<nav class="sidebar-nav">
-				<a href="dashboard_prof.html" th:href="@{/professor/dashboard_prof}" class="nav-link">
+				<a th:href="@{/professor/dashboard}" class="nav-link">
 					<i data-lucide="home"></i>
 					<span class="nav-title">Início</span>
 				</a>
-				<a href="tarefas_prof.html" th:href="@{/professor/tarefas_prof}" class="nav-link">
+				<a th:href="@{/professor/tarefas}" class="nav-link">
 					<i data-lucide="book-open"></i>
 					<span class="nav-title">Atividades</span>
 				</a>
-				<a href="chat_prof.html" th:href="@{/professor/chat_prof}" class="nav-link active">
+				<a th:href="@{/professor/chat}" class="nav-link active">
 					<i data-lucide="message-square"></i>
 					<span class="nav-title">Chat</span>
 				</a>
-				<a href="calendario_prof.html" th:href="@{/professor/calendario_prof}" class="nav-link">
+				<a th:href="@{/professor/calendario}" class="nav-link">
 					<i data-lucide="calendar"></i>
 					<span class="nav-title">Calendário</span>
 				</a>
-				<a href="turmas-prof.html" th:href="@{/professor/turmas-prof}" class="nav-link">
+				<a th:href="@{/professor/turmas}" class="nav-link">
 					<i data-lucide="users"></i>
 					<span class="nav-title">Turmas</span>
 				</a>
 			</nav>
 
 			<div class="sidebar-footer">
-				<a href="configuracoes_prof.html" th:href="@{/professor/configuracoes_prof}" class="nav-link">
+				<a th:href="@{/professor/configuracoes}" class="nav-link">
 					<i data-lucide="settings"></i>
 					<span class="nav-title">Ajustes</span>
 				</a>
@@ -333,7 +331,7 @@
 			() => {
 
 				window.location.href =
-	                /*[[@{/login/login}]]*/ '../login.html';
+	                /*[[@{/?logout}]]*/ '../login.html';
 			}
 		);
 

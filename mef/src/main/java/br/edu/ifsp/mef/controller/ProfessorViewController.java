@@ -14,17 +14,8 @@ import br.edu.ifsp.mef.model.Usuario;
 import br.edu.ifsp.mef.model.UsuarioDetails;
 import br.edu.ifsp.mef.repository.TurmaRepository;
 import br.edu.ifsp.mef.service.ProfessorService;
-import br.edu.ifsp.mef.service.TurmaService;
 import br.edu.ifsp.mef.service.UsuarioDetailsService;
 
-/**
- * Serve as telas do perfil PROFESSOR.
- * Por enquanto os metodos so retornam a view (sem dados dinamicos) --
- * a ligacao com dados reais (turmas, atividades, etc.) ainda precisa ser feita.
- *
- * OBS: nao existe rota para "chat_professor" pois o HTML/CSS dessa pagina
- * veio vazio (0 bytes) no zip enviado.
- */
 @Controller
 public class ProfessorViewController {
 
@@ -66,6 +57,11 @@ public class ProfessorViewController {
 
 		return "professor/turmas-professor";
 	}
+	
+	@GetMapping("/professor/turmas/nova")
+	public String cadastrarTurma(Authentication authentication, Model model) {
+		return "professor/criar_nova_turma";
+	}
 
 	@GetMapping("/professor/turma/{id}")
 	public String detalhesTurma(@PathVariable Long id, Model model) {
@@ -76,6 +72,11 @@ public class ProfessorViewController {
 	@GetMapping("/professor/configuracoes")
 	public String configuracoes() {
 		return "professor/configuracoes_professor";
+	}
+	
+	@GetMapping("/professor/calendario")
+	public String calendario() {
+		return "professor/calendario_prof";
 	}
 	
 	@GetMapping("/professor/chat")

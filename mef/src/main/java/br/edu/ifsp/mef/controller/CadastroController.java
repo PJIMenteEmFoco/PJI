@@ -24,7 +24,7 @@ public class CadastroController {
 	
 	@GetMapping("/cadastro")
 	public String cadastro(Model model) {
-	    return "cadastro";
+	    return "/cadastro";
 	}
 	
 	@PostMapping("/cadastrar")

@@ -20,8 +20,6 @@ public class AlunoViewController {
 	AlunoService alunoService;
     @Autowired
     UsuarioRepository usuarioRepository;
-    
-   
 	
 	@GetMapping("/aluno/dashboard")
     public String dashboard(Model model, Authentication authentication) {
@@ -65,7 +63,6 @@ public class AlunoViewController {
 	    model.addAttribute("usuarioLogado", aluno);
 		return "aluno/chatAluno";
 	}
-
 
 	@GetMapping("/aluno/configuracoes")
 	public String configuracoes() {

@@ -20,9 +20,11 @@
 		<!-- SIDEBAR DO ALUNO -->
 		<aside class="sidebar" id="sidebar">
 			<div class="sidebar-header">
-				<img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" class="logo-symbol-only">
-				<img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" class="logo-full-white">
-			</div>
+				<div class="sidebar-header">
+					<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+
+					<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+				</div>			</div>
 
 			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
 				<i data-lucide="chevron-left"></i>
@@ -41,7 +43,7 @@
 					<i data-lucide="message-square"></i>
 					<span class="nav-title">Chat</span>
 				</a>
-				<a href="#" class="nav-link">
+				<a th:href="@{/aluno/calendario}" class="nav-link">
 					<i data-lucide="calendar"></i>
 					<span class="nav-title">Calendário</span>
 				</a>

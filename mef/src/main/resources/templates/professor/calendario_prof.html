@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendário - Professor | Mente em Foco</title>
-    <link rel="stylesheet" href="../style/calendario_prof.css" th:href="@{/css/calendario_prof.css}">
+    <link rel="stylesheet" th:href="@{/css/calendario_prof.css}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -15,40 +15,40 @@
         
         <!-- SIDEBAR PROFESSOR -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-symbol-only">
-                <img src="/imagens/logo_em_pe.svg" th:src="@{/imagens/logo_em_pe.svg}" alt="Mente em Foco" class="logo-full-white">
-            </div>
+			<div class="sidebar-header">
+			    <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+			    <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+			</div>
 
             <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
                 <i data-lucide="chevron-right"></i>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="dashboard_prof.html" th:href="@{/professor/dashboard_prof}" class="nav-link">
+                <a th:href="@{/professor/dashboard}" class="nav-link">
                     <i data-lucide="home"></i>
                     <span class="nav-title">Início</span>
                 </a>
-                <a href="turmas-prof.html" th:href="@{/professor/turmas-prof}" class="nav-link">
+                <a th:href="@{/professor/turmas}" class="nav-link">
                     <i data-lucide="users"></i>
                     <span class="nav-title">Minhas Turmas</span>
                 </a>
-                <a href="tarefas_prof.html" th:href="@{/professor/tarefas_prof}" class="nav-link">
+                <a th:href="@{/professor/tarefas}" class="nav-link">
                     <i data-lucide="book-open"></i>
                     <span class="nav-title">Atividades</span>
                 </a>
-                <a href="chat_prof.html" th:href="@{/professor/chat_prof}" class="nav-link">
+                <a th:href="@{/professor/chat}" class="nav-link">
                     <i data-lucide="message-square"></i>
                     <span class="nav-title">Chat</span>
                 </a>
-                <a href="calendario_prof.html" th:href="@{/professor/calendario_prof}" class="nav-link active">
+                <a th:href="@{/professor/calendario}" class="nav-link active">
                     <i data-lucide="calendar"></i>
                     <span class="nav-title">Calendário</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <a href="configuracoes.html" th:href="@{/professor/configuracoes_prof}" class="nav-link">
+                <a th:href="@{/professor/configuracoes}" class="nav-link">
                     <i data-lucide="settings"></i>
                     <span class="nav-title">Ajustes</span>
                 </a>
@@ -194,7 +194,6 @@
                 <div class="wireframe-field">
                     <label>Data e Horário</label>
 
-```html
                     <input type="text" class="wireframe-box-text" placeholder="Ex: 22/09/2026 às 14:00">
                 </div>
 
@@ -420,7 +419,7 @@
         const logoutModal = document.getElementById('logout-modal');
         document.getElementById('btn-open-logout').addEventListener('click', (e) => { e.preventDefault(); logoutModal.classList.add('active'); });
         document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
-        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = /*[[@{/login/login}]]*/ '../login.html');
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = /*[[@{/?logout}]]*/ '../login.html');
 
         renderCalendar(currentYear, currentMonth);
     </script>
