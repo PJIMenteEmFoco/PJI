@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário - Aluno | Mente em Foco</title>
+    <link rel="stylesheet" th:href="@{/css/calendario_aluno.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    </form>
+
+    <!-- Eventos reais do banco -->
+    <div id="eventos-data" style="display:none;">
+        <div class="evento-item"
+             th:each="evento : ${calendario.eventos}"
+             th:attr="data-id=${evento.id},
+                      data-year=${evento.dataInicio.year},
+                      data-month=${evento.dataInicio.monthValue - 1},
+                      data-day=${evento.dataInicio.dayOfMonth},
+                      data-title=${evento.nome},
+                      data-desc=${evento.descricao},
+                      data-priority=${evento.prioridade},
+                      data-pillclass=${evento.prioridade == 'ALTA' ? 'orange' : (evento.prioridade == 'MEDIA' ? 'dark' : 'blue')},
+                      data-labelpill=${evento.prioridade == 'ALTA' ? 'Alta Prioridade' : (evento.prioridade == 'MEDIA' ? 'Média Prioridade' : 'Baixa Prioridade')}">
+        </div>
+    </div>
+
+    <!-- Atividades atribuídas pelos professores a este aluno (só entram as que tem prazo definido) -->
+    <div id="atividades-data" style="display:none;">
+        <div class="atividade-item"
+             th:each="atividade : ${atividadesDoAluno}"
+             th:if="${atividade.prazo != null}"
+             th:attr="data-id=${atividade.id},
+                      data-year=${atividade.prazo.year},
+                      data-month=${atividade.prazo.monthValue - 1},
+                      data-day=${atividade.prazo.dayOfMonth},
+                      data-title=${atividade.nome},
+                      data-desc=${atividade.descricao},
+                      data-tipo=${atividade.tipoAtividade},
+                      data-status=${atividade.status}">
+        </div>
+    </div>
+
+    <div class="app-layout">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+            </div>
+
+            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+                <i data-lucide="chevron-right"></i>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a th:href="@{/aluno/dashboard}" class="nav-link">
+                    <i data-lucide="home"></i>
+                    <span class="nav-title">Início</span>
+                </a>
+                <a th:href="@{/aluno/tarefas}" class="nav-link">
+                    <i data-lucide="book-open"></i>
+                    <span class="nav-title">Atividades</span>
+                </a>
+                <a th:href="@{/aluno/chat}" class="nav-link">
+                    <i data-lucide="message-square"></i>
+                    <span class="nav-title">Chat</span>
+                </a>
+                <a th:href="@{/aluno/calendario}" class="nav-link active">
+                    <i data-lucide="calendar"></i>
+                    <span class="nav-title">Calendário</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a th:href="@{/aluno/configuracoes}" class="nav-link">
+                    <i data-lucide="settings"></i>
+                    <span class="nav-title">Ajustes</span>
+                </a>
+                <button class="nav-link" id="btn-open-logout">
+                    <i data-lucide="log-out"></i>
+                    <span class="nav-title">Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-calendar-container">
+                
+                <div class="calendar-page-header">
+                    <div>
+                        <h1 class="page-title">Meu Calendário</h1>
+                        <p class="page-subtitle">Acompanhe seus prazos de entrega e atividades agendadas</p>
+                    </div>
+                </div>
+
+                <div class="stats-overview-row">
+                    <div class="stat-mini-card">
+                        <div class="stat-icon-wrapper orange">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <div class="stat-text-group">
+                            <span class="stat-value" id="stat-entregas">0</span>
+                            <span class="stat-label">Entregas este mês</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-mini-card">
+                        <div class="stat-icon-wrapper blue">
+                            <i data-lucide="check-circle-2"></i>
+                        </div>
+                        <div class="stat-text-group">
+                            <span class="stat-value" id="stat-concluidas">0</span>
+                            <span class="stat-label">Itens cadastrados este mês</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-mini-card">
+                        <div class="stat-icon-wrapper dark">
+                            <i data-lucide="alert-circle"></i>
+                        </div>
+                        <div class="stat-text-group">
+                            <span class="stat-value" id="stat-pendentes">0</span>
+                            <span class="stat-label">Alta prioridade</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-calendar-grid">
+                    
+                    <div class="calendar-card-panel">
+                        <div class="calendar-toolbar-header">
+                            <div class="month-navigation">
+                                <button class="btn-month-nav" id="btn-prev-month"><i data-lucide="chevron-left"></i></button>
+                                <h2 id="calendar-month-year">-</h2>
+                                <button class="btn-month-nav" id="btn-next-month"><i data-lucide="chevron-right"></i></button>
+                            </div>
+                            <div class="legend-inline">
+                                <span class="legend-chip high"><span class="dot-color"></span> Alta</span>
+                                <span class="legend-chip medium"><span class="dot-color"></span> Média</span>
+                                <span class="legend-chip low"><span class="dot-color"></span> Baixa</span>
+                            </div>
+                        </div>
+
+                        <table class="grid-calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="agenda-sidebar-panel">
+                        <div class="section-sub-header">
+                            <h3>Atividades do Mês</h3>
+                            <span id="agenda-month-label">-</span>
+                        </div>
+
+                        <div class="events-stack-list" id="events-stack-list">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="modal-view-event">
+        <div class="wireframe-popup-card">
+            <div class="wireframe-popup-inner">
+                <div class="wireframe-field">
+                    <label id="view-kind-label">Nome do evento</label>
+                    <div class="wireframe-box-text" id="view-title">--</div>
+                </div>
+
+                <div class="wireframe-field">
+                    <label>Descrição</label>
+                    <div class="wireframe-box-textarea" id="view-description">--</div>
+                </div>
+
+                <div class="wireframe-date-info">
+                    <strong id="view-date">--</strong>
+                </div>
+
+                <div class="wireframe-actions">
+                    <button class="btn-wireframe-close" id="btn-close-view-event">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card-custom logout">
+            <h3>Tem certeza que deseja sair da sua conta?</h3>
+            <div class="modal-card-footer">
+                <button class="btn-sec" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-pri danger" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="none">
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        document.getElementById('toggle-btn').addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        function textoLegivel(valorEnum) {
+            if (!valorEnum) return '';
+            return valorEnum.toString()
+                .toLowerCase()
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        // Eventos reais, lidos dos atributos data-* que o Thymeleaf gerou
+        const eventosDoBanco = Array.from(document.querySelectorAll('#eventos-data .evento-item')).map(el => ({
+            kind: 'evento',
+            id: el.dataset.id,
+            year: parseInt(el.dataset.year),
+            month: parseInt(el.dataset.month),
+            day: parseInt(el.dataset.day),
+            title: el.dataset.title,
+            desc: el.dataset.desc,
+            priority: el.dataset.priority,
+            pillClass: el.dataset.pillclass,
+            labelPill: el.dataset.labelpill
+        }));
+
+        // Atividades atribuídas pelo professor a este aluno, lidas da mesma forma
+        const atividadesDoBanco = Array.from(document.querySelectorAll('#atividades-data .atividade-item')).map(el => ({
+            kind: 'atividade',
+            id: el.dataset.id,
+            year: parseInt(el.dataset.year),
+            month: parseInt(el.dataset.month),
+            day: parseInt(el.dataset.day),
+            title: el.dataset.title,
+            desc: (el.dataset.desc || '') + (el.dataset.status ? ` (Status: ${textoLegivel(el.dataset.status)})` : ''),
+            priority: null,
+            pillClass: 'dark',
+            labelPill: textoLegivel(el.dataset.tipo) || 'Atividade'
+        }));
+
+        const databaseEvents = eventosDoBanco.concat(atividadesDoBanco);
+
+        const monthNames = [
+            "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+            "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
+
+        const hoje = new Date();
+        let currentYear = hoje.getFullYear();
+        let currentMonth = hoje.getMonth();
+
+        const calendarBody = document.getElementById('calendar-body');
+        const calendarHeader = document.getElementById('calendar-month-year');
+        const agendaMonthLabel = document.getElementById('agenda-month-label');
+        const eventsStackList = document.getElementById('events-stack-list');
+
+        function renderCalendar(year, month) {
+            calendarBody.innerHTML = '';
+            eventsStackList.innerHTML = '';
+
+            calendarHeader.textContent = `${monthNames[month]} ${year}`;
+            agendaMonthLabel.textContent = monthNames[month];
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+            let daysHtml = '';
+            let dayCounter = 1;
+            let nextMonthDayCounter = 1;
+
+            let entregasNoMes = 0;
+            let altasPrioridades = 0;
+
+            for (let row = 0; row < 6; row++) {
+                let rowHtml = '<tr>';
+                
+                for (let col = 0; col < 7; col++) {
+                    const cellIndex = row * 7 + col;
+
+                    if (cellIndex < firstDayIndex) {
+                        const prevDay = prevMonthLastDay - (firstDayIndex - cellIndex - 1);
+                        rowHtml += `<td class="muted-day"><span class="num">${prevDay}</span></td>`;
+                    } else if (dayCounter > totalDaysInMonth) {
+                        rowHtml += `<td class="muted-day"><span class="num">${nextMonthDayCounter}</span></td>`;
+                        nextMonthDayCounter++;
+                    } else {
+                        const currentDayNum = dayCounter;
+                        
+                        const isToday = (dayCounter === hoje.getDate() && month === hoje.getMonth() && year === hoje.getFullYear());
+                        const cellClass = isToday ? 'active-today' : '';
+                        const todayTag = isToday ? '<span class="day-tag">Hoje</span>' : '';
+
+                        const dayEvents = databaseEvents.filter(e => e.year === year && e.month === month && e.day === currentDayNum);
+                        
+                        let eventPillsHtml = '';
+                        let isClickable = dayEvents.length > 0 ? 'clickable-day' : '';
+
+                        if (dayEvents.length > 0) {
+                            dayEvents.forEach(evt => {
+                                eventPillsHtml += `<div class="event-pill-item ${evt.pillClass}">${evt.labelPill}</div>`;
+                                entregasNoMes++;
+                                if (evt.priority === 'ALTA') altasPrioridades++;
+                            });
+                        }
+
+                        rowHtml += `
+                            <td class="${cellClass} ${isClickable}" onclick="handleCellClick(${year}, ${month}, ${currentDayNum})">
+                                <span class="num">${currentDayNum}</span>
+                                ${todayTag}
+                                ${eventPillsHtml}
+                            </td>
+                        `;
+
+                        dayCounter++;
+                    }
+                }
+
+                rowHtml += '</tr>';
+                daysHtml += rowHtml;
+
+                if (dayCounter > totalDaysInMonth && (row + 1) * 7 >= firstDayIndex + totalDaysInMonth) {
+                    break;
+                }
+            }
+
+            calendarBody.innerHTML = daysHtml;
+
+            document.getElementById('stat-entregas').textContent = entregasNoMes;
+            document.getElementById('stat-concluidas').textContent = databaseEvents.filter(e => e.year === year && e.month === month).length;
+            document.getElementById('stat-pendentes').textContent = altasPrioridades;
+
+            renderAgendaList(year, month);
+        }
+
+        function renderAgendaList(year, month) {
+            const monthEvents = databaseEvents.filter(e => e.year === year && e.month === month);
+
+            if (monthEvents.length === 0) {
+                eventsStackList.innerHTML = `<p style="font-size:0.85rem; color:#8fa5b4; text-align:center; padding:20px;">Nenhum item cadastrado para este mês.</p>`;
+                return;
+            }
+
+            let stackHtml = '';
+            monthEvents.forEach(evt => {
+                const priorityClass = evt.priority === 'ALTA' ? 'high' : (evt.priority === 'MEDIA' ? 'medium' : 'low');
+
+                stackHtml += `
+                    <div class="event-item-card priority-${priorityClass}" onclick="openEventDetails('${evt.id}', '${evt.kind}')">
+                        <div class="event-card-header">
+                            <span class="badge-priority ${priorityClass}">${evt.labelPill}</span>
+                            <span class="event-date-time">${evt.day} ${monthNames[month].substring(0,3).toUpperCase()}</span>
+                        </div>
+                        <h4>${evt.title}</h4>
+                        <p>${evt.desc || ''}</p>
+                    </div>
+                `;
+            });
+
+            eventsStackList.innerHTML = stackHtml;
+        }
+
+        function handleCellClick(year, month, day) {
+            const event = databaseEvents.find(e => e.year === year && e.month === month && e.day === day);
+            if (event) {
+                openEventDetails(event.id, event.kind);
+            }
+        }
+
+        document.getElementById('btn-prev-month').addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        document.getElementById('btn-next-month').addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentYear, currentMonth);
+        });
+
+        const modalViewEvent = document.getElementById('modal-view-event');
+        const viewTitle = document.getElementById('view-title');
+        const viewDescription = document.getElementById('view-description');
+        const viewDate = document.getElementById('view-date');
+        const viewKindLabel = document.getElementById('view-kind-label');
+
+        function openEventDetails(id, kind) {
+            const evt = databaseEvents.find(e => String(e.id) === String(id) && e.kind === kind);
+            if (!evt) return;
+            viewKindLabel.textContent = kind === 'atividade' ? 'Nome da atividade' : 'Nome do evento';
+            viewTitle.textContent = evt.title;
+            viewDescription.textContent = evt.desc || '(sem descrição)';
+            viewDate.textContent = `${evt.day} de ${monthNames[evt.month].toLowerCase()} de ${evt.year}`;
+            modalViewEvent.classList.add('active');
+        }
+
+        document.getElementById('btn-close-view-event').addEventListener('click', () => {
+            modalViewEvent.classList.remove('active');
+        });
+
+        const logoutModal = document.getElementById('logout-modal');
+        document.getElementById('btn-open-logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+        document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => document.getElementById('logoutForm').submit());
+
+        renderCalendar(currentYear, currentMonth);
+    </script>
+</body>
+</html>

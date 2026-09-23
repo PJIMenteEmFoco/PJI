@@ -25,7 +25,6 @@ body {
     height: 100vh;
 }
 
-/* ================= SIDEBAR PADRONIZADA ================= */
 .sidebar {
     width: 80px;
     background-color: #0F2D3C;
@@ -85,7 +84,6 @@ body {
     pointer-events: auto;
 }
 
-/* BADGE COM A SETA - CENTRALIZADA CORRETAMENTE */
 .sidebar-toggle-badge {
     position: absolute;
     right: -13px;
@@ -201,7 +199,6 @@ body {
     flex-shrink: 0;
 }
 
-/* ================= ÁREA PRINCIPAL ================= */
 .main-content {
     flex: 1;
     height: 100vh;
@@ -651,7 +648,6 @@ body {
     border-color: #b5ccda;
 }
 
-/* ================= MEDIA QUERIES (RESPONSIVIDADE DA SIDEBAR E CONTEÚDO) ================= */
 @media (max-width: 768px) {
     .sidebar {
         width: 0;

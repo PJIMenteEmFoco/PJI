@@ -21,21 +21,12 @@ import br.edu.ifsp.mef.repository.MensagemChatRepository;
 @Controller
 public class ChatController {
 
-	private final MensagemChatService mensagemChatService;
-
+	@Autowired
+	MensagemChatService mensagemChatService;
 	@Autowired
 	SimpMessagingTemplate templateMensagem;
-
 	@Autowired
 	MensagemChatRepository mensagemChatRepository;
-
-	public ChatController(SimpMessagingTemplate templateMensagem, MensagemChatRepository mensagemChatRepository,
-			MensagemChatService mensagemChatService) {
-
-		this.templateMensagem = templateMensagem;
-		this.mensagemChatRepository = mensagemChatRepository;
-		this.mensagemChatService = mensagemChatService;
-	}
 
 	@MessageMapping("/chat.privateMessage")
 	public void sendPrivateMessage(MensagemChat mensagemChat) {

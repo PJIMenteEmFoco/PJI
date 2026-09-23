@@ -88,7 +88,7 @@ body {
     position: absolute;
     right: -13px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(180deg);
     width: 26px;
     height: 26px;
     background-color: #557D91;
@@ -103,8 +103,8 @@ body {
     transition: transform 0.3s ease;
 }
 
-.sidebar.expanded .sidebar-toggle-badge {
-    transform: translateY(-50%) rotate(180deg);
+.sidebar.expanded .sidebar-toggle-badge { 
+    transform: translateY(-50%) rotate(0deg); 
 }
 
 .sidebar-toggle-badge svg {
@@ -313,6 +313,24 @@ body {
     transform: translateY(-1px);
 }
 
+.btn-config-delete {
+    background-color: #ffffff;
+    color: #557D91;
+    border: 2px solid #557D91;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-config-delete:hover {
+    background-color: #557D91;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
 .custom-dropdown {
     position: relative;
     user-select: none;
@@ -414,22 +432,6 @@ body {
     border: 1px solid #c9d8e2;
 }
 
-.btn-config-delete {
-    background-color: #557D91;
-    color: #ffffff;
-    border: none;
-    padding: 8px 24px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-config-delete:hover {
-    background-color: #486d80;
-}
-
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -437,7 +439,8 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: rgba(15, 45, 60, 0.45);
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -462,6 +465,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 18px;
+    text-align: center;
 }
 
 .modal-title {
@@ -495,24 +499,29 @@ body {
     font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
-    border: none;
+    border: 1px solid transparent;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
-    transition: opacity 0.2s ease;
-}
-
-.btn-modal:hover {
-    opacity: 0.9;
+    transition: all 0.2s ease;
 }
 
 .btn-modal-cancel {
+    background-color: #f1f5f8;
+    color: #557D91;
+    border-color: #b5ccda;
+}
+
+.btn-modal-cancel:hover {
+    background-color: #e2eaf0;
+}
+
+.btn-modal-save, .btn-modal-logout {
     background-color: #557D91;
     color: #ffffff;
 }
 
-.btn-modal-save {
-    background-color: #E69C2E;
-    color: #ffffff;
+.btn-modal-save:hover, .btn-modal-logout:hover {
+    background-color: #436577;
 }
 
 .delete-modal-card {
@@ -550,9 +559,9 @@ body {
 }
 
 .btn-delete-cancel {
-    background-color: #557D91;
-    color: #ffffff;
-    border: none;
+    background-color: #f1f5f8;
+    color: #557D91;
+    border: 1px solid #b5ccda;
     flex: 1;
     padding: 12px 0;
     border-radius: 25px;
@@ -560,12 +569,17 @@ body {
     font-size: 0.95rem;
     cursor: pointer;
     font-family: 'Montserrat', sans-serif;
+    transition: background-color 0.2s ease;
+}
+
+.btn-delete-cancel:hover {
+    background-color: #e2eaf0;
 }
 
 .btn-delete-confirm {
-    background-color: #CBDDE6;
-    color: #557D91;
-    border: 2px solid #557D91;
+    background-color: #557D91;
+    color: #ffffff;
+    border: none;
     flex: 1;
     padding: 12px 0;
     border-radius: 25px;
@@ -577,7 +591,7 @@ body {
 }
 
 .btn-delete-confirm:hover {
-    background-color: #b8d0de;
+    background-color: #436577;
 }
 
 body.dark-mode {
@@ -609,6 +623,17 @@ body.dark-mode .custom-dropdown-option {
 
 body.dark-mode .custom-dropdown-option:hover {
     background-color: #1a3544;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-config-delete {
+    background-color: #122834;
+    color: #8fa5b4;
+    border-color: #557D91;
+}
+
+body.dark-mode .btn-config-delete:hover {
+    background-color: #557D91;
     color: #ffffff;
 }
 
@@ -650,7 +675,7 @@ body.dark-mode .custom-dropdown-option:hover {
         font-size: 1.8rem;
     }
 
-    .delete-modal-actions {
+    .delete-modal-actions, .modal-actions {
         flex-direction: column;
     }
 }

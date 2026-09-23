@@ -1,371 +1,399 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Mente em Foco</title>
-    <link rel="stylesheet" th:href="@{/css/dashboard_prof.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard - Mente em Foco</title>
+	<link rel="stylesheet" th:href="@{/css/dashboard_prof.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap"
+		rel="stylesheet">
+	<script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body>
-    <form th:action="@{/?logout}" method="post" id="logoutForm" style="display:none;">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-    </form>
+	<form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
 
+	<!-- Atividades dos alunos deste professor, com prazo definido -->
+	<div id="atividades-prof-data" style="display:none;">
+		<div class="atividade-prof-item" th:each="atividade : ${atividadesDoProfessor}"
+			th:if="${atividade.prazo != null}" th:attr="data-year=${atividade.prazo.year},
+                      data-month=${atividade.prazo.monthValue - 1},
+                      data-day=${atividade.prazo.dayOfMonth}">
+		</div>
+	</div>
 
-    <div class="app-layout">
-        
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
-                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
-            </div>
+	<div class="app-layout">
 
-            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-                <i data-lucide="chevron-left"></i>
-            </div>
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+			</div>
 
-            <nav class="sidebar-nav">
-                <a th:href="@{/dashboard_prof}" class="nav-link active">
-                    <i data-lucide="home"></i>
-                    <span class="nav-title">Início</span>
-                </a>
-                <a th:href="@{/professor/tarefas}" class="nav-link">
-                    <i data-lucide="book-open"></i>
-                    <span class="nav-title">Atividades</span>
-                </a>
-                <a th:href="@{/professor/chat}" class="nav-link">
-                    <i data-lucide="message-square"></i>
-                    <span class="nav-title">Chat</span>
-                </a>
-                <a th:href="@{/professor/calendario}" class="nav-link">
-                    <i data-lucide="calendar"></i>
-                    <span class="nav-title">Calendário</span>
-                </a>
-                <a th:href="@{/professor/turmas}" class="nav-link">
-                    <i data-lucide="users"></i>
-                    <span class="nav-title">Turmas</span>
-                </a>
-            </nav>
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
 
-            <div class="sidebar-footer">
-                <a th:href="@{/professor/configuracoes}" class="nav-link">
-                    <i data-lucide="settings"></i>
-                    <span class="nav-title">Ajustes</span>
-                </a>
-                <button class="nav-link" id="btn-open-logout">
-                    <i data-lucide="log-out"></i>
-                    <span class="nav-title">Sair</span>
-                </button>
-            </div>
-        </aside>
+			<nav class="sidebar-nav">
+				<a th:href="@{/professor/dashboard}" class="nav-link active">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a th:href="@{/professor/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a th:href="@{/professor/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a th:href="@{/professor/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a th:href="@{/professor/turmas}" class="nav-link">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+			</nav>
 
-        <main class="main-content">
-            <div class="dashboard-container">
-                
-                <h1 class="greeting-title">Bem vindo(a), <span class="greeting-title" th:text="${#authentication.principal.primeiroNome}"></span></h1>
+			<div class="sidebar-footer">
+				<a th:href="@{/professor/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
 
-                <div class="metrics-row">
-                    <div class="metric-card">
-                        <div class="metric-text-group">
-                            <span class="metric-label">Alunos em Acompanhamento</span>
-                            <span class="metric-value" th:text="${quantidadeAlunos}">0</span>
-                        </div>
-                        <div class="metric-badge-icon sand"><i data-lucide="user"></i></div>
-                    </div>
+		<main class="main-content">
+			<div class="dashboard-container">
 
-                    <div class="metric-card">
-                        <div class="metric-text-group">
-                            <span class="metric-label">Atividades da Semana</span>
-                            <span class="metric-value" th:text="${quantidadeAtividades}">0</span>
-                        </div>
-                        <div class="metric-badge-icon blue"><i data-lucide="book-open"></i></div>
-                    </div>
+				<h1 class="greeting-title">Bem vindo(a), <span class="greeting-title"
+						th:text="${#authentication.principal.primeiroNome}"></span></h1>
 
-                    <div class="metric-card">
-                        <div class="metric-text-group">
-                            <span class="metric-label">Relatórios e Feedbacks</span>
-                            <span class="metric-value">0</span>
-                        </div>
-                        <div class="metric-badge-icon sand"><i data-lucide="file-text"></i></div>
-                    </div>
-                </div>
+				<div class="metrics-row">
+					<div class="metric-card">
+						<div class="metric-text-group">
+							<span class="metric-label">Alunos em Acompanhamento</span>
+							<span class="metric-value" th:text="${quantidadeAlunos}">0</span>
+						</div>
+						<div class="metric-badge-icon sand"><i data-lucide="user"></i></div>
+					</div>
 
-                <div class="content-columns">
-                    <div class="column-left">
-                        <div>
-                            <div class="section-header-flex">
-                                <span class="section-title">Atividades recentes</span>
-                                <a th:href="@{/professor/tarefas}" class="section-link">+ Ver todas</a>
-                            </div>
-                            <div class="cards-grid-3">
-                                <a th:href="@{/professor/tarefas/nova}" class="box-card box-card-large box-card-create" title="Criar Nova Tarefa">
-                                    <span class="plus-badge-center">+</span>
-                                </a>
-                                <div class="box-card box-card-large"></div>
-                                <div class="box-card box-card-large"></div>
-                            </div>
-                        </div>
+					<div class="metric-card">
+						<div class="metric-text-group">
+							<span class="metric-label">Atividades da Semana</span>
+							<span class="metric-value" th:text="${quantidadeAtividades}">0</span>
+						</div>
+						<div class="metric-badge-icon blue"><i data-lucide="book-open"></i></div>
+					</div>
 
-                        <div>
-                            <div class="section-header-flex">
-                                <span class="section-title">Turmas</span>
-                                <a th:href="@{/professor/turmas}" class="section-link">+ Ver todas</a>
-                            </div>
-                            <div class="cards-grid-3">
-                                <div class="box-card box-card-small"></div>
-                                <div class="box-card box-card-small"></div>
-                                <div class="box-card box-card-small"></div>
-                            </div>
-                        </div>
+					<div class="metric-card">
+						<div class="metric-text-group">
+							<span class="metric-label">Relatórios e Feedbacks</span>
+							<span class="metric-value">0</span>
+						</div>
+						<div class="metric-badge-icon sand"><i data-lucide="file-text"></i></div>
+					</div>
+				</div>
 
-                        <div>
-                            <div class="section-header-flex">
-                                <span class="section-title">Alertas e Observações</span>
-                            </div>
-                            <div class="alerts-wrapper">
-                                <div class="alert-card alert-yellow">
-                                    <div class="alert-indicator"></div>
-                                    <i data-lucide="alert-circle" class="alert-icon"></i>
-                                    <div class="alert-texts">
-                                        <strong>Lucas Bonetti (Psicopedagogo)</strong>
-                                        <span>Nova observação adicionada para o aluno Cauê (Turma 2) sobre foco.</span>
-                                    </div>
-                                </div>
+				<div class="content-columns">
+					<div class="column-left">
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Atividades recentes</span>
+								<a th:href="@{/professor/tarefas}" class="section-link">+ Ver todas</a>
+							</div>
+							<div class="cards-grid-3">
+								<a th:href="@{/professor/tarefas/nova}" class="box-card box-card-large box-card-create"
+									title="Criar Nova Tarefa">
+									<span class="plus-badge-center">+</span>
+								</a>
+								<div class="box-card box-card-large"></div>
+								<div class="box-card box-card-large"></div>
+							</div>
+						</div>
 
-                                <div class="alert-card alert-blue">
-                                    <div class="alert-indicator"></div>
-                                    <i data-lucide="clock" class="alert-icon"></i>
-                                    <div class="alert-texts">
-                                        <strong>Atividade de Memória Aguardando para correção</strong>
-                                        <span>Aluno Cauê (Turma 2) Enviou a atividade de memória. Aguardando Correção.</span>
-                                    </div>
-                                </div>
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Turmas</span>
+								<a th:href="@{/professor/turmas}" class="section-link">+ Ver todas</a>
+							</div>
+							<div class="cards-grid-3">
+								<div class="box-card box-card-small"></div>
+								<div class="box-card box-card-small"></div>
+								<div class="box-card box-card-small"></div>
+							</div>
+						</div>
 
-                                <div class="alert-card alert-yellow">
-                                    <div class="alert-indicator"></div>
-                                    <i data-lucide="alert-circle" class="alert-icon"></i>
-                                    <div class="alert-texts">
-                                        <strong>Lucas Bonetti (Psicopedagogo)</strong>
-                                        <span>Nova observação adicionada para o aluno Cauê (Turma 2) sobre foco.</span>
-                                    </div>
-                                </div>
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Alertas e Observações</span>
+							</div>
+							<div class="alerts-wrapper">
+								<div class="alert-card alert-yellow">
+									<div class="alert-indicator"></div>
+									<i data-lucide="alert-circle" class="alert-icon"></i>
+									<div class="alert-texts">
+										<strong>Lucas Bonetti (Psicopedagogo)</strong>
+										<span>Nova observação adicionada para o aluno Cauê (Turma 2) sobre foco.</span>
+									</div>
+								</div>
 
-                                <div class="alert-card alert-blue">
-                                    <div class="alert-indicator"></div>
-                                    <i data-lucide="clock" class="alert-icon"></i>
-                                    <div class="alert-texts">
-                                        <strong>Atividade de Memória Aguardando para correção</strong>
-                                        <span>Aluno Cauê (Turma 2) Enviou a atividade de memória. Aguardando Correção.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+								<div class="alert-card alert-blue">
+									<div class="alert-indicator"></div>
+									<i data-lucide="clock" class="alert-icon"></i>
+									<div class="alert-texts">
+										<strong>Atividade de Memória Aguardando para correção</strong>
+										<span>Aluno Cauê (Turma 2) Enviou a atividade de memória. Aguardando
+											Correção.</span>
+									</div>
+								</div>
 
-                    </div>
+								<div class="alert-card alert-yellow">
+									<div class="alert-indicator"></div>
+									<i data-lucide="alert-circle" class="alert-icon"></i>
+									<div class="alert-texts">
+										<strong>Lucas Bonetti (Psicopedagogo)</strong>
+										<span>Nova observação adicionada para o aluno Cauê (Turma 2) sobre foco.</span>
+									</div>
+								</div>
 
-                    <div class="column-right">
-                        <div>
-                            <div class="section-header-flex">
-                                <span class="section-title">Calendário</span>
-                            </div>
-                            <div class="calendar-card-container">
-                                <div class="calendar-header-bar">
-                                    <select class="cal-select" id="cal-month-select">
-                                        <option value="0">Janeiro</option>
-                                        <option value="1">Fevereiro</option>
-                                        <option value="2">Março</option>
-                                        <option value="3">Abril</option>
-                                        <option value="4">Maio</option>
-                                        <option value="5">Junho</option>
-                                        <option value="6">Julho</option>
-                                        <option value="7">Agosto</option>
-                                        <option value="8" selected>Setembro</option>
-                                        <option value="9">Outubro</option>
-                                        <option value="10">Novembro</option>
-                                        <option value="11">Dezembro</option>
-                                    </select>
-                                    <select class="cal-select" id="cal-year-select">
-                                        <option value="2025">2025</option>
-                                        <option value="2026" selected>2026</option>
-                                        <option value="2027">2027</option>
-                                        <option value="2028">2028</option>
-                                    </select>
-                                </div>
-                                <table class="calendar-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Domingo</th><th>Segunda</th><th>Terça</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sábado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="calendar-body">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+								<div class="alert-card alert-blue">
+									<div class="alert-indicator"></div>
+									<i data-lucide="clock" class="alert-icon"></i>
+									<div class="alert-texts">
+										<strong>Atividade de Memória Aguardando para correção</strong>
+										<span>Aluno Cauê (Turma 2) Enviou a atividade de memória. Aguardando
+											Correção.</span>
+									</div>
+								</div>
+							</div>
+						</div>
 
-                        <div>
-                            <div class="section-header-flex">
-                                <span class="section-title">Resumo das Atividades</span>
-                            </div>
-                            <div class="summary-box">
-                                <div class="summary-item">
-                                    <div class="summary-label">
-                                        <i data-lucide="check-circle-2"></i>
-                                        <span>Atividades terminadas:</span>
-                                    </div>
-                                    <span class="summary-count">0</span>
-                                </div>
-                                <div class="summary-item">
-                                    <div class="summary-label">
-                                        <i data-lucide="check"></i>
-                                        <span>Atividades iniciadas:</span>
-                                    </div>
-                                    <span class="summary-count">0</span>
-                                </div>
-                                <div class="summary-item">
-                                    <div class="summary-label">
-                                        <i data-lucide="x-circle"></i>
-                                        <span>Atividades não iniciadas:</span>
-                                    </div>
-                                    <span class="summary-count">0</span>
-                                </div>
-                            </div>
-                        </div>
+					</div>
 
-                        <div>
-                            <div class="section-header-flex">
-                                <span class="section-title">Lembretes</span>
-                            </div>
-                            <div class="reminders-box">
-                                <div class="reminder-row">
-                                    <span class="reminder-time">14:00</span>
-                                    <span class="reminder-text">Entregar atividades para turma 1</span>
-                                </div>
-                                <div class="reminder-row">
-                                    <span class="reminder-time">15:00</span>
-                                    <span class="reminder-text">Alinhamento Pedagógico com Lucas Bonetti</span>
-                                </div>
-                                <div class="reminder-row">
-                                    <span class="reminder-time">16:30</span>
-                                    <span class="reminder-text">Avaliação de Desempenho - Turma 2</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+					<div class="column-right">
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Calendário</span>
+							</div>
+							<div class="calendar-card-container">
+								<div class="calendar-header-bar">
+									<select class="cal-select" id="cal-month-select">
+										<option value="0">Janeiro</option>
+										<option value="1">Fevereiro</option>
+										<option value="2">Março</option>
+										<option value="3">Abril</option>
+										<option value="4">Maio</option>
+										<option value="5">Junho</option>
+										<option value="6">Julho</option>
+										<option value="7">Agosto</option>
+										<option value="8">Setembro</option>
+										<option value="9">Outubro</option>
+										<option value="10">Novembro</option>
+										<option value="11">Dezembro</option>
+									</select>
+									<select class="cal-select" id="cal-year-select">
+										<option value="2025">2025</option>
+										<option value="2026">2026</option>
+										<option value="2027">2027</option>
+										<option value="2028">2028</option>
+									</select>
+								</div>
+								<table class="calendar-table">
+									<thead>
+										<tr>
+											<th>Domingo</th>
+											<th>Segunda</th>
+											<th>Terça</th>
+											<th>Quarta</th>
+											<th>Quinta</th>
+											<th>Sexta</th>
+											<th>Sábado</th>
+										</tr>
+									</thead>
+									<tbody id="calendar-body">
+									</tbody>
+								</table>
+							</div>
+						</div>
 
-    <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
-            </div>
-        </div>
-    </div>
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Resumo das Atividades</span>
+							</div>
+							<div class="summary-box">
+								<div class="summary-item">
+									<div class="summary-label">
+										<i data-lucide="check-circle-2"></i>
+										<span>Atividades terminadas:</span>
+									</div>
+									<span class="summary-count">0</span>
+								</div>
+								<div class="summary-item">
+									<div class="summary-label">
+										<i data-lucide="check"></i>
+										<span>Atividades iniciadas:</span>
+									</div>
+									<span class="summary-count">0</span>
+								</div>
+								<div class="summary-item">
+									<div class="summary-label">
+										<i data-lucide="x-circle"></i>
+										<span>Atividades não iniciadas:</span>
+									</div>
+									<span class="summary-count">0</span>
+								</div>
+							</div>
+						</div>
 
-    <script>
-        lucide.createIcons();
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Lembretes</span>
+							</div>
+							<div class="reminders-box">
+								<div class="reminder-row">
+									<span class="reminder-time">14:00</span>
+									<span class="reminder-text">Entregar atividades para turma 1</span>
+								</div>
+								<div class="reminder-row">
+									<span class="reminder-time">15:00</span>
+									<span class="reminder-text">Alinhamento Pedagógico com Lucas Bonetti</span>
+								</div>
+								<div class="reminder-row">
+									<span class="reminder-time">16:30</span>
+									<span class="reminder-text">Avaliação de Desempenho - Turma 2</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
 
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
+	<div class="modal-overlay" id="logout-modal">
+		<div class="modal-card">
+			<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+			<div class="modal-actions">
+				<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+				<button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+			</div>
+		</div>
+	</div>
 
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('expanded');
-        });
+	<script th:inline="none">
+		lucide.createIcons();
 
-        const logoutModal = document.getElementById('logout-modal');
-        const btnOpenLogout = document.getElementById('btn-open-logout');
-        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+		const sidebar = document.getElementById('sidebar');
+		const toggleBtn = document.getElementById('toggle-btn');
 
-        btnOpenLogout.addEventListener('click', (e) => {
-            e.preventDefault();
-            logoutModal.classList.add('active');
-        });
+		toggleBtn.addEventListener('click', () => {
+			sidebar.classList.toggle('expanded');
+		});
 
-        btnCancelLogout.addEventListener('click', () => {
-            logoutModal.classList.remove('active');
-        });
+		const logoutModal = document.getElementById('logout-modal');
+		const btnOpenLogout = document.getElementById('btn-open-logout');
+		const btnCancelLogout = document.getElementById('btn-cancel-logout');
 
-        const monthSelect = document.getElementById('cal-month-select');
-        const yearSelect = document.getElementById('cal-year-select');
-        const calendarBody = document.getElementById('calendar-body');
+		btnOpenLogout.addEventListener('click', (e) => {
+			e.preventDefault();
+			logoutModal.classList.add('active');
+		});
 
-        const badgesConfig = {
-            "2026-8-9": "orange",
-            "2026-8-16": "blue",
-            "2026-8-24": "orange"
-        };
+		btnCancelLogout.addEventListener('click', () => {
+			logoutModal.classList.remove('active');
+		});
 
-        function generateCalendar(month, year) {
-            calendarBody.innerHTML = '';
-            
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
-            const prevMonthDays = new Date(year, month, 0).getDate();
-            
-            let dayCounter = 1;
-            let nextMonthCounter = 1;
+		const monthSelect = document.getElementById('cal-month-select');
+		const yearSelect = document.getElementById('cal-year-select');
+		const calendarBody = document.getElementById('calendar-body');
 
-            for (let r = 0; r < 5; r++) {
-                const row = document.createElement('tr');
+		// Datas reais das atividades dos alunos deste professor (lidas do banco).
+		// Toda atividade com prazo nesse dia vira uma bolinha laranja no calendario.
+		const badgesConfig = {};
+		document.querySelectorAll('#atividades-prof-data .atividade-prof-item').forEach(el => {
+			const key = `${el.dataset.year}-${el.dataset.month}-${el.dataset.day}`;
+			badgesConfig[key] = 'orange';
+		});
 
-                for (let d = 0; d < 7; d++) {
-                    const cell = document.createElement('td');
-                    const cellIndex = r * 7 + d;
+		function generateCalendar(month, year) {
+			calendarBody.innerHTML = '';
 
-                    if (cellIndex < firstDayIndex) {
-                        cell.classList.add('muted');
-                        cell.textContent = prevMonthDays - (firstDayIndex - 1 - cellIndex);
-                    } else if (dayCounter <= totalDaysInMonth) {
-                        const dateKey = `${year}-${month}-${dayCounter}`;
-                        
-                        if (badgesConfig[dateKey]) {
-                            const badge = document.createElement('span');
-                            badge.className = `day-badge ${badgesConfig[dateKey]}`;
-                            badge.textContent = dayCounter;
-                            cell.appendChild(badge);
-                        } else {
-                            cell.textContent = dayCounter;
-                        }
-                        dayCounter++;
-                    } else {
-                        cell.classList.add('muted');
-                        cell.textContent = nextMonthCounter++;
-                    }
+			const firstDayIndex = new Date(year, month, 1).getDay();
+			const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+			const prevMonthDays = new Date(year, month, 0).getDate();
 
-                    row.appendChild(cell);
-                }
+			let dayCounter = 1;
+			let nextMonthCounter = 1;
 
-                calendarBody.appendChild(row);
-            }
-        }
+			for (let r = 0; r < 5; r++) {
+				const row = document.createElement('tr');
 
-        monthSelect.addEventListener('change', () => {
-            generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
-        });
+				for (let d = 0; d < 7; d++) {
+					const cell = document.createElement('td');
+					const cellIndex = r * 7 + d;
 
-        yearSelect.addEventListener('change', () => {
-            generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
-        });
+					if (cellIndex < firstDayIndex) {
+						cell.classList.add('muted');
+						cell.textContent = prevMonthDays - (firstDayIndex - 1 - cellIndex);
+					} else if (dayCounter <= totalDaysInMonth) {
+						const dateKey = `${year}-${month}-${dayCounter}`;
 
-        generateCalendar(8, 2026);
-    </script>
+						if (badgesConfig[dateKey]) {
+							const badge = document.createElement('span');
+							badge.className = `day-badge ${badgesConfig[dateKey]}`;
+							badge.textContent = dayCounter;
+							cell.appendChild(badge);
+						} else {
+							cell.textContent = dayCounter;
+						}
+						dayCounter++;
+					} else {
+						cell.classList.add('muted');
+						cell.textContent = nextMonthCounter++;
+					}
 
-    <script>
-        var btnConfirmLogout = document.getElementById('btn-confirm-logout');
-        if (btnConfirmLogout) {
-            btnConfirmLogout.addEventListener('click', function () {
-                document.getElementById('logoutForm').submit();
-            });
-        }
-    </script>
+					row.appendChild(cell);
+				}
+
+				calendarBody.appendChild(row);
+			}
+		}
+
+		monthSelect.addEventListener('change', () => {
+			generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+		});
+
+		yearSelect.addEventListener('change', () => {
+			generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+		});
+
+		const hoje = new Date();
+		monthSelect.value = hoje.getMonth();
+		yearSelect.value = hoje.getFullYear();
+		generateCalendar(hoje.getMonth(), hoje.getFullYear());
+	</script>
+
+	<script>
+		var btnConfirmLogout = document.getElementById('btn-confirm-logout');
+		if (btnConfirmLogout) {
+			btnConfirmLogout.addEventListener('click', function () {
+				document.getElementById('logoutForm').submit();
+			});
+		}
+	</script>
 </body>
+
 </html>

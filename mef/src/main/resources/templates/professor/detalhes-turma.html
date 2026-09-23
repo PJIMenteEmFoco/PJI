@@ -1,245 +1,898 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalhes da Turma - Mente em Foco</title>
-    <link rel="stylesheet" th:href="@{/css/detalhes-turma.css}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title
+		th:text="${turma != null ? 'Detalhes da Turma - ' + turma.nome + ' | Mente em Foco' : 'Detalhes da Turma | Mente em Foco'}">
+		Detalhes da Turma - Mente em Foco
+	</title>
+
+	<link rel="stylesheet" href="/css/detalhes-turma.css" th:href="@{/css/detalhes-turma.css}">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+
+	<script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body>
-    <form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-    </form>
+
+	<!-- LOGOUT SPRING SECURITY -->
+	<form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;">
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+
+	<div class="app-layout">
+
+		<aside class="sidebar" id="sidebar">
+
+			<div class="sidebar-header">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav">
+
+				<a href="/professor/dashboard" th:href="@{/professor/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+
+				<a href="/professor/tarefas" th:href="@{/professor/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+
+				<a href="/professor/chat" th:href="@{/professor/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+
+				<a href="/professor/calendario" th:href="@{/professor/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+
+				<a href="/professor/turmas" th:href="@{/professor/turmas}" class="nav-link active">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+
+			</nav>
+
+			<div class="sidebar-footer">
+
+				<a href="/professor/configuracoes" th:href="@{/professor/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+
+				<button type="button" class="nav-link" id="btn-open-logout">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+
+			</div>
+
+		</aside>
+
+		<main class="main-content">
+
+			<div class="details-container">
+
+				<div class="team-header-card">
+
+					<div class="team-title-group">
+
+						<a href="/professor/turmas" th:href="@{/professor/turmas}" class="btn-back-link"
+							title="Voltar para Turmas">
+							<i data-lucide="arrow-left"></i>
+						</a>
+
+						<div class="team-header-info">
+
+							<h1 id="turma-titulo" th:text="${turma.nome}">
+								Turma
+							</h1>
+
+							<p id="turma-professores">
+
+								<span th:if="${professorTurma != null}" th:text="${'Prof. ' + professorTurma.nome}">
+									Prof. --
+								</span>
+
+								<span th:if="${professorTurma != null and psicopedagogoTurma != null}">
+									|
+								</span>
+
+								<span th:if="${psicopedagogoTurma != null}"
+									th:text="${'Psicopedagogo ' + psicopedagogoTurma.nome}">
+									Psicopedagogo --
+								</span>
+
+								<span th:if="${professorTurma == null and psicopedagogoTurma == null}">
+									Responsáveis não informados
+								</span>
+
+							</p>
+
+						</div>
+
+					</div>
+
+					<div class="team-quick-stats">
+
+						<div class="stat-badge">
+							<span class="metric-val" id="total-alunos-val"
+								th:text="${alunos != null ? #lists.size(alunos) : 0}">
+								0
+							</span>
+							<span class="metric-lbl">Alunos</span>
+						</div>
+
+						<div class="stat-badge">
+							<span class="metric-val" id="total-atividades-val"
+								th:text="${totalAtividades != null ? totalAtividades : 0}">
+								0
+							</span>
+							<span class="metric-lbl">Atividades</span>
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="controls-row">
+
+					<div class="search-student-box">
+						<i data-lucide="search"></i>
+						<input type="text" id="search-student" placeholder="Buscar aluno nesta turma..."
+							autocomplete="off">
+					</div>
+
+					<!-- Mantido como botão visual.
+                         Quando existir um endpoint de vínculo, basta transformar em link ou abrir o modal. -->
+					<button type="button" class="btn-add-student" id="btn-open-vincular-aluno">
+						<i data-lucide="user-plus"></i>
+						Vincular Aluno
+					</button>
+
+				</div>
+
+				<h2 class="section-title">
+					Alunos em Acompanhamento
+				</h2>
+
+				<div class="students-list-grid" id="students-grid">
+
+					<!-- Nenhum aluno -->
+					<div class="empty-state-card" th:if="${alunos == null or #lists.isEmpty(alunos)}">
+
+						<i data-lucide="users" class="empty-icon"></i>
+
+						<h3>Nenhum aluno vinculado</h3>
+
+						<p>
+							Esta turma ainda não possui alunos cadastrados.
+						</p>
+
+					</div>
 
 
-    <div class="app-layout">
-        
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
-                <img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
-            </div>
+					<!-- Cards vindos do banco -->
+					<div class="student-card" th:each="aluno : ${alunos}" th:attr="
+                            data-aluno-id=${aluno.id},
+                            data-nome=${aluno.nome},
+                            data-email=${aluno.email},
+                            data-telefone=${aluno.telefone},
+                            data-data-nascimento=${aluno.dataNascimento},
+                            data-hiperfoco=${aluno.hiperfoco},
+                            data-tempo-foco=${aluno.tempoFoco},
+                            data-laudo=${aluno.laudo},
+                            data-desregulacao=${aluno.desregulacao}">
 
-            <div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-                <i data-lucide="chevron-left"></i>
-            </div>
+						<div class="student-profile-group">
 
-            <nav class="sidebar-nav">
-                <a th:href="@{/professor/dashboard}" class="nav-link">
-                    <i data-lucide="home"></i>
-                    <span class="nav-title">Início</span>
-                </a>
-                <a th:href="@{/professor/tarefas}" class="nav-link">
-                    <i data-lucide="book-open"></i>
-                    <span class="nav-title">Atividades</span>
-                </a>
-                <a th:href="@{/professor/chat}" class="nav-link">
-                    <i data-lucide="message-square"></i>
-                    <span class="nav-title">Chat</span>
-                </a>
-                <a th:href="@{/professor/calendario}" class="nav-link">
-                    <i data-lucide="calendar"></i>
-                    <span class="nav-title">Calendário</span>
-                </a>
-                <a th:href="@{/professor/turmas}" class="nav-link active">
-                    <i data-lucide="users"></i>
-                    <span class="nav-title">Turmas</span>
-                </a>
-            </nav>
+							<div class="student-avatar" style="background-color:#CBDDE6; color:#0F2D3C;" th:text="${aluno.nome != null and !#strings.isEmpty(aluno.nome)
+                                     ? #strings.substring(aluno.nome, 0, 1).toUpperCase()
+                                     : '?'}">
+								A
+							</div>
 
-            <div class="sidebar-footer">
-                <a th:href="@{/professor/configuracoes}" class="nav-link">
-                    <i data-lucide="settings"></i>
-                    <span class="nav-title">Ajustes</span>
-                </a>
-                <button class="nav-link" id="btn-open-logout">
-                    <i data-lucide="log-out"></i>
-                    <span class="nav-title">Sair</span>
-                </button>
-            </div>
-        </aside>
+							<div>
 
-        <main class="main-content">
-            <div class="details-container">
-                
-                <div class="team-header-card">
-                    <div class="team-title-group">
-                        <a th:href="@{/professor/turmas}" class="btn-back-link" title="Voltar para Turmas">
-                            <i data-lucide="arrow-left"></i>
-                        </a>
-                        <div class="team-header-info">
-                            <h1>Turma 2 - Ensino Médio</h1>
-                            <p>Prof. Levi Viana | Psicopedagogo Lucas Bonetti</p>
-                        </div>
-                    </div>
+								<h3 class="student-name" th:text="${aluno.nome}">
+									Nome do aluno
+								</h3>
 
-                    <div class="team-quick-stats">
-                        <div class="stat-badge">
-                            <span class="metric-val">6</span>
-                            <span class="metric-lbl">Alunos</span>
-                        </div>
-                        <div class="stat-badge">
-                            <span class="metric-val">12</span>
-                            <span class="metric-lbl">Atividades</span>
-                        </div>
-                    </div>
-                </div>
+								<span class="student-sub"
+									th:text="${aluno.email != null ? aluno.email : 'E-mail não informado'}">
+									email@email.com
+								</span>
 
-                <div class="controls-row">
-                    <div class="search-student-box">
-                        <i data-lucide="search"></i>
-                        <input type="text" id="search-student" placeholder="Buscar aluno nesta turma...">
-                    </div>
+							</div>
 
-                    <button class="btn-add-student">
-                        <i data-lucide="user-plus"></i> Vincular Aluno
-                    </button>
-                </div>
+						</div>
 
-                <h2 class="section-title">Alunos em Acompanhamento</h2>
+						<!-- Hiperfoco e tempo de foco vêm diretamente da entidade Aluno. -->
+						<div class="student-info-pill">
+							<span class="info-label">
+								Hiperfoco
+							</span>
+							<span class="info-value" th:text="${aluno.hiperfoco != null and !#strings.isEmpty(aluno.hiperfoco)
+                                      ? aluno.hiperfoco
+                                      : 'Não informado'}">
+								Não informado
+							</span>
+						</div>
 
-                <div class="students-list-grid" id="students-grid">
-                    
-                    <div class="student-card">
-                        <div class="student-profile-group">
-                            <div class="student-avatar">C</div>
-                            <div>
-                                <h3 class="student-name">Cauê Campos</h3>
-                                <span class="student-sub">1ª Série EM • TDAH (CID-11: 6A05)</span>
-                            </div>
-                        </div>
+						<div class="student-info-pill">
+							<span class="info-label">
+								Tempo Médio de Foco
+							</span>
+							<span class="info-value" th:text="${aluno.tempoFoco > 0
+                                      ? #numbers.formatDecimal(aluno.tempoFoco, 1, 1) + ' min'
+                                      : 'Não informado'}">
+								Não informado
+							</span>
+						</div>
 
-                        <div class="student-info-pill">
-                            <span class="info-label">Hiperfoco</span>
-                            <span class="info-value">Jogos Digitais / HQs</span>
-                        </div>
+						<div class="student-actions-row">
 
-                        <div class="student-info-pill">
-                            <span class="info-label">Tempo Médio de Foco</span>
-                            <span class="info-value">15 a 20 minutos</span>
-                        </div>
+							<button type="button" class="btn-card-action btn-view-report" title="Ver Relatório">
+								<i data-lucide="file-text"></i>
+								Relatório
+							</button>
 
-                        <button class="btn-view-report">
-                            <i data-lucide="file-text"></i> Relatório
-                        </button>
-                    </div>
+							<button type="button" class="btn-card-action btn-view-ficha" title="Ver Ficha">
+								<i data-lucide="clipboard-list"></i>
+								Ficha
+							</button>
 
-                    <div class="student-card">
-                        <div class="student-profile-group">
-                            <div class="student-avatar" style="background-color:#f7edd8; color:#E69C2E;">L</div>
-                            <div>
-                                <h3 class="student-name">Lucas Bonetti</h3>
-                                <span class="student-sub">2ª Série EM • TDAH Predominante Desatento</span>
-                            </div>
-                        </div>
+							<a th:href="@{/professor/calendario/{id}(id=${aluno.id})}" class="btn-card-action"
+								title="Ver Calendário">
+								<i data-lucide="calendar"></i>
+								Calendário
+							</a>
 
-                        <div class="student-info-pill">
-                            <span class="info-label">Hiperfoco</span>
-                            <span class="info-value">Astronomia / Leitura</span>
-                        </div>
+						</div>
 
-                        <div class="student-info-pill">
-                            <span class="info-label">Tempo Médio de Foco</span>
-                            <span class="info-value">25 minutos</span>
-                        </div>
+					</div>
 
-                        <button class="btn-view-report">
-                            <i data-lucide="file-text"></i> Relatório
-                        </button>
-                    </div>
+				</div>
 
-                    <div class="student-card">
-                        <div class="student-profile-group">
-                            <div class="student-avatar">H</div>
-                            <div>
-                                <h3 class="student-name">Heitor Oliveira</h3>
-                                <span class="student-sub">1ª Série EM • TDAH Combinado</span>
-                            </div>
-                        </div>
+				<!-- Resultado vazio da pesquisa -->
+				<div class="empty-state-card" id="no-search-results" style="display:none;">
 
-                        <div class="student-info-pill">
-                            <span class="info-label">Hiperfoco</span>
-                            <span class="info-value">Esportes / Lógica</span>
-                        </div>
+					<i data-lucide="search-x" class="empty-icon"></i>
 
-                        <div class="student-info-pill">
-                            <span class="info-label">Tempo Médio de Foco</span>
-                            <span class="info-value">10 a 15 minutos</span>
-                        </div>
+					<h3>Nenhum aluno encontrado</h3>
 
-                        <button class="btn-view-report">
-                            <i data-lucide="file-text"></i> Relatório
-                        </button>
-                    </div>
+					<p>
+						Tente pesquisar por outro nome ou e-mail.
+					</p>
 
-                </div>
+				</div>
 
-            </div>
-        </main>
+			</div>
 
-    </div>
+		</main>
 
-    <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
-            </div>
-        </div>
-    </div>
+	</div>
 
-    <script>
-        lucide.createIcons();
 
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
+	<!-- RELATÓRIO -->
+	<div class="modal-overlay" id="relatorio-modal">
 
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('expanded');
-        });
+		<div class="vincular-outer-card">
 
-        const logoutModal = document.getElementById('logout-modal');
-        const btnOpenLogout = document.getElementById('btn-open-logout');
-        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+			<div class="vincular-inner-card">
 
-        btnOpenLogout.addEventListener('click', (e) => {
-            e.preventDefault();
-            logoutModal.classList.add('active');
-        });
+				<div class="modal-header">
+					<h3 id="relatorio-aluno-nome">
+						Relatório do Aluno
+					</h3>
 
-        btnCancelLogout.addEventListener('click', () => {
-            logoutModal.classList.remove('active');
-        });
+					<p id="relatorio-aluno-sub">
+						Dados do aluno
+					</p>
+				</div>
 
-        const searchInput = document.getElementById('search-student');
-        const studentCards = document.querySelectorAll('.student-card');
+				<div class="relatorio-corpo">
 
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.toLowerCase();
-            studentCards.forEach(card => {
-                const name = card.querySelector('.student-name').textContent.toLowerCase();
-                const sub = card.querySelector('.student-sub').textContent.toLowerCase();
-                if (name.includes(query) || sub.includes(query)) {
-                    card.style.display = 'grid';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    </script>
+					<div class="relatorio-block">
+						<span class="relatorio-label">
+							Hiperfoco:
+						</span>
 
-    <script>
-        var btnConfirmLogout = document.getElementById('btn-confirm-logout');
-        if (btnConfirmLogout) {
-            btnConfirmLogout.addEventListener('click', function () {
-                document.getElementById('logoutForm').submit();
-            });
-        }
-    </script>
+						<p id="relatorio-hiperfoco" class="relatorio-texto">
+							Não informado
+						</p>
+					</div>
+
+					<div class="relatorio-block">
+						<span class="relatorio-label">
+							Tempo Médio de Foco:
+						</span>
+
+						<p id="relatorio-foco" class="relatorio-texto">
+							Não informado
+						</p>
+					</div>
+
+					<div class="relatorio-block">
+						<span class="relatorio-label">
+							Laudo:
+						</span>
+
+						<p id="relatorio-laudo" class="relatorio-texto">
+							Não informado
+						</p>
+					</div>
+
+					<div class="relatorio-block">
+						<span class="relatorio-label">
+							Desregulação:
+						</span>
+
+						<p id="relatorio-desregulacao" class="relatorio-texto">
+							Não informada
+						</p>
+					</div>
+
+				</div>
+
+				<div class="modal-btn-row">
+
+					<button type="button" class="btn-modal-cancel" id="btn-fechar-relatorio">
+						Fechar
+					</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- FICHA -->
+	<div class="modal-overlay" id="ficha-modal">
+
+		<div class="vincular-outer-card">
+
+			<div class="vincular-inner-card">
+
+				<div class="modal-header">
+
+					<h3 id="ficha-aluno-nome">
+						Ficha do Aluno
+					</h3>
+
+					<p id="ficha-aluno-sub">
+						Dados cadastrais
+					</p>
+
+				</div>
+
+				<div class="ficha-corpo">
+
+					<div class="ficha-block">
+						<span class="ficha-label">
+							E-mail:
+						</span>
+
+						<p id="ficha-email" class="ficha-texto">
+							Não informado
+						</p>
+					</div>
+
+					<div class="ficha-block">
+						<span class="ficha-label">
+							Telefone:
+						</span>
+
+						<p id="ficha-telefone" class="ficha-texto">
+							Não informado
+						</p>
+					</div>
+
+					<div class="ficha-block">
+						<span class="ficha-label">
+							Data de Nascimento:
+						</span>
+
+						<p id="ficha-data-nascimento" class="ficha-texto">
+							Não informada
+						</p>
+					</div>
+
+					<div class="ficha-block">
+						<span class="ficha-label">
+							Laudo:
+						</span>
+
+						<p id="ficha-laudo" class="ficha-texto">
+							Não informado
+						</p>
+					</div>
+
+					<div class="ficha-block">
+						<span class="ficha-label">
+							Desregulação:
+						</span>
+
+						<p id="ficha-desregulacao" class="ficha-texto">
+							Não informada
+						</p>
+					</div>
+
+				</div>
+
+				<div class="modal-btn-row">
+
+					<button type="button" class="btn-modal-cancel" id="btn-fechar-ficha">
+						Fechar
+					</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- MODAL VINCULAR ALUNO
+         Deixado visualmente pronto. O envio ao banco deve apontar para um endpoint real. -->
+	<div class="modal-overlay" id="vincular-aluno-modal">
+
+		<div class="vincular-outer-card">
+
+			<div class="vincular-inner-card">
+
+				<div class="modal-header">
+					<h3>Vincular Aluno à Turma</h3>
+					<p>
+						Selecione ou informe o aluno que será vinculado a esta turma.
+					</p>
+				</div>
+
+				<div class="relatorio-corpo">
+
+					<p class="relatorio-texto">
+						É necessário criar o link de ingresso da turma
+					</p>
+
+				</div>
+
+				<div class="modal-btn-row">
+
+					<button type="button" class="btn-modal-cancel" id="btn-cancel-vincular">
+						Cancelar
+					</button>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- LOGOUT -->
+	<div class="modal-overlay" id="logout-modal">
+
+		<div class="modal-card">
+
+			<h2 class="modal-title">
+				Tem certeza que deseja sair da sua conta?
+			</h2>
+
+			<div class="modal-actions">
+
+				<button type="button" class="btn-modal btn-modal-cancel" id="btn-cancel-logout">
+					Cancelar
+				</button>
+
+				<button type="button" class="btn-modal btn-modal-logout" id="btn-confirm-logout">
+					Sair
+				</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<script>
+
+		/*
+		 * TEMA
+		 */
+		(function initTheme() {
+
+			if (localStorage.getItem('theme') === 'escuro') {
+				document.body.classList.add('dark-mode');
+			}
+
+		})();
+
+
+		/*
+		 * LUCIDE
+		 */
+		lucide.createIcons();
+
+
+		/*
+		 * SIDEBAR
+		 */
+		const sidebar =
+			document.getElementById('sidebar');
+
+		const toggleBtn =
+			document.getElementById('toggle-btn');
+
+		if (sidebar && toggleBtn) {
+
+			toggleBtn.addEventListener('click', () => {
+				sidebar.classList.toggle('expanded');
+			});
+
+		}
+
+
+		/*
+		 * PESQUISA
+		 *
+		 * Os cards já vieram renderizados pelo Thymeleaf.
+		 * O JavaScript apenas controla a exibição.
+		 */
+		const searchInput =
+			document.getElementById('search-student');
+
+		const studentsGrid =
+			document.getElementById('students-grid');
+
+		const noSearchResults =
+			document.getElementById('no-search-results');
+
+
+		if (searchInput && studentsGrid) {
+
+			searchInput.addEventListener('input', () => {
+
+				const query =
+					searchInput.value
+						.trim()
+						.toLocaleLowerCase('pt-BR');
+
+				const cards =
+					studentsGrid.querySelectorAll('.student-card');
+
+				let visiveis = 0;
+
+
+				cards.forEach(card => {
+
+					const nome =
+						(card.dataset.nome || '')
+							.toLocaleLowerCase('pt-BR');
+
+					const email =
+						(card.dataset.email || '')
+							.toLocaleLowerCase('pt-BR');
+
+					const exibir =
+						nome.includes(query) ||
+						email.includes(query);
+
+
+					card.style.display =
+						exibir ? '' : 'none';
+
+
+					if (exibir) {
+						visiveis++;
+					}
+
+				});
+
+
+				if (noSearchResults) {
+
+					noSearchResults.style.display =
+						cards.length > 0 &&
+							visiveis === 0
+							? ''
+							: 'none';
+
+				}
+
+			});
+
+		}
+
+
+		/*
+		 * MODAL DO RELATÓRIO
+		 */
+		const relatorioModal =
+			document.getElementById('relatorio-modal');
+
+		const btnFecharRelatorio =
+			document.getElementById('btn-fechar-relatorio');
+
+
+		document.querySelectorAll('.btn-view-report')
+			.forEach(button => {
+
+				button.addEventListener('click', event => {
+
+					const card =
+						event.currentTarget.closest('.student-card');
+
+					if (!card) return;
+
+
+					document.getElementById(
+						'relatorio-aluno-nome'
+					).textContent =
+						`Relatório: ${card.dataset.nome || 'Aluno'}`;
+
+
+					document.getElementById(
+						'relatorio-aluno-sub'
+					).textContent =
+						card.dataset.email || 'Dados do aluno';
+
+
+					document.getElementById(
+						'relatorio-hiperfoco'
+					).textContent =
+						card.dataset.hiperfoco || 'Não informado';
+
+
+					const tempoFoco =
+						parseFloat(card.dataset.tempoFoco || '0');
+
+					document.getElementById(
+						'relatorio-foco'
+					).textContent =
+						tempoFoco > 0
+							? `${tempoFoco.toLocaleString('pt-BR')} min`
+							: 'Não informado';
+
+
+					document.getElementById(
+						'relatorio-laudo'
+					).textContent =
+						card.dataset.laudo || 'Não informado';
+
+
+					document.getElementById(
+						'relatorio-desregulacao'
+					).textContent =
+						card.dataset.desregulacao || 'Não informada';
+
+
+					relatorioModal.classList.add('active');
+
+				});
+
+			});
+
+
+		if (btnFecharRelatorio) {
+
+			btnFecharRelatorio.addEventListener('click', () => {
+				relatorioModal.classList.remove('active');
+			});
+
+		}
+
+
+		/*
+		 * MODAL DA FICHA
+		 */
+		const fichaModal =
+			document.getElementById('ficha-modal');
+
+		const btnFecharFicha =
+			document.getElementById('btn-fechar-ficha');
+
+
+		document.querySelectorAll('.btn-view-ficha')
+			.forEach(button => {
+
+				button.addEventListener('click', event => {
+
+					const card =
+						event.currentTarget.closest('.student-card');
+
+					if (!card) return;
+
+
+					document.getElementById(
+						'ficha-aluno-nome'
+					).textContent =
+						`Ficha: ${card.dataset.nome || 'Aluno'}`;
+
+
+					document.getElementById(
+						'ficha-email'
+					).textContent =
+						card.dataset.email || 'Não informado';
+
+
+					document.getElementById(
+						'ficha-telefone'
+					).textContent =
+						card.dataset.telefone || 'Não informado';
+
+
+					document.getElementById(
+						'ficha-data-nascimento'
+					).textContent =
+						card.dataset.dataNascimento || 'Não informada';
+
+
+					document.getElementById(
+						'ficha-laudo'
+					).textContent =
+						card.dataset.laudo || 'Não informado';
+
+
+					document.getElementById(
+						'ficha-desregulacao'
+					).textContent =
+						card.dataset.desregulacao || 'Não informada';
+
+
+					fichaModal.classList.add('active');
+
+				});
+
+			});
+
+
+		if (btnFecharFicha) {
+
+			btnFecharFicha.addEventListener('click', () => {
+				fichaModal.classList.remove('active');
+			});
+
+		}
+
+
+		/*
+		 * VINCULAR ALUNO
+		 */
+		const vincularModal =
+			document.getElementById('vincular-aluno-modal');
+
+		const btnOpenVincular =
+			document.getElementById('btn-open-vincular-aluno');
+
+		const btnCancelVincular =
+			document.getElementById('btn-cancel-vincular');
+
+
+		if (btnOpenVincular && vincularModal) {
+
+			btnOpenVincular.addEventListener('click', () => {
+				vincularModal.classList.add('active');
+			});
+
+		}
+
+
+		if (btnCancelVincular && vincularModal) {
+
+			btnCancelVincular.addEventListener('click', () => {
+				vincularModal.classList.remove('active');
+			});
+
+		}
+
+
+		/*
+		 * LOGOUT
+		 */
+		const logoutModal =
+			document.getElementById('logout-modal');
+
+		const btnOpenLogout =
+			document.getElementById('btn-open-logout');
+
+		const btnCancelLogout =
+			document.getElementById('btn-cancel-logout');
+
+		const btnConfirmLogout =
+			document.getElementById('btn-confirm-logout');
+
+
+		if (btnOpenLogout && logoutModal) {
+
+			btnOpenLogout.addEventListener('click', event => {
+
+				event.preventDefault();
+
+				logoutModal.classList.add('active');
+
+			});
+
+		}
+
+
+		if (btnCancelLogout && logoutModal) {
+
+			btnCancelLogout.addEventListener('click', () => {
+				logoutModal.classList.remove('active');
+			});
+
+		}
+
+
+		if (btnConfirmLogout) {
+
+			btnConfirmLogout.addEventListener('click', () => {
+
+				const logoutForm =
+					document.getElementById('logoutForm');
+
+				if (logoutForm) {
+					logoutForm.submit();
+				}
+
+			});
+
+		}
+
+
+		/*
+		 * Fecha modais clicando fora.
+		 */
+		[
+			relatorioModal,
+			fichaModal,
+			vincularModal,
+			logoutModal
+		].forEach(modal => {
+
+			if (!modal) return;
+
+			modal.addEventListener('click', event => {
+
+				if (event.target === modal) {
+					modal.classList.remove('active');
+				}
+
+			});
+
+		});
+
+	</script>
+
 </body>
+
 </html>

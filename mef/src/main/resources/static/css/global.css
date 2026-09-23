@@ -1,0 +1,54 @@
+body.dark-mode {
+    background-color: #0a1922 !important;
+    color: #e1ebf0 !important;
+}
+
+body.dark-mode .main-content {
+    background-color: #0a1922 !important;
+}
+
+body.dark-mode .page-title,
+body.dark-mode .section-title,
+body.dark-mode .greeting-title,
+body.dark-mode .config-label,
+body.dark-mode .metric-value,
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .metric-card,
+body.dark-mode .config-card-group,
+body.dark-mode .calendar-card-container,
+body.dark-mode .calendar-card-panel,
+body.dark-mode .stat-mini-card,
+body.dark-mode .event-item-card,
+body.dark-mode .reminders-box,
+body.dark-mode .alerts-wrapper {
+    background-color: #122834 !important;
+    border-color: #1e3c4d !important;
+}
+
+body.dark-mode .modal-card,
+body.dark-mode .wireframe-popup-inner {
+    background-color: #122834 !important;
+    color: #ffffff !important;
+}
+#logout-modal .btn-modal-cancel {
+    background-color: #ffffff !important;
+    color: #557D91 !important;
+    border: 2px solid #557D91 !important;
+}
+
+#logout-modal .btn-modal-cancel:hover {
+    background-color: #f1f5f8 !important;
+}
+
+#logout-modal .btn-modal-logout {
+    background-color: #E69C2E !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+#logout-modal .btn-modal-logout:hover {
+    background-color: #d48419 !important;
+}

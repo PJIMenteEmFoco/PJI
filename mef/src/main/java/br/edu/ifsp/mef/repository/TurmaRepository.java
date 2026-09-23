@@ -1,6 +1,7 @@
 package br.edu.ifsp.mef.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -53,4 +54,26 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 			""")
 	List<Turma> findByIdProfessor(@Param("idProfessor") Long idProfessor);
 
+	@Query("""
+			    SELECT DISTINCT t
+			    FROM Turma t
+			    JOIN FETCH t.usuarios membro
+			    JOIN t.usuarios professor
+			    WHERE t.id = :idTurma
+			    AND professor.id = :idProfessor
+			    AND UPPER(professor.perfil) = 'PROFESSOR'
+			""")
+	Optional<Turma> buscarTurmaDoProfessor(@Param("idTurma") Long idTurma, @Param("idProfessor") Long idProfessor);
+
+	// NOVO:
+	// busca SOMENTE os alunos da turma selecionada
+	@Query("""
+			    SELECT DISTINCT usuario
+			    FROM Turma turma
+			    JOIN turma.usuarios usuario
+			    WHERE turma.id = :idTurma
+			    AND UPPER(usuario.perfil) = 'ALUNO'
+			    ORDER BY usuario.nome
+			""")
+	List<Usuario> buscarAlunosDaTurma(@Param("idTurma") Long idTurma);
 }

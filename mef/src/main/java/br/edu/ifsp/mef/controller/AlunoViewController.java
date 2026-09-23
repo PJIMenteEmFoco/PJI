@@ -8,16 +8,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import br.edu.ifsp.mef.model.Aluno;
+import br.edu.ifsp.mef.model.Atividade;
+import br.edu.ifsp.mef.model.Calendario;
 import br.edu.ifsp.mef.model.Usuario;
 import br.edu.ifsp.mef.model.UsuarioDetails;
 import br.edu.ifsp.mef.repository.UsuarioRepository;
 import br.edu.ifsp.mef.service.AlunoService;
+import br.edu.ifsp.mef.service.CalendarioService;
 
 @Controller
 public class AlunoViewController {
 
 	@Autowired
 	AlunoService alunoService;
+	@Autowired
+	CalendarioService calendarioService;
     @Autowired
     UsuarioRepository usuarioRepository;
 	
@@ -26,11 +32,6 @@ public class AlunoViewController {
         
         String emailLogado = authentication.getName();
         Usuario aluno = usuarioRepository.findByEmailIgnoreCase(emailLogado).orElse(null);
-        // 3. Passa as listas de tarefas (substitua pelos seus métodos reais do banco)
-        // model.addAttribute("tarefasPendentes", tarefaService.buscarPendentes(aluno.getId()));
-        // model.addAttribute("tarefasAtrasadas", tarefaService.buscarAtrasadas(aluno.getId()));
-
-        // Meta da semana (pode deixar valores fixos por enquanto também, se preferir)
         model.addAttribute("metaConcluidas", 7);
         model.addAttribute("metaTotal", 10);
         model.addAttribute("metaPorcentagem", 70);
@@ -52,6 +53,16 @@ public class AlunoViewController {
 	@GetMapping("/aluno/desempenho")
 	public String relatorioDesempenho() {
 		return "aluno/relatorio_desempenho";
+	}
+	
+	@GetMapping("/aluno/calendario")
+	public String calendario(Authentication authentication, Model model) {
+		UsuarioDetails aluno = (UsuarioDetails) authentication.getPrincipal();
+	    Calendario calendario = calendarioService.buscarPorAluno((Aluno) aluno.getUsuario());
+	    List<Atividade> atividadesDoAluno = alunoService.buscarAtividades(aluno.getId());
+	    model.addAttribute("calendario", calendario);
+	    model.addAttribute("atividadesDoAluno", atividadesDoAluno);
+		return "aluno/calendario_aluno";
 	}
 
 	@GetMapping("/aluno/chat")

@@ -5,11 +5,13 @@ import br.edu.ifsp.mef.repository.AtividadeRepository;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifsp.mef.model.Atividade;
+import br.edu.ifsp.mef.model.Turma;
 import br.edu.ifsp.mef.model.Usuario;
 import br.edu.ifsp.mef.repository.TurmaRepository;
 
@@ -49,5 +51,21 @@ public class ProfessorService {
 
 		return atividadeRepository.findAtividadesDaSemanaDoProfessor(idProfessor, inicioSemana, fimSemana);
 	}
+
+	public List<Atividade> buscarTodasAtividades(Long idProfessor) {
+		return atividadeRepository.findAtividadesDoAluno(idProfessor);
+	}
+
+	public List<Usuario> buscarAlunosPorTurma(Long idTurma) {
+		return turmaRepository.buscarAlunosDaTurma(idTurma);
+	}
+
+	public Optional<Turma> buscarTurmaDoProfessor(Long idTurma, Long idProfessor) {
+		return turmaRepository.buscarTurmaDoProfessor(idTurma, idProfessor);
+	}
+	
+	public long contarAtividadesDaTurma(Long idTurma) {
+	    return atividadeRepository.countAtividadesDaTurma(idTurma);
+	}	
 
 }

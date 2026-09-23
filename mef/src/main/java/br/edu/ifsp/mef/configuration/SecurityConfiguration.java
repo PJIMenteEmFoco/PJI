@@ -25,7 +25,7 @@ public class SecurityConfiguration {
 	public SecurityFilterChain seguranca(HttpSecurity https) throws Exception {
 		return https
 				.authorizeHttpRequests((auth) -> auth
-						.requestMatchers("/login", "/cadastro", "/cadastrar", "/css/**", "/img/**").permitAll()
+						.requestMatchers("/login", "/cadastro", "/cadastrar", "/css/**", "/img/**", "/error").permitAll()
 						.requestMatchers("/categoria/excluirContaPsico/**").hasAnyRole("PSICOPEDAGOGO", "ADMIN")
 						.requestMatchers("/categoria/excluirContaProfessor/**").hasAnyRole("PROFESSOR", "ADMIN")
 						.requestMatchers("/categoria/excluirContaAluno/**")

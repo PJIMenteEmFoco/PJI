@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title
+		th:text="${aluno != null ? 'Agenda de ' + aluno.nome + ' | Mente em Foco' : 'Agenda do Aluno | Mente em Foco'}">
+		Agenda do Aluno | Mente em Foco
+	</title>
+
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/agenda_aluno.css}">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+
+	<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+	<!-- LOGOUT -->
+	<form th:action="@{/logout}" method="post" id="logoutForm" style="display:none;">
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+
+	<div id="eventos-data" hidden>
+
+		<div class="evento-item" th:if="${calendario != null}" th:each="evento : ${calendario.eventos}"
+			th:attr="
+                data-id=${evento.id},
+                data-year=${evento.dataInicio.year},
+                data-month=${evento.dataInicio.monthValue - 1},
+                data-day=${evento.dataInicio.dayOfMonth},
+                data-title=${evento.nome},
+                data-desc=${evento.descricao},
+                data-priority=${evento.prioridade},
+                data-pillclass=${evento.prioridade == 'ALTA' ? 'orange' : (evento.prioridade == 'MEDIA' ? 'dark' : 'blue')},
+                data-labelpill=${evento.prioridade == 'ALTA' ? 'Alta prioridade' : (evento.prioridade == 'MEDIA' ? 'Média prioridade' : 'Baixa prioridade')}">
+		</div>
+
+	</div>
+
+
+	<div id="atividades-data" hidden>
+
+		<div class="atividade-item" th:each="atividade : ${atividadesDoAluno}" th:if="${atividade.prazo != null}"
+			th:attr="
+                data-id=${atividade.id},
+                data-year=${atividade.prazo.year},
+                data-month=${atividade.prazo.monthValue - 1},
+                data-day=${atividade.prazo.dayOfMonth},
+                data-title=${atividade.nome},
+                data-desc=${atividade.descricao},
+                data-tipo=${atividade.tipoAtividade},
+                data-status=${atividade.status}">
+		</div>
+
+	</div>
+
+
+	<div class="app-layout">
+
+		<!-- SIDEBAR DO PROFESSOR -->
+		<aside class="sidebar" id="sidebar">
+
+			<div class="sidebar-header">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav">
+
+				<a th:href="@{/professor/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+
+				<a th:href="@{/professor/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+
+				<a th:href="@{/professor/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+
+				<a th:href="@{/professor/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+
+				<a th:href="@{/professor/turmas}" class="nav-link active">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+
+			</nav>
+
+			<div class="sidebar-footer">
+
+				<a th:href="@{/professor/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+
+				<button type="button" class="nav-link" id="btn-open-logout">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+
+			</div>
+
+		</aside>
+
+
+		<main class="main-content">
+
+			<div class="student-agenda-container">
+
+				<!-- CABEÇALHO -->
+				<div class="agenda-page-header">
+
+					<div>
+						<a th:href="@{/professor/turmas}" class="back-link">
+							<i data-lucide="arrow-left"></i>
+							Voltar para turmas
+						</a>
+
+						<h1 class="page-title">
+							Agenda do
+							<span th:text="${aluno.nome}">Heitor</span>
+						</h1>
+					</div>
+
+					<a class="btn-assign-task" th:href="@{/professor/tarefas/nova(alunoId=${aluno.id})}">
+						<i data-lucide="plus"></i>
+						Atribuir tarefa
+					</a>
+
+				</div>
+
+
+				<!-- RESUMO -->
+				<div class="stats-overview-row">
+
+					<div class="stat-mini-card">
+
+						<div class="stat-icon-wrapper orange">
+							<i data-lucide="book-open"></i>
+						</div>
+
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-aulas">0</span>
+							<span class="stat-label">Aulas/Sessões este mês</span>
+						</div>
+
+					</div>
+
+
+					<div class="stat-mini-card">
+
+						<div class="stat-icon-wrapper blue">
+							<i data-lucide="file-text"></i>
+						</div>
+
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-avaliar">0</span>
+							<span class="stat-label">Atividades a avaliar</span>
+						</div>
+
+					</div>
+
+
+					<div class="stat-mini-card">
+
+						<div class="stat-icon-wrapper dark">
+							<i data-lucide="alert-circle"></i>
+						</div>
+
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-prioridade">0</span>
+							<span class="stat-label">Alta prioridade</span>
+						</div>
+
+					</div>
+
+				</div>
+
+
+				<!-- CALENDÁRIO + AGENDA -->
+				<div class="main-calendar-grid">
+
+					<section class="calendar-card-panel">
+
+						<div class="calendar-toolbar-header">
+
+							<div class="month-navigation">
+
+								<button type="button" class="btn-month-nav" id="btn-prev-month"
+									aria-label="Mês anterior">
+									<i data-lucide="chevron-left"></i>
+								</button>
+
+								<h2 id="calendar-month-year">-</h2>
+
+								<button type="button" class="btn-month-nav" id="btn-next-month"
+									aria-label="Próximo mês">
+									<i data-lucide="chevron-right"></i>
+								</button>
+
+							</div>
+
+
+							<div class="legend-inline">
+
+								<span class="legend-chip high">
+									<span class="dot-color"></span>
+									Alta
+								</span>
+
+								<span class="legend-chip medium">
+									<span class="dot-color"></span>
+									Média
+								</span>
+
+								<span class="legend-chip low">
+									<span class="dot-color"></span>
+									Baixa
+								</span>
+
+							</div>
+
+						</div>
+
+
+						<table class="grid-calendar-table">
+
+							<thead>
+								<tr>
+									<th>Dom</th>
+									<th>Seg</th>
+									<th>Ter</th>
+									<th>Qua</th>
+									<th>Qui</th>
+									<th>Sex</th>
+									<th>Sáb</th>
+								</tr>
+							</thead>
+
+							<tbody id="calendar-body"></tbody>
+
+						</table>
+
+					</section>
+
+
+					<aside class="agenda-sidebar-panel">
+
+						<div class="section-sub-header">
+
+							<h3>Aulas e Compromissos</h3>
+
+							<span id="agenda-month-label">-</span>
+
+						</div>
+
+						<div class="events-stack-list" id="events-stack-list">
+						</div>
+
+					</aside>
+
+				</div>
+
+			</div>
+
+		</main>
+
+	</div>
+
+
+	<!-- MODAL: DETALHES -->
+	<div class="modal-overlay" id="modal-view-event">
+
+		<div class="event-modal-card">
+
+			<div class="modal-head">
+
+				<div>
+					<span class="modal-kind" id="view-kind-label">
+						Compromisso
+					</span>
+
+					<h3 id="view-title">--</h3>
+				</div>
+
+				<button type="button" class="modal-icon-close" id="btn-close-view-event">
+					<i data-lucide="x"></i>
+				</button>
+
+			</div>
+
+			<p class="modal-description" id="view-description">
+				--
+			</p>
+
+			<div class="modal-date">
+				<i data-lucide="calendar-days"></i>
+				<strong id="view-date">--</strong>
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<!-- MODAL: LOGOUT -->
+	<div class="modal-overlay" id="logout-modal">
+
+		<div class="logout-modal-card">
+
+			<h3>
+				Tem certeza que deseja sair da sua conta?
+			</h3>
+
+			<div class="logout-modal-actions">
+
+				<button type="button" class="btn-logout-cancel" id="btn-cancel-logout">
+					Cancelar
+				</button>
+
+				<button type="button" class="btn-logout-confirm" id="btn-confirm-logout">
+					Sair
+				</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<script th:inline="none">
+
+		/* =====================================================
+		   BASE
+		   ===================================================== */
+
+		(function initTheme() {
+			if (localStorage.getItem('theme') === 'escuro') {
+				document.body.classList.add('dark-mode');
+			}
+		})();
+
+		lucide.createIcons();
+
+
+		const sidebar =
+			document.getElementById('sidebar');
+
+		const toggleBtn =
+			document.getElementById('toggle-btn');
+
+		if (sidebar && toggleBtn) {
+			toggleBtn.addEventListener('click', () => {
+				sidebar.classList.toggle('expanded');
+			});
+		}
+
+
+		function textoLegivel(valorEnum) {
+
+			if (!valorEnum) return '';
+
+			return valorEnum
+				.toString()
+				.toLowerCase()
+				.replace(/_/g, ' ')
+				.replace(/\b\w/g, letra => letra.toUpperCase());
+		}
+
+
+		function escapeHtml(value) {
+
+			return String(value ?? '')
+				.replaceAll('&', '&amp;')
+				.replaceAll('<', '&lt;')
+				.replaceAll('>', '&gt;')
+				.replaceAll('"', '&quot;')
+				.replaceAll("'", '&#039;');
+		}
+
+
+		/* =====================================================
+		   DADOS VINDOS DO THYMELEAF
+		   ===================================================== */
+
+		const eventosDoBanco =
+			Array.from(
+				document.querySelectorAll(
+					'#eventos-data .evento-item'
+				)
+			)
+				.map(el => ({
+
+					kind: 'evento',
+
+					id: el.dataset.id,
+
+					year: Number(el.dataset.year),
+
+					month: Number(el.dataset.month),
+
+					day: Number(el.dataset.day),
+
+					title: el.dataset.title || 'Evento',
+
+					desc: el.dataset.desc || '',
+
+					priority: el.dataset.priority || 'BAIXA',
+
+					pillClass:
+						el.dataset.pillclass || 'blue',
+
+					labelPill:
+						el.dataset.labelpill || 'Evento'
+
+				}));
+
+
+		const atividadesDoBanco =
+			Array.from(
+				document.querySelectorAll(
+					'#atividades-data .atividade-item'
+				)
+			)
+				.map(el => ({
+
+					kind: 'atividade',
+
+					id: el.dataset.id,
+
+					year: Number(el.dataset.year),
+
+					month: Number(el.dataset.month),
+
+					day: Number(el.dataset.day),
+
+					title: el.dataset.title || 'Atividade',
+
+					desc: el.dataset.desc || '',
+
+					priority: null,
+
+					pillClass: 'dark',
+
+					labelPill:
+						textoLegivel(el.dataset.tipo) ||
+						'Atividade',
+
+					status:
+						el.dataset.status || ''
+
+				}));
+
+
+		const databaseEvents =
+			eventosDoBanco.concat(atividadesDoBanco);
+
+
+		/* =====================================================
+		   CALENDÁRIO
+		   ===================================================== */
+
+		const monthNames = [
+			'Janeiro',
+			'Fevereiro',
+			'Março',
+			'Abril',
+			'Maio',
+			'Junho',
+			'Julho',
+			'Agosto',
+			'Setembro',
+			'Outubro',
+			'Novembro',
+			'Dezembro'
+		];
+
+
+		const hoje = new Date();
+
+		let currentYear =
+			hoje.getFullYear();
+
+		let currentMonth =
+			hoje.getMonth();
+
+
+		const calendarBody =
+			document.getElementById('calendar-body');
+
+		const calendarHeader =
+			document.getElementById('calendar-month-year');
+
+		const agendaMonthLabel =
+			document.getElementById('agenda-month-label');
+
+		const eventsStackList =
+			document.getElementById('events-stack-list');
+
+
+		function renderCalendar(year, month) {
+
+			calendarBody.innerHTML = '';
+
+			calendarHeader.textContent =
+				`${monthNames[month]} ${year}`;
+
+			agendaMonthLabel.textContent =
+				monthNames[month];
+
+
+			const firstDayIndex =
+				new Date(year, month, 1).getDay();
+
+			const totalDaysInMonth =
+				new Date(year, month + 1, 0).getDate();
+
+			const prevMonthLastDay =
+				new Date(year, month, 0).getDate();
+
+
+			let dayCounter = 1;
+
+			let nextMonthDayCounter = 1;
+
+			let calendarHtml = '';
+
+
+			for (let row = 0; row < 6; row++) {
+
+				let rowHtml = '<tr>';
+
+
+				for (let col = 0; col < 7; col++) {
+
+					const cellIndex =
+						row * 7 + col;
+
+
+					if (cellIndex < firstDayIndex) {
+
+						const prevDay =
+							prevMonthLastDay -
+							(firstDayIndex - cellIndex - 1);
+
+						rowHtml += `
+                            <td class="muted-day">
+                                <span class="num">
+                                    ${prevDay}
+                                </span>
+                            </td>
+                        `;
+
+						continue;
+					}
+
+
+					if (dayCounter > totalDaysInMonth) {
+
+						rowHtml += `
+                            <td class="muted-day">
+                                <span class="num">
+                                    ${nextMonthDayCounter}
+                                </span>
+                            </td>
+                        `;
+
+						nextMonthDayCounter++;
+
+						continue;
+					}
+
+
+					const currentDayNum =
+						dayCounter;
+
+
+					const isToday =
+						currentDayNum === hoje.getDate() &&
+						month === hoje.getMonth() &&
+						year === hoje.getFullYear();
+
+
+					const dayEvents =
+						databaseEvents.filter(evento =>
+							evento.year === year &&
+							evento.month === month &&
+							evento.day === currentDayNum
+						);
+
+
+					const cellClasses = [];
+
+					if (isToday) {
+						cellClasses.push('active-today');
+					}
+
+					if (dayEvents.length > 0) {
+						cellClasses.push('clickable-day');
+					}
+
+
+					const eventPills =
+						dayEvents
+							.slice(0, 2)
+							.map(evento => `
+                                <div class="event-pill-item ${escapeHtml(evento.pillClass)}">
+                                    ${escapeHtml(evento.labelPill)}
+                                </div>
+                            `)
+							.join('');
+
+
+					const morePill =
+						dayEvents.length > 2
+							? `<div class="event-more-pill">+${dayEvents.length - 2}</div>`
+							: '';
+
+
+					rowHtml += `
+                        <td class="${cellClasses.join(' ')}"
+                            data-year="${year}"
+                            data-month="${month}"
+                            data-day="${currentDayNum}">
+
+                            <div class="day-number-row">
+
+                                <span class="num">
+                                    ${currentDayNum}
+                                </span>
+
+                                ${isToday
+							? '<span class="day-tag">Hoje</span>'
+							: ''
+						}
+
+                            </div>
+
+                            ${eventPills}
+                            ${morePill}
+
+                        </td>
+                    `;
+
+
+					dayCounter++;
+				}
+
+
+				rowHtml += '</tr>';
+
+				calendarHtml += rowHtml;
+
+
+				if (
+					dayCounter > totalDaysInMonth &&
+					(row + 1) * 7 >=
+					firstDayIndex + totalDaysInMonth
+				) {
+					break;
+				}
+			}
+
+
+			calendarBody.innerHTML =
+				calendarHtml;
+
+
+			document
+				.querySelectorAll(
+					'#calendar-body .clickable-day'
+				)
+				.forEach(cell => {
+
+					cell.addEventListener(
+						'click',
+						() => {
+
+							const year =
+								Number(cell.dataset.year);
+
+							const month =
+								Number(cell.dataset.month);
+
+							const day =
+								Number(cell.dataset.day);
+
+
+							const evento =
+								databaseEvents.find(item =>
+									item.year === year &&
+									item.month === month &&
+									item.day === day
+								);
+
+
+							if (evento) {
+								openEventDetails(
+									evento.id,
+									evento.kind
+								);
+							}
+						}
+					);
+
+				});
+
+
+			atualizarEstatisticas(
+				year,
+				month
+			);
+
+
+			renderAgendaList(
+				year,
+				month
+			);
+		}
+
+
+		function atualizarEstatisticas(
+			year,
+			month
+		) {
+
+			const eventosDoMes =
+				eventosDoBanco.filter(item =>
+					item.year === year &&
+					item.month === month
+				);
+
+
+			const atividadesDoMes =
+				atividadesDoBanco.filter(item =>
+					item.year === year &&
+					item.month === month
+				);
+
+
+			const atividadesAvaliacao =
+				atividadesDoMes.filter(item => {
+
+					const status =
+						(item.status || '')
+							.toUpperCase();
+
+					return !status.includes('CONCLU');
+				});
+
+
+			const altaPrioridade =
+				eventosDoMes.filter(item =>
+					(item.priority || '')
+						.toUpperCase() === 'ALTA'
+				);
+
+
+			document
+				.getElementById('stat-aulas')
+				.textContent =
+				eventosDoMes.length;
+
+
+			document
+				.getElementById('stat-avaliar')
+				.textContent =
+				atividadesAvaliacao.length;
+
+
+			document
+				.getElementById('stat-prioridade')
+				.textContent =
+				altaPrioridade.length;
+		}
+
+
+		function renderAgendaList(
+			year,
+			month
+		) {
+
+			const monthEvents =
+				databaseEvents
+					.filter(evento =>
+						evento.year === year &&
+						evento.month === month
+					)
+					.sort((a, b) =>
+						a.day - b.day
+					);
+
+
+			if (monthEvents.length === 0) {
+
+				eventsStackList.innerHTML = `
+                    <div class="agenda-empty">
+                        <i data-lucide="calendar-x"></i>
+                        <p>
+                            Nenhum compromisso cadastrado
+                            neste mês.
+                        </p>
+                    </div>
+                `;
+
+				lucide.createIcons();
+
+				return;
+			}
+
+
+			eventsStackList.innerHTML =
+				monthEvents
+					.map(evento => {
+
+						const priorityClass =
+							evento.priority === 'ALTA'
+								? 'high'
+								: evento.priority === 'MEDIA'
+									? 'medium'
+									: 'low';
+
+
+						const badgeText =
+							evento.kind === 'atividade'
+								? evento.labelPill
+								: evento.labelPill;
+
+
+						return `
+                            <button
+                                type="button"
+                                class="event-item-card priority-${priorityClass}"
+                                data-id="${escapeHtml(evento.id)}"
+                                data-kind="${escapeHtml(evento.kind)}">
+
+                                <div class="event-card-header">
+
+                                    <span class="badge-priority ${priorityClass}">
+                                        ${escapeHtml(badgeText)}
+                                    </span>
+
+                                    <span class="event-date-time">
+                                        ${evento.day}
+                                        ${monthNames[month]
+								.substring(0, 3)
+								.toUpperCase()}
+                                    </span>
+
+                                </div>
+
+                                <h4>
+                                    ${escapeHtml(evento.title)}
+                                </h4>
+
+                                <p>
+                                    ${escapeHtml(evento.desc)}
+                                </p>
+
+                            </button>
+                        `;
+
+					})
+					.join('');
+
+
+			eventsStackList
+				.querySelectorAll(
+					'.event-item-card'
+				)
+				.forEach(card => {
+
+					card.addEventListener(
+						'click',
+						() => {
+
+							openEventDetails(
+								card.dataset.id,
+								card.dataset.kind
+							);
+
+						}
+					);
+
+				});
+		}
+
+
+		/* =====================================================
+		   NAVEGAÇÃO DOS MESES
+		   ===================================================== */
+
+		document
+			.getElementById('btn-prev-month')
+			.addEventListener(
+				'click',
+				() => {
+
+					currentMonth--;
+
+					if (currentMonth < 0) {
+						currentMonth = 11;
+						currentYear--;
+					}
+
+					renderCalendar(
+						currentYear,
+						currentMonth
+					);
+				}
+			);
+
+
+		document
+			.getElementById('btn-next-month')
+			.addEventListener(
+				'click',
+				() => {
+
+					currentMonth++;
+
+					if (currentMonth > 11) {
+						currentMonth = 0;
+						currentYear++;
+					}
+
+					renderCalendar(
+						currentYear,
+						currentMonth
+					);
+				}
+			);
+
+
+		/* =====================================================
+		   MODAL DE DETALHES
+		   ===================================================== */
+
+		const modalViewEvent =
+			document.getElementById(
+				'modal-view-event'
+			);
+
+
+		function openEventDetails(
+			id,
+			kind
+		) {
+
+			const evento =
+				databaseEvents.find(item =>
+					String(item.id) === String(id) &&
+					item.kind === kind
+				);
+
+
+			if (!evento) return;
+
+
+			document
+				.getElementById(
+					'view-kind-label'
+				)
+				.textContent =
+				kind === 'atividade'
+					? 'Atividade'
+					: 'Compromisso';
+
+
+			document
+				.getElementById(
+					'view-title'
+				)
+				.textContent =
+				evento.title;
+
+
+			document
+				.getElementById(
+					'view-description'
+				)
+				.textContent =
+				evento.desc ||
+				'Sem descrição informada.';
+
+
+			document
+				.getElementById(
+					'view-date'
+				)
+				.textContent =
+				`${evento.day} de ` +
+				`${monthNames[evento.month].toLowerCase()} de ` +
+				`${evento.year}`;
+
+
+			modalViewEvent
+				.classList
+				.add('active');
+		}
+
+
+		document
+			.getElementById(
+				'btn-close-view-event'
+			)
+			.addEventListener(
+				'click',
+				() => {
+
+					modalViewEvent
+						.classList
+						.remove('active');
+
+				}
+			);
+
+
+		/* =====================================================
+		   LOGOUT
+		   ===================================================== */
+
+		const logoutModal =
+			document.getElementById(
+				'logout-modal'
+			);
+
+
+		document
+			.getElementById(
+				'btn-open-logout'
+			)
+			.addEventListener(
+				'click',
+				event => {
+
+					event.preventDefault();
+
+					logoutModal
+						.classList
+						.add('active');
+
+				}
+			);
+
+
+		document
+			.getElementById(
+				'btn-cancel-logout'
+			)
+			.addEventListener(
+				'click',
+				() => {
+
+					logoutModal
+						.classList
+						.remove('active');
+
+				}
+			);
+
+
+		document
+			.getElementById(
+				'btn-confirm-logout'
+			)
+			.addEventListener(
+				'click',
+				() => {
+
+					document
+						.getElementById(
+							'logoutForm'
+						)
+						.submit();
+
+				}
+			);
+
+
+		[
+			modalViewEvent,
+			logoutModal
+		].forEach(modal => {
+
+			modal.addEventListener(
+				'click',
+				event => {
+
+					if (event.target === modal) {
+						modal
+							.classList
+							.remove('active');
+					}
+
+				}
+			);
+
+		});
+
+
+		renderCalendar(
+			currentYear,
+			currentMonth
+		);
+
+	</script>
+
+</body>
+
+</html>

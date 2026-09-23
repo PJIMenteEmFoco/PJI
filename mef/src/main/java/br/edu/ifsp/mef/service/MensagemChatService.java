@@ -30,7 +30,6 @@ public class MensagemChatService {
 
 	public List<MensagemChatEntity> buscarConversa(String usuario1, String usuario2) {
 
-		return repository.findBySenderAndRecipientOrRecipientAndSenderOrderByTimestampAsc(usuario1, usuario2, usuario2,
-				usuario1);
+		return repository.findConversasBetween(usuario1, usuario2);
 	}
 }

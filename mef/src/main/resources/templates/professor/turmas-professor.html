@@ -1,38 +1,31 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
-
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title>Turmas - Mente em Foco</title>
 
-	<link rel="stylesheet" th:href="@{/css/turmas-professor.css}">
+	<!-- CSS usado pela versão visual que já estava funcionando -->
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="stylesheet" href="/css/turmas-professor.css" th:href="@{/css/turmas-professor.css}">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 	<link
 		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
 		rel="stylesheet">
 
 	<script src="https://unpkg.com/lucide@latest"></script>
-
 </head>
 
 <body>
 
-
-	<!-- LOGOUT -->
+	<!-- Formulário de logout usado pelo Spring Security -->
 	<form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;">
-
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 	</form>
-
 
 	<div class="app-layout">
 
@@ -40,143 +33,88 @@
 		<aside class="sidebar" id="sidebar">
 
 			<div class="sidebar-header">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
 
-				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
-
-				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
-
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-full-white">
 			</div>
-
 
 			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-
-				<i data-lucide="chevron-left"></i>
-
+				<i data-lucide="chevron-right"></i>
 			</div>
-
 
 			<nav class="sidebar-nav">
 
-				<a th:href="@{/professor/dashboard}" class="nav-link">
-
+				<a href="/professor/dashboard" th:href="@{/professor/dashboard}" class="nav-link">
 					<i data-lucide="home"></i>
-
-					<span class="nav-title">
-						Início
-					</span>
-
+					<span class="nav-title">Início</span>
 				</a>
 
-
-				<a th:href="@{/professor/tarefas}" class="nav-link">
-
+				<a href="/professor/tarefas" th:href="@{/professor/tarefas}" class="nav-link">
 					<i data-lucide="book-open"></i>
-
-					<span class="nav-title">
-						Atividades
-					</span>
-
+					<span class="nav-title">Atividades</span>
 				</a>
 
-
-				<a th:href="@{/professor/chat}" class="nav-link">
-
+				<a href="/professor/chat" th:href="@{/professor/chat}" class="nav-link">
 					<i data-lucide="message-square"></i>
-
-					<span class="nav-title">
-						Chat
-					</span>
-
+					<span class="nav-title">Chat</span>
 				</a>
 
-
-				<a th:href="@{/professor/calendario}" class="nav-link">
-
+				<a href="/professor/calendario" th:href="@{/professor/calendario}" class="nav-link">
 					<i data-lucide="calendar"></i>
-
-					<span class="nav-title">
-						Calendário
-					</span>
-
+					<span class="nav-title">Calendário</span>
 				</a>
 
-
-				<a th:href="@{/professor/turmas}" class="nav-link active">
-
+				<a href="/professor/turmas" th:href="@{/professor/turmas}" class="nav-link active">
 					<i data-lucide="users"></i>
-
-					<span class="nav-title">
-						Turmas
-					</span>
-
+					<span class="nav-title">Turmas</span>
 				</a>
 
 			</nav>
 
-
 			<div class="sidebar-footer">
 
-				<a th:href="@{/professor/configuracoes}" class="nav-link">
-
+				<a href="/professor/configuracoes" th:href="@{/professor/configuracoes}" class="nav-link">
 					<i data-lucide="settings"></i>
-
-					<span class="nav-title">
-						Ajustes
-					</span>
-
+					<span class="nav-title">Ajustes</span>
 				</a>
 
-
 				<button type="button" class="nav-link" id="btn-open-logout">
-
 					<i data-lucide="log-out"></i>
-
-					<span class="nav-title">
-						Sair
-					</span>
-
+					<span class="nav-title">Sair</span>
 				</button>
 
 			</div>
 
 		</aside>
 
-
 		<!-- CONTEÚDO PRINCIPAL -->
 		<main class="main-content">
 
-			<div class="teams-container">
+			<div class="page-container">
 
-				<h1 class="page-title">
-					Turmas
-				</h1>
+				<h1 class="page-title">Turmas</h1>
 
+				<!-- BARRA DE AÇÕES -->
+				<div class="toolbar-row">
 
-				<!-- AÇÕES -->
-				<div class="header-actions-row">
-
-					<button type="button" class="btn-create-team"
-						onclick="window.location.href='/professor/turmas/nova'">
-
+					<button type="button" class="btn-criar-turma"
+						th:onclick="|window.location.href='@{/professor/turmas/nova}'|">
 						<i data-lucide="plus"></i>
-
 						Criar turma
-
 					</button>
 
+					<div class="filters-group">
 
-					<div class="search-filter-group">
+						<div class="search-box">
+							<i data-lucide="search" style="width: 16px; height: 16px; color: #8fa5b4;"></i>
 
-						<div class="search-input-box">
-
-							<i data-lucide="search"></i>
-
-							<input type="text" id="search-teams" placeholder="Pesquisar turmas..." autocomplete="off">
-
+							<input type="text" id="input-search-turmas" placeholder="Pesquisar turmas..."
+								autocomplete="off">
 						</div>
 
-
-						<select class="select-filter" id="filter-psico">
+						<select class="select-filter" id="select-filter-psico">
 
 							<option value="">
 								Todos os Psicopedagogos
@@ -184,7 +122,7 @@
 
 							<option th:each="psicopedagogo : ${psicopedagogos}" th:value="${psicopedagogo.id}"
 								th:text="${psicopedagogo.nome}">
-
+								Psicopedagogo
 							</option>
 
 						</select>
@@ -193,97 +131,123 @@
 
 				</div>
 
+				<h2 class="section-title">Turmas</h2>
 
-				<h2 class="section-title">
-					Turmas
-				</h2>
+				<!-- GRID DINÂMICO -->
+				<div class="turmas-grid" id="turmas-grid">
 
+					<div class="turma-card" th:each="turma : ${turmas}"
+						th:onclick="|window.location.href='/professor/turmas/${turma.id}'|">
 
-				<!-- GRID DAS TURMAS -->
-				<div class="teams-grid" id="teams-grid">
+						<h3 class="turma-card-title" th:text="${turma.nome}">
+							Turma
+						</h3>
 
-					<!--
-                    Cada card é criado pelo Thymeleaf.
+						<div class="avatars-and-badge">
 
-                    turma.id       -> ID da turma
-                    turma.nome     -> nome da turma
-                    turma.usuarios -> usuários da turma
-                -->
+							<div class="avatar-group">
 
-					<div class="team-card" th:each="turma : ${turmas}"
-						th:onclick="|window.location.href='/professor/turma/${turma.id}'|"> <!-- Nome da turma -->
-						<h3 class="team-card-title" th:text="${turma.nome}"> Turma </h3>
-						<div class="team-card-body"> <!-- Alunos da turma -->
-							<div class="avatar-stack">
-								<th:block th:each="usuario, iterStat : ${turma.usuarios}"
-									th:if="${usuario.perfil == 'ALUNO' and iterStat.index < 3}">
-									<div class="avatar-circle"
-										th:text="${usuario.nome != null and !usuario.nome.isEmpty() ? #strings.substring(usuario.nome, 0, 1).toUpperCase() : '?'}">
-										A </div>
+								<!-- Mostra no máximo os três primeiros ALUNOS -->
+								<th:block th:each="aluno, iterStat : ${turma.usuarios.?[perfil == 'ALUNO']}"
+									th:if="${iterStat.index < 3}">
+
+									<div class="avatar-circle" th:text="${aluno.nome != null and !#strings.isEmpty(aluno.nome)
+                                             ? #strings.substring(aluno.nome, 0, 1).toUpperCase()
+                                             : '?'}">
+										A
+									</div>
+
 								</th:block>
-							</div> <!-- Quantidade de alunos -->
-							<div class="avatar-more-badge"> <i data-lucide="users" style="width:13px; height:13px;"></i>
-								<span th:text="${#lists.size(turma.usuarios.?[perfil == 'ALUNO'])} + ' Alunos'"> 0
-									Alunos </span>
+
+								<!-- Caso a turma não tenha alunos -->
+								<div class="avatar-circle"
+									th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'ALUNO'])}">
+									--
+								</div>
+
 							</div>
-						</div>
 
+							<span class="badge-alunos">
+								<i data-lucide="users" style="width:14px; height:14px;"></i>
 
-						<!-- CASO NÃO TENHA TURMAS NO BANCO -->
-						<div class="empty-teams-message" id="empty-teams-message" th:if="${#lists.isEmpty(turmas)}">
-
-							<i data-lucide="users"></i>
-
-							<p>
-								Você ainda não possui nenhuma turma.
-							</p>
+								<span th:text="${#lists.size(turma.usuarios.?[perfil == 'ALUNO'])} + ' Alunos'">
+									0 Alunos
+								</span>
+							</span>
 
 						</div>
 
+						<div class="turma-info-text">
 
-						<!-- CASO OS FILTROS NÃO ENCONTREM TURMAS -->
-						<div class="empty-teams-message" id="no-results-message" style="display: none;">
+							<div>
+								Professor:
 
-							<i data-lucide="search-x"></i>
+								<strong th:each="usuario : ${turma.usuarios}" th:if="${usuario.perfil == 'PROFESSOR'}"
+									th:text="${usuario.nome}">
+									Professor
+								</strong>
 
-							<p>
-								Nenhuma turma encontrada.
-							</p>
+								<strong th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'PROFESSOR'])}">
+									Não informado
+								</strong>
+							</div>
+
+							<div>
+								Psicopedagogo:
+
+								<strong class="psicopedagogo" th:each="usuario : ${turma.usuarios}"
+									th:if="${usuario.perfil == 'PSICOPEDAGOGO'}"
+									th:attr="data-psicopedagogo-id=${usuario.id}" th:text="${usuario.nome}">
+									Psicopedagogo
+								</strong>
+
+								<strong th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'PSICOPEDAGOGO'])}">
+									Não informado
+								</strong>
+							</div>
 
 						</div>
 
 					</div>
 
+					<!-- Nenhuma turma cadastrada -->
+					<div class="empty-teams-message" id="empty-teams-message"
+						th:if="${turmas == null or #lists.isEmpty(turmas)}">
+						<i data-lucide="users"></i>
+						<p>Você ainda não possui nenhuma turma.</p>
+					</div>
+
+					<!-- Nenhum resultado após pesquisa/filtro -->
+					<div class="empty-teams-message" id="no-results-message" style="display: none;">
+						<i data-lucide="search-x"></i>
+						<p>Nenhuma turma encontrada.</p>
+					</div>
+
 				</div>
+
+			</div>
 
 		</main>
 
 	</div>
 
-
 	<!-- MODAL DE LOGOUT -->
 	<div class="modal-overlay" id="logout-modal">
 
-		<div class="modal-card">
+		<div class="modal-card-logout">
 
-			<h2 class="modal-title">
+			<h3 class="modal-logout-title">
 				Tem certeza que deseja sair da sua conta?
-			</h2>
+			</h3>
 
+			<div class="modal-logout-actions">
 
-			<div class="modal-actions">
-
-				<button type="button" class="btn-modal btn-modal-cancel" id="btn-cancel-logout">
-
+				<button type="button" class="btn-logout-cancel" id="btn-cancel-logout">
 					Cancelar
-
 				</button>
 
-
-				<button type="button" class="btn-modal btn-modal-logout" id="btn-confirm-logout">
-
+				<button type="button" class="btn-logout-confirm" id="btn-confirm-logout">
 					Sair
-
 				</button>
 
 			</div>
@@ -292,8 +256,17 @@
 
 	</div>
 
+	<script>
 
-	<script th:inline="javascript">
+		/*
+		 * TEMA
+		 */
+		(function initTheme() {
+			if (localStorage.getItem('theme') === 'escuro') {
+				document.body.classList.add('dark-mode');
+			}
+		})();
+
 
 		/*
 		 * LUCIDE
@@ -310,29 +283,27 @@
 		const toggleBtn =
 			document.getElementById('toggle-btn');
 
-
 		if (sidebar && toggleBtn) {
-
 			toggleBtn.addEventListener('click', () => {
-
 				sidebar.classList.toggle('expanded');
-
 			});
-
 		}
 
 
 		/*
-		 * PESQUISA E FILTRO DE TURMAS
+		 * PESQUISA E FILTRO
+		 *
+		 * Os cards já vieram renderizados do banco pelo Thymeleaf.
+		 * O JavaScript apenas decide quais cards ficam visíveis.
 		 */
 		const searchInput =
-			document.getElementById('search-teams');
+			document.getElementById('input-search-turmas');
 
 		const filterPsico =
-			document.getElementById('filter-psico');
+			document.getElementById('select-filter-psico');
 
 		const teamCards =
-			document.querySelectorAll('.team-card');
+			document.querySelectorAll('.turma-card');
 
 		const noResultsMessage =
 			document.getElementById('no-results-message');
@@ -341,45 +312,35 @@
 		function filtrarTurmas() {
 
 			const pesquisa =
-				searchInput.value
+				(searchInput?.value || '')
 					.trim()
-					.toLowerCase();
+					.toLocaleLowerCase('pt-BR');
 
 			const psicopedagogoSelecionado =
-				filterPsico.value;
-
+				filterPsico?.value || '';
 
 			let turmasVisiveis = 0;
 
 
 			teamCards.forEach(card => {
 
-				const titulo =
-					card.querySelector('.team-card-title')
-						.textContent
-						.toLowerCase();
-
-
-				const footer =
-					card.querySelector('.team-card-footer')
-						.textContent
-						.toLowerCase();
+				/*
+				 * Pesquisar em todo o texto do card:
+				 * nome da turma, professor e psicopedagogo.
+				 */
+				const textoCard =
+					card.textContent
+						.toLocaleLowerCase('pt-BR');
 
 
 				/*
-				 * Pega os psicopedagogos existentes
-				 * dentro da turma.
+				 * Cada psicopedagogo renderizado recebe
+				 * data-psicopedagogo-id com o ID vindo do banco.
 				 */
 				const psicopedagogos =
-					card.querySelectorAll(
-						'.psicopedagogo'
-					);
+					card.querySelectorAll('.psicopedagogo');
 
 
-				/*
-				 * Verifica se a turma pertence
-				 * ao psicopedagogo selecionado.
-				 */
 				const correspondePsicopedagogo =
 					psicopedagogoSelecionado === '' ||
 					Array.from(psicopedagogos).some(
@@ -389,13 +350,8 @@
 					);
 
 
-				/*
-				 * Verifica a pesquisa pelo nome
-				 * da turma ou informações do footer.
-				 */
 				const correspondePesquisa =
-					titulo.includes(pesquisa) ||
-					footer.includes(pesquisa);
+					textoCard.includes(pesquisa);
 
 
 				const deveExibir =
@@ -404,52 +360,46 @@
 
 
 				card.style.display =
-					deveExibir ? 'flex' : 'none';
+					deveExibir ? '' : 'none';
 
 
 				if (deveExibir) {
-
 					turmasVisiveis++;
-
 				}
 
 			});
 
 
 			/*
-			 * Mostra "Nenhuma turma encontrada"
-			 * somente quando existem cards, mas
-			 * nenhum passou pelos filtros.
+			 * Não mostra esta mensagem se o professor
+			 * realmente não possuir nenhuma turma.
+			 * Nesse caso o Thymeleaf já mostra a mensagem
+			 * "Você ainda não possui nenhuma turma".
 			 */
 			if (noResultsMessage) {
 
 				noResultsMessage.style.display =
-					turmasVisiveis === 0
+					teamCards.length > 0 &&
+						turmasVisiveis === 0
 						? 'flex'
 						: 'none';
-
 			}
-
 		}
 
 
 		if (searchInput) {
-
 			searchInput.addEventListener(
 				'input',
 				filtrarTurmas
 			);
-
 		}
 
 
 		if (filterPsico) {
-
 			filterPsico.addEventListener(
 				'change',
 				filtrarTurmas
 			);
-
 		}
 
 
@@ -476,40 +426,33 @@
 			btnConfirmLogout
 		) {
 
-			btnOpenLogout.addEventListener('click', (event) => {
-
+			btnOpenLogout.addEventListener('click', event => {
 				event.preventDefault();
-
 				logoutModal.classList.add('active');
-
 			});
 
 
 			btnCancelLogout.addEventListener('click', () => {
-
 				logoutModal.classList.remove('active');
-
 			});
 
 
 			btnConfirmLogout.addEventListener('click', () => {
 
-				document
-					.getElementById('logoutForm')
-					.submit();
+				const logoutForm =
+					document.getElementById('logoutForm');
+
+				if (logoutForm) {
+					logoutForm.submit();
+				}
 
 			});
 
 
-			/*
-			 * Fecha o modal clicando fora.
-			 */
-			logoutModal.addEventListener('click', (event) => {
+			logoutModal.addEventListener('click', event => {
 
 				if (event.target === logoutModal) {
-
 					logoutModal.classList.remove('active');
-
 				}
 
 			});

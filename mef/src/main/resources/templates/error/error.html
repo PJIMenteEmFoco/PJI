@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Página Não Encontrada | Mente em Foco</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700;800;900&display=swap"
+		rel="stylesheet">
+
+	<link rel="stylesheet" href="/css/erro.css" th:href="@{/css/erro.css}">
+
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+
+	<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+	<div class="error-container">
+
+		<div class="error-outer-card">
+
+			<div class="error-inner-card">
+
+				<div class="error-badge">
+					<i data-lucide="compass"></i>
+				</div>
+
+				<h1 class="error-code">404</h1>
+
+				<h2 class="error-title">
+					Página não encontrada
+				</h2>
+
+				<p class="error-message">
+					Ops! A página que você tentou acessar não existe ou foi movida.
+					Não se preocupe, você pode voltar ao seu painel em segurança.
+				</p>
+
+				<div class="error-actions">
+
+					<button type="button" class="btn-error-primary" onclick="window.history.back()">
+
+						<i data-lucide="arrow-left"></i>
+						Voltar página
+
+					</button>
+
+
+					<!--
+                        O controller deve enviar "perfilUsuario"
+                        com um destes valores:
+
+                        PROFESSOR
+                        PSICOPEDAGOGO
+                        ALUNO
+                    -->
+					<div th:switch="${perfilUsuario}">
+
+						<a th:case="'PROFESSOR'" th:href="@{/professor/dashboard}" class="btn-error-secondary">
+
+							<i data-lucide="home"></i>
+							Ir para o Início
+
+						</a>
+
+
+						<a th:case="'PSICOPEDAGOGO'" th:href="@{/psicopedagogo/dashboard}" class="btn-error-secondary">
+
+							<i data-lucide="home"></i>
+							Ir para o Início
+
+						</a>
+
+
+						<a th:case="'ALUNO'" th:href="@{/aluno/dashboard}" class="btn-error-secondary">
+
+							<i data-lucide="home"></i>
+							Ir para o Início
+
+						</a>
+
+
+						<!-- Fallback caso o perfil não esteja disponível -->
+						<a th:case="*" th:href="@{/}" class="btn-error-secondary">
+
+							<i data-lucide="home"></i>
+							Ir para o Início
+
+						</a>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+
+	<script>
+
+		/*
+		 * TEMA
+		 */
+		(function initTheme() {
+
+			if (localStorage.getItem('theme') === 'escuro') {
+				document.body.classList.add('dark-mode');
+			}
+
+		})();
+
+
+		/*
+		 * ÍCONES
+		 */
+		lucide.createIcons();
+
+	</script>
+
+</body>
+
+</html>
