@@ -11,13 +11,24 @@
 </head>
 <body>
 
-    <div class="top-logo">
-    <img src="../imagens/Captura de tela 2026-09-06 145230.png" alt="Mente em Foco" class="" />
-    </div>
+  <div class="toast-notification" id="toast">
+    <span id="toast-message">Código enviado com sucesso!</span>
+    <button class="toast-close-btn" onclick="hideToast()" aria-label="Fechar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+    </button>
+  </div>
+
+  <div class="top-logo">
+    <img src="../imagens/Captura de tela 2026-09-06 145230.png" alt="Mente em Foco" />
+  </div>
 
   <main class="verify-container">
     <h1 class="verify-title">
-      Enviaremos um código de validação<br>por E-Mail para você.
+      Digite um e-mail para enviarmos um código de validação para você
     </h1>
 
     <form class="verify-form" onsubmit="enviarCodigo(event)">
@@ -31,19 +42,40 @@
           required 
         />
       </div>
-
-      <a href="#" class="alternative-link">Tentar de outro jeito.</a>
-
-      <button type="submit" class="btn btn-secondary">Email</button>
+      <button type="submit" class="btn btn-secondary">Enviar E-mail</button>
+      <a href="../login/login.html" class="form-link">Lembrou a senha? Clique aqui para entrar!</a>
     </form>
   </main>
 
   <script>
+    
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toast-message');
+    let toastTimeout;
+
+    function showToast(message, redirect = false) {
+      toastMessage.textContent = message;
+      toast.classList.add('show');
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        hideToast();
+        if (redirect) {
+          window.location.href = 'codigo-verificacao.html';
+        }
+      }, 2000);
+    }
+
+    function hideToast() {
+      toast.classList.remove('show');
+    }
+
     function enviarCodigo(event) {
       event.preventDefault();
       const email = document.getElementById('recoveryEmail').value.trim();
+
       if (email) {
-        alert("Código de verificação enviado para " + email);
+        showToast('Código enviado para ' + email + '!', true);
       }
     }
   </script>

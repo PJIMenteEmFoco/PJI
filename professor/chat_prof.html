@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="stylesheet" href="../style/chat_professor.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -166,27 +167,22 @@
 
     </div>
 
-    <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
-            </div>
+   <div class="modal-overlay" id="logout-modal">
+    <div class="modal-card-logout">
+        <h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+        <div class="modal-logout-actions">
+            <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+            <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
         </div>
     </div>
-
-    <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
-            </div>
-        </div>
-    </div>
+</div>
 
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -208,7 +204,7 @@
         });
 
         btnConfirmLogout.addEventListener('click', () => {
-            window.location.href = '../login.html';
+            window.location.href = '../login/login.html';
         });
 
         const chatsDatabase = {

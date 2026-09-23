@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../style/tarefas.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../style/global.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -235,16 +236,22 @@
     </div>
 
     <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+        <div class="modal-card-logout">
+            <h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+            <div class="modal-logout-actions">
+                <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
             </div>
         </div>
     </div>
 
     <script>
+        (function initTheme() {
+            if (localStorage.getItem('theme') === 'escuro') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -257,6 +264,7 @@
         const logoutModal = document.getElementById('logout-modal');
         const btnOpenLogout = document.getElementById('btn-open-logout');
         const btnCancelLogout = document.getElementById('btn-cancel-logout');
+        const btnConfirmLogout = document.getElementById('btn-confirm-logout');
 
         btnOpenLogout.addEventListener('click', (e) => {
             e.preventDefault();
@@ -265,6 +273,10 @@
 
         btnCancelLogout.addEventListener('click', () => {
             logoutModal.classList.remove('active');
+        });
+
+        btnConfirmLogout.addEventListener('click', () => {
+            window.location.href = '../login/login.html';
         });
 
         const searchInput = document.getElementById('task-search-input');

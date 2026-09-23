@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes da Turma - Mente em Foco</title>
-    <link rel="stylesheet" href="../style/detalhes-turma.css">
+    <link rel="stylesheet" href="../style/detalhes-turmas-psico.css">
     <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        /* ESTILIZAÇÃO DOS BOTÕES NO CARD DO ALUNO */
-
-    </style>
 </head>
 <body>
 
@@ -30,30 +26,30 @@
             </div>
 
             <nav class="sidebar-nav">
-                <a href="dashboard_prof.html" class="nav-link">
+                <a href="dashboard_psico.html" class="nav-link">
                     <i data-lucide="home"></i>
                     <span class="nav-title">Início</span>
                 </a>
-                <a href="tarefas_prof.html" class="nav-link">
+                <a href="tarefas_psico.html" class="nav-link">
                     <i data-lucide="book-open"></i>
                     <span class="nav-title">Atividades</span>
                 </a>
-                <a href="chat_prof.html" class="nav-link">
+                <a href="chat_psico.html" class="nav-link">
                     <i data-lucide="message-square"></i>
                     <span class="nav-title">Chat</span>
                 </a>
-                <a href="calendario_prof.html" class="nav-link">
+                <a href="calendario_psico.html" class="nav-link">
                     <i data-lucide="calendar"></i>
                     <span class="nav-title">Calendário</span>
                 </a>
-                <a href="turmas-prof.html" class="nav-link active">
+                <a href="turmas_psico.html" class="nav-link active">
                     <i data-lucide="users"></i>
                     <span class="nav-title">Turmas</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <a href="configuracoes_prof.html" class="nav-link">
+                <a href="configuracoes_psico.html" class="nav-link">
                     <i data-lucide="settings"></i>
                     <span class="nav-title">Ajustes</span>
                 </a>
@@ -69,7 +65,7 @@
                 
                 <div class="team-header-card">
                     <div class="team-title-group">
-                        <a href="turmas-prof.html" class="btn-back-link" title="Voltar para Turmas">
+                        <a href="turmas_psico.html" class="btn-back-link" title="Voltar para Turmas">
                             <i data-lucide="arrow-left"></i>
                         </a>
                         <div class="team-header-info">
@@ -148,45 +144,6 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="ficha-modal">
-        <div class="vincular-outer-card">
-            <div class="vincular-inner-card">
-                
-                <div class="modal-header">
-                    <h3 id="ficha-aluno-nome">Ficha do Aluno</h3>
-                    <p id="ficha-aluno-sub">Dados Cadastrais e Médicos</p>
-                </div>
-
-                <div class="ficha-corpo">
-                    <div class="ficha-block">
-                        <span class="ficha-label">Diagnóstico / CID:</span>
-                        <p id="ficha-diagnostico" class="ficha-texto">-</p>
-                    </div>
-
-                    <div class="ficha-block">
-                        <span class="ficha-label">Medicamentos em Uso:</span>
-                        <p id="ficha-medicamento" class="ficha-texto">Nenhum informado</p>
-                    </div>
-
-                    <div class="ficha-block">
-                        <span class="ficha-label">Acompanhamento Multidisciplinar:</span>
-                        <p id="ficha-acompanhamento" class="ficha-texto">Psicopedagogia, Terapia Ocupacional</p>
-                    </div>
-
-                    <div class="ficha-block">
-                        <span class="ficha-label">Contacto do Responsável:</span>
-                        <p id="ficha-contacto" class="ficha-texto">(11) 98765-4321 • responsavel@email.com</p>
-                    </div>
-                </div>
-
-                <div class="modal-btn-row">
-                    <button type="button" class="btn-modal-cancel" id="btn-fechar-ficha">Fechar</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="vincular-aluno-modal">
         <div class="vincular-outer-card">
             <div class="vincular-inner-card">
@@ -253,10 +210,10 @@
 
     <script>
         (function initTheme() {
-            if (localStorage.getItem('theme') === 'escuro') {
-                document.body.classList.add('dark-mode');
-            }
-        })();
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -333,13 +290,6 @@
         const obsView = document.getElementById('relatorio-obs-view');
         const obsEdit = document.getElementById('relatorio-obs-edit');
 
-        const fichaModal = document.getElementById('ficha-modal');
-        const btnFecharFicha = document.getElementById('btn-fechar-ficha');
-
-        btnFecharFicha.addEventListener('click', () => {
-            fichaModal.classList.remove('active');
-        });
-
         let alunoIndexEditando = null;
 
         btnFecharRelatorio.addEventListener('click', () => {
@@ -411,17 +361,9 @@
                         <span class="info-value">${aluno.foco}</span>
                     </div>
 
-                    <div class="student-actions-row">
-                        <button class="btn-card-action btn-view-report" data-index="${index}" title="Ver Relatório">
-                            <i data-lucide="file-text"></i> Relatório
-                        </button>
-                        <button class="btn-card-action btn-view-ficha" data-index="${index}" title="Ver Ficha">
-                            <i data-lucide="clipboard-list"></i> Ficha
-                        </button>
-                        <a href="calendario_prof.html" class="btn-card-action" title="Ver Calendário">
-                            <i data-lucide="calendar"></i> Calendário
-                        </a>
-                    </div>
+                    <button class="btn-view-report" data-index="${index}">
+                        <i data-lucide="file-text"></i> Relatório
+                    </button>
                 `;
                 studentsGrid.appendChild(card);
             });
@@ -446,25 +388,11 @@
                     }
                 });
             });
-
-            document.querySelectorAll('.btn-view-ficha').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const idx = e.currentTarget.getAttribute('data-index');
-                    const aluno = listaAlunos[idx];
-
-                    if (aluno) {
-                        document.getElementById('ficha-aluno-nome').textContent = `Ficha: ${aluno.nome}`;
-                        document.getElementById('ficha-aluno-sub').textContent = aluno.sub;
-                        document.getElementById('ficha-diagnostico').textContent = aluno.sub.split('•')[1] || aluno.sub;
-                        
-                        fichaModal.classList.add('active');
-                    }
-                });
-            });
         }
 
         RENDERIZAR_ALUNOS();
 
+        // PESQUISA
         const searchInput = document.getElementById('search-student');
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();
@@ -539,7 +467,7 @@
             logoutModal.classList.remove('active');
         });
         document.getElementById('btn-confirm-logout').addEventListener('click', () => {
-            window.location.href = '../login.html';
+            window.location.href = '../login/login.html';
         });
     </script>
 </body>

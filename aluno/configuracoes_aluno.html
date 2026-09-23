@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - Mente em Foco</title>
+    <title>Ajustes - Mente em Foco</title>
     <link rel="stylesheet" href="../style/configuracoes.css">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -43,7 +44,7 @@
             </nav>
 
             <div class="sidebar-footer">
-                <a href="#" class="nav-link active">
+                <a href="../aluno/calendario_aluno.html" class="nav-link active">
                     <i data-lucide="settings"></i>
                     <span class="nav-title">Ajustes</span>
                 </a>
@@ -56,7 +57,8 @@
 
         <main class="main-content">
             <div class="settings-container">
-                <h1 class="page-title">Configurações</h1>
+                <h1 class="page-title">Ajustes</h1>
+                
                 <div class="config-section">
                     <h2 class="section-title">Informações Pessoais</h2>
                     <div class="config-card-group">
@@ -82,7 +84,7 @@
                         <div class="config-item">
                             <div class="config-info-text">
                                 <span class="config-label">Nome</span>
-                                <span class="config-value" id="val-name">Cauê Campos Fraga</span>
+                                <span class="config-value" id="val-name">Levi</span>
                             </div>
                             <button class="btn-config-edit" onclick="openEditModal('Nome', 'val-name')">Editar</button>
                         </div>
@@ -149,6 +151,16 @@
         </main>
     </div>
 
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="edit-modal">
         <div class="modal-card">
             <h3 class="modal-title" id="modal-title-text">Editar Informação</h3>
@@ -171,23 +183,48 @@
         </div>
     </div>
 
-       <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
-            </div>
-        </div>
-    </div>
-
-
     <script>
+    (function applyThemeImmediately() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'escuro') {
+            document.documentElement.classList.add('dark-mode');
+            document.body?.classList.add('dark-mode');
+        }
+    })();
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (localStorage.getItem('theme') === 'escuro') {
+            document.body.classList.add('dark-mode');
+        }
+    });
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
         toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+        const logoutModal = document.getElementById('logout-modal');
+        const btnOpenLogout = document.getElementById('btn-open-logout');
+        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+        const btnConfirmLogout = document.getElementById('btn-confirm-logout');
+
+        btnOpenLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+
+        btnCancelLogout.addEventListener('click', () => {
+            logoutModal.classList.remove('active');
+        });
+
+        btnConfirmLogout.addEventListener('click', () => {
+            window.location.href = '../login/login.html';
+        });
 
         const themeDropdown = document.getElementById('theme-dropdown');
         const themeBtnLabel = document.getElementById('theme-btn-label');
@@ -198,7 +235,6 @@
 
         function selectTheme(theme) {
             themeDropdown.classList.remove('open');
-            
             document.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
             
             if (theme === 'escuro') {
@@ -232,14 +268,6 @@
         const modalTitleText = document.getElementById('modal-title-text');
         const modalFieldInput = document.getElementById('modal-field-input');
         let currentTargetId = '';
-
-        const logoutModal = document.getElementById('logout-modal');
-        document.getElementById('btn-open-logout').addEventListener('click', (e) => {
-            e.preventDefault();
-            logoutModal.classList.add('active');
-        });
-        document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
-        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login.html');
 
         function openEditModal(label, targetId) {
             currentTargetId = targetId;
@@ -279,7 +307,7 @@
         function confirmDeleteAccount() {
             closeDeleteModal();
             setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = '../index.html';
             }, 300);
         }
     </script>

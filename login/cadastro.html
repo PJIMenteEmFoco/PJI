@@ -10,6 +10,17 @@
   <link rel="stylesheet" href="../style/style.css" />
 </head>
 <body>
+  <div class="toast-notification" id="toast">
+    <span id="toast-message">Cadastro realizado com sucesso!</span>
+    <button class="toast-close-btn" onclick="hideToast()" aria-label="Fechar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+    </button>
+  </div>
+
   <div class="top-logo">
     <img src="../imagens/Captura de tela 2026-09-06 145230.png" alt="Mente em Foco" class="" />
   </div>
@@ -40,11 +51,11 @@
         <div class="password-rules">
           A senha deve conter ao menos:
           <ul>
-            <li>Uma letra maiúscula;</li>
-            <li>Uma letra minúscula;</li>
-            <li>Um número;</li>
-            <li>Um carecter especial e</li>
-            <li>Oito dígitos</li>
+            <li id="rule-uppercase">Uma letra maiúscula;</li>
+            <li id="rule-lowercase">Uma letra minúscula;</li>
+            <li id="rule-number">Um número;</li>
+            <li id="rule-special">Um carecter especial e</li>
+            <li id="rule-length">Oito dígitos</li>
           </ul>
         </div>
       </div>
@@ -64,12 +75,12 @@
 
       <div class="form-group">
         <label for="phone">Telefone</label>
-        <input type="tel" id="phone" class="form-control" autocomplete="off" />
+        <input type="tel" id="phone" class="form-control" placeholder="(00) 00000-0000" maxlength="15" autocomplete="off" />
       </div>
 
       <div class="form-group">
         <label for="birthDate">Data de nascimento</label>
-        <input type="text" id="birthDate" class="form-control" placeholder="dd/mm/aaaa" />
+        <input type="text" id="birthDate" class="form-control" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off" />
       </div>
 
       <div class="role-group">
@@ -91,34 +102,147 @@
       </div>
 
       <button type="submit" class="btn btn-primary">Cadastrar-se</button>
-      <a href="../login.html" class="form-link">Já é cadastrado? Clique aqui para entrar!</a>
+      <a href="../login/login.html" class="form-link">Já é cadastrado? Clique aqui para entrar!</a>
     </form>
   </main>
 
 <script>
+  
   function togglePassword(fieldId) {
     const field = document.getElementById(fieldId);
     field.type = field.type === 'password' ? 'text' : 'password';
   }
 
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toast-message');
+  let toastTimeout;
+
+  function showToast(message, redirect = false) {
+    toastMessage.textContent = message;
+    toast.classList.add('show');
+
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      hideToast();
+      if (redirect) {
+        window.location.href = '../login.html';
+      }
+    }, 3000);
+  }
+
+  function hideToast() {
+    toast.classList.remove('show');
+  }
+
+  const phoneInput = document.getElementById('phone');
+  phoneInput.addEventListener('input', function (e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+
+    if (value.length > 10) {
+      value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+    } else if (value.length > 6) {
+      value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+    } else if (value.length > 2) {
+      value = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+    } else if (value.length > 0) {
+      value = value.replace(/^(\d*)$/, '($1');
+    }
+    e.target.value = value;
+  });
+
+  const birthDateInput = document.getElementById('birthDate');
+  birthDateInput.addEventListener('input', function (e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 8) value = value.slice(0, 8);
+
+    if (value.length > 4) {
+      value = value.replace(/^(\d{2})(\d{2})(\d{0,4})$/, '$1/$2/$3');
+    } else if (value.length > 2) {
+      value = value.replace(/^(\d{2})(\d{0,2})$/, '$1/$2');
+    }
+    e.target.value = value;
+  });
+
+  const passwordInput = document.getElementById('password');
+  const ruleUppercase = document.getElementById('rule-uppercase');
+  const ruleLowercase = document.getElementById('rule-lowercase');
+  const ruleNumber = document.getElementById('rule-number');
+  const ruleSpecial = document.getElementById('rule-special');
+  const ruleLength = document.getElementById('rule-length');
+
+  passwordInput.addEventListener('input', function () {
+    const val = passwordInput.value;
+
+    if (/[A-Z]/.test(val)) {
+      ruleUppercase.classList.add('valid');
+    } else {
+      ruleUppercase.classList.remove('valid');
+    }
+
+    if (/[a-z]/.test(val)) {
+      ruleLowercase.classList.add('valid');
+    } else {
+      ruleLowercase.classList.remove('valid');
+    }
+
+    if (/\d/.test(val)) {
+      ruleNumber.classList.add('valid');
+    } else {
+      ruleNumber.classList.remove('valid');
+    }
+
+    if (/[@$!%*?&#^()_\-+=\[\]{}|\\;:'",.<>/\`]/.test(val)) {
+      ruleSpecial.classList.add('valid');
+    } else {
+      ruleSpecial.classList.remove('valid');
+    }
+
+    if (val.length >= 8) {
+      ruleLength.classList.add('valid');
+    } else {
+      ruleLength.classList.remove('valid');
+    }
+  });
+
   document.querySelector('.register-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const password = document.getElementById('password').value;
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = passwordInput.value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const phone = phoneInput.value.trim();
+    const birthDate = birthDateInput.value.trim();
+
+    if (!fullName || !email || !password || !confirmPassword || !phone || !birthDate) {
+      showToast('Por favor, preencha todos os campos antes de continuar.');
+      return;
+    }
+
+    if (phone.length < 14) {
+      showToast('Por favor, insira um número de telefone válido.');
+      return;
+    }
+
+    if (birthDate.length < 10) {
+      showToast('Por favor, insira uma data de nascimento válida.');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_\-+=\[\]{}|\\;:'",.<>/\`])[A-Za-z\d@$!%*?&#^()_\-+=\[\]{}|\\;:'",.<>/\`]{8,}$/;
 
     if (password !== confirmPassword) {
-      alert('As palavras-passe não coincidem. Por favor, verifica novamente.');
+      showToast('As senhas não coincidem. Por favor, verifique novamente.');
       return;
     }
 
     if (!passwordRegex.test(password)) {
-      alert('A palavra-passe deve conter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma minúscula, um número e um caractere especial.');
+      showToast('A senha não cumpre todos os requisitos exigidos.');
       return;
     }
 
-    alert('Registo efetuado com sucesso!');
+    showToast('Cadastro realizado com sucesso!', true);
   });
 </script>
 </body>

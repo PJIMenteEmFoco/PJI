@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat - Mente em Foco</title>
     <link rel="stylesheet" href="../style/chat_psico.css">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -185,6 +186,11 @@
     </div>
 
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -197,7 +203,7 @@
             logoutModal.classList.add('active');
         });
         document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
-        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login.html');
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login/login.html');
 
         const chatsDatabase = {
             'caue': {

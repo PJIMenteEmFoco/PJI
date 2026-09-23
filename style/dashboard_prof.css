@@ -87,7 +87,7 @@ body {
     position: absolute;
     right: -13px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(180deg);
     width: 26px;
     height: 26px;
     background-color: #557D91;
@@ -102,8 +102,8 @@ body {
     transition: transform 0.3s ease;
 }
 
-.sidebar.expanded .sidebar-toggle-badge {
-    transform: translateY(-50%) rotate(180deg);
+.sidebar.expanded .sidebar-toggle-badge { 
+    transform: translateY(-50%) rotate(0deg); 
 }
 
 .sidebar-toggle-badge svg {
@@ -285,18 +285,27 @@ body {
     width: 100%;
 }
 
-.column-left,
-.column-right {
+.column-left {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.column-right > div:not(:first-child) {
+    margin-top: 32px;
 }
 
 .section-header-flex {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .section-title {
@@ -440,27 +449,87 @@ body {
 
 .calendar-header-bar {
     background-color: #557D91;
-    padding: 10px 16px;
+    padding: 12px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
-.cal-select {
-    background-color: rgba(255, 255, 255, 0.2);
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    user-select: none;
+}
+
+.dropdown-trigger {
+    background-color: rgba(255, 255, 255, 0.25);
     color: #ffffff;
     border: none;
-    padding: 4px 10px;
-    border-radius: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    outline: none;
+    white-space: nowrap;
+    transition: background-color 0.2s ease;
 }
 
-.cal-select option {
+.dropdown-trigger:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+.dropdown-arrow {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 130px;
     background-color: #ffffff;
+    border: 1px solid #cbdde6;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(15, 45, 60, 0.15);
+    padding: 6px;
+    display: none;
+    flex-direction: column;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.custom-dropdown.open .dropdown-menu {
+    display: flex;
+}
+
+.dropdown-option {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: #0F2D3C;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-option:hover {
+    background-color: #f1f5f8;
+}
+
+.dropdown-option.selected {
+    background-color: #557D91;
+    color: #ffffff;
+    font-weight: 700;
 }
 
 .calendar-table {
@@ -470,16 +539,16 @@ body {
 }
 
 .calendar-table th {
-    padding: 8px 4px;
-    font-size: 0.65rem;
+    padding: 12px 6px;
+    font-size: 0.7rem;
     font-weight: 700;
     color: #6b8290;
     border-bottom: 1px solid #eef3f7;
 }
 
 .calendar-table td {
-    height: 32px;
-    font-size: 0.72rem;
+    height: 38px;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #0F2D3C;
 }
@@ -490,8 +559,8 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
 }
 
@@ -501,10 +570,10 @@ body {
 .summary-box {
     background-color: #CBDDE6;
     border-radius: 16px;
-    padding: 14px 18px;
+    padding: 18px 22px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
 }
 
 .summary-item {
@@ -539,17 +608,17 @@ body {
     background-color: #f7f9fb;
     border: 1px solid #d9e3eb;
     border-radius: 16px;
-    padding: 14px 18px;
+    padding: 18px 22px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .reminder-row {
     display: flex;
     align-items: center;
-    font-size: 0.72rem;
-    padding-bottom: 8px;
+    font-size: 0.75rem;
+    padding-bottom: 10px;
     border-bottom: 1px solid #e7eff5;
 }
 
@@ -570,43 +639,6 @@ body {
     color: #0F2D3C;
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: rgba(15, 45, 60, 0.45);
-    backdrop-filter: blur(3px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 1000; opacity: 0; visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-
-.modal-overlay.active { opacity: 1; visibility: visible; }
-
-.modal-card {
-    background-color: #CBDDE6;
-    border-radius: 18px;
-    padding: 32px 36px;
-    width: 100%; max-width: 440px;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
-}
-
-.modal-title {
-    font-size: 1.1rem; font-weight: 700; color: #0F2D3C;
-    margin-bottom: 26px;
-}
-
-.modal-actions { display: flex; gap: 16px; }
-
-.btn-modal {
-    flex: 1; padding: 12px 0; border-radius: 24px;
-    font-size: 0.9rem; font-weight: 700; cursor: pointer;
-    border: 1px solid transparent; text-align: center;
-}
-
-.btn-modal-cancel { background-color: #557D91; color: #ffffff; }
-.btn-modal-logout { background-color: #f1f5f8; color: #557D91; border-color: #b5ccda; }
-
-/* MODAL DE LOGOUT E OVERLAY BLUR */
 .modal-overlay {
     position: fixed;
     top: 0; 
@@ -724,3 +756,65 @@ body {
         grid-template-columns: 1fr;
     }
 }
+        .modal-card-logout {
+            background-color: #CBDDE6;
+            border-radius: 20px;
+            padding: 32px 28px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .modal-logout-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0F2D3C;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.3;
+        }
+
+        .modal-logout-actions {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-logout-cancel {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            background-color: #ffffff;
+            color: #557D91;
+            border: 2px solid #557D91;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-logout-cancel:hover {
+            background-color: #f1f5f8;
+        }
+
+        .btn-logout-confirm {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 800;
+            cursor: pointer;
+            background-color: #E69C2E;
+            color: #ffffff;
+            border: none;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-logout-confirm:hover {
+            background-color: #d48419;
+        }

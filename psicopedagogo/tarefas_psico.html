@@ -6,6 +6,7 @@
     <title>Atividades - Psicopedagogo | Mente em Foco</title>
     <link rel="stylesheet" href="../style/tarefas_psico.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -166,6 +167,11 @@
     </div>
 
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
         const sidebar = document.getElementById('sidebar');
         document.getElementById('toggle-btn').addEventListener('click', () => sidebar.classList.toggle('expanded'));
@@ -176,7 +182,7 @@
             logoutModal.classList.add('active');
         });
         document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
-        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login.html');
+        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login/login.html');
     </script>
 </body>
 </html>

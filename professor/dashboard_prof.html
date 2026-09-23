@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mente em Foco</title>
     <link rel="stylesheet" href="../style/dashboard_prof.css">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -59,15 +60,15 @@
             </div>
         </aside>
 
-    <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+        <div class="modal-overlay" id="logout-modal">
+            <div class="modal-card-logout">
+                <h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+                <div class="modal-logout-actions">
+                    <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+                    <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
+                </div>
             </div>
         </div>
-    </div>
 
         <main class="main-content">
             <div class="dashboard-container">
@@ -116,7 +117,7 @@
                             </div>
                         </div>
 
-                        <div>
+                        <div style="margin-top: 24px;">
                             <div class="section-header-flex">
                                 <span class="section-title">Turmas</span>
                                 <a href="../professor/turmas-professor.html" class="section-link">+ Ver todas</a>
@@ -128,7 +129,7 @@
                             </div>
                         </div>
 
-                        <div>
+                        <div style="margin-top: 24px;">
                             <div class="section-header-flex">
                                 <span class="section-title">Alertas e Observações</span>
                             </div>
@@ -175,31 +176,48 @@
 
                     <div class="column-right">
                         <div>
-                            <div class="section-header-flex">
+                            <div class="section-header-flex" style="margin-bottom: 12px;">
                                 <span class="section-title">Calendário</span>
                             </div>
                             <div class="calendar-card-container">
-                                <div class="calendar-header-bar">
-                                    <select class="cal-select" id="cal-month-select">
-                                        <option value="0">Janeiro</option>
-                                        <option value="1">Fevereiro</option>
-                                        <option value="2">Março</option>
-                                        <option value="3">Abril</option>
-                                        <option value="4">Maio</option>
-                                        <option value="5">Junho</option>
-                                        <option value="6">Julho</option>
-                                        <option value="7">Agosto</option>
-                                        <option value="8" selected>Setembro</option>
-                                        <option value="9">Outubro</option>
-                                        <option value="10">Novembro</option>
-                                        <option value="11">Dezembro</option>
-                                    </select>
-                                    <select class="cal-select" id="cal-year-select">
-                                        <option value="2025">2025</option>
-                                        <option value="2026" selected>2026</option>
-                                        <option value="2027">2027</option>
-                                        <option value="2028">2028</option>
-                                    </select>
+                                <div class="calendar-header-bar" style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 12px 20px;">
+                                    <div class="custom-dropdown" id="dropdown-month">
+                                        <button type="button" class="dropdown-trigger">
+                                            <span class="dropdown-selected">Setembro</span>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="dropdown-arrow">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-option" data-value="0">Janeiro</div>
+                                            <div class="dropdown-option" data-value="1">Fevereiro</div>
+                                            <div class="dropdown-option" data-value="2">Março</div>
+                                            <div class="dropdown-option" data-value="3">Abril</div>
+                                            <div class="dropdown-option" data-value="4">Maio</div>
+                                            <div class="dropdown-option" data-value="5">Junho</div>
+                                            <div class="dropdown-option" data-value="6">Julho</div>
+                                            <div class="dropdown-option" data-value="7">Agosto</div>
+                                            <div class="dropdown-option selected" data-value="8">Setembro</div>
+                                            <div class="dropdown-option" data-value="9">Outubro</div>
+                                            <div class="dropdown-option" data-value="10">Novembro</div>
+                                            <div class="dropdown-option" data-value="11">Dezembro</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="custom-dropdown" id="dropdown-year">
+                                        <button type="button" class="dropdown-trigger">
+                                            <span class="dropdown-selected">2026</span>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="dropdown-arrow">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="dropdown-option" data-value="2025">2025</div>
+                                            <div class="dropdown-option selected" data-value="2026">2026</div>
+                                            <div class="dropdown-option" data-value="2027">2027</div>
+                                            <div class="dropdown-option" data-value="2028">2028</div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <table class="calendar-table">
                                     <thead>
@@ -213,8 +231,8 @@
                             </div>
                         </div>
 
-                        <div>
-                            <div class="section-header-flex">
+                        <div style="margin-top: 36px;">
+                            <div class="section-header-flex" style="margin-bottom: 12px;">
                                 <span class="section-title">Resumo das Atividades</span>
                             </div>
                             <div class="summary-box">
@@ -242,8 +260,8 @@
                             </div>
                         </div>
 
-                        <div>
-                            <div class="section-header-flex">
+                        <div style="margin-top: 36px;">
+                            <div class="section-header-flex" style="margin-bottom: 12px;">
                                 <span class="section-title">Lembretes</span>
                             </div>
                             <div class="reminders-box">
@@ -268,6 +286,12 @@
     </div>
 
     <script>
+        (function initTheme() {
+            if (localStorage.getItem('theme') === 'escuro') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -280,6 +304,7 @@
         const logoutModal = document.getElementById('logout-modal');
         const btnOpenLogout = document.getElementById('btn-open-logout');
         const btnCancelLogout = document.getElementById('btn-cancel-logout');
+        const btnConfirmLogout = document.getElementById('btn-confirm-logout');
 
         btnOpenLogout.addEventListener('click', (e) => {
             e.preventDefault();
@@ -290,8 +315,13 @@
             logoutModal.classList.remove('active');
         });
 
-        const monthSelect = document.getElementById('cal-month-select');
-        const yearSelect = document.getElementById('cal-year-select');
+        btnConfirmLogout.addEventListener('click', () => {
+            window.location.href = '../login/login.html';
+        });
+
+        let currentMonth = 8;
+        let currentYear = 2026;
+
         const calendarBody = document.getElementById('calendar-body');
 
         const badgesConfig = {
@@ -344,15 +374,48 @@
             }
         }
 
-        monthSelect.addEventListener('change', () => {
-            generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+        function setupDropdown(dropdownId, onChangeCallback) {
+            const dropdown = document.getElementById(dropdownId);
+            const trigger = dropdown.querySelector('.dropdown-trigger');
+            const selectedText = dropdown.querySelector('.dropdown-selected');
+            const options = dropdown.querySelectorAll('.dropdown-option');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('open');
+                });
+                dropdown.classList.toggle('open');
+            });
+
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedText.textContent = option.textContent;
+                    dropdown.classList.remove('open');
+                    onChangeCallback(parseInt(option.getAttribute('data-value')));
+                });
+            });
+        }
+
+        setupDropdown('dropdown-month', (val) => {
+            currentMonth = val;
+            generateCalendar(currentMonth, currentYear);
         });
 
-        yearSelect.addEventListener('change', () => {
-            generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+        setupDropdown('dropdown-year', (val) => {
+            currentYear = val;
+            generateCalendar(currentMonth, currentYear);
         });
 
-        generateCalendar(8, 2026);
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('open');
+            });
+        });
+
+        generateCalendar(currentMonth, currentYear);
     </script>
 </body>
 </html>

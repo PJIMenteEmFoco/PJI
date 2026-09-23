@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - Mente em Foco</title>
+    <title>Ajustes - Mente em Foco</title>
     <link rel="stylesheet" href="../style/configuracoes.css">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -60,7 +61,7 @@
 
         <main class="main-content">
             <div class="settings-container">
-                <h1 class="page-title">Configurações</h1>
+                <h1 class="page-title">Ajustes</h1>
                 
                 <div class="config-section">
                     <h2 class="section-title">Informações Pessoais</h2>
@@ -187,6 +188,11 @@
     </div>
 
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -208,10 +214,9 @@
         });
 
         btnConfirmLogout.addEventListener('click', () => {
-            window.location.href = '../login.html';
+            window.location.href = '../login/login.html';
         });
 
-        // Dropdown de Tema
         const themeDropdown = document.getElementById('theme-dropdown');
         const themeBtnLabel = document.getElementById('theme-btn-label');
 
@@ -280,7 +285,6 @@
             closeEditModal();
         }
 
-        // Modal de Exclusão
         const deleteModal = document.getElementById('delete-modal');
 
         function openDeleteModal() {

@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - Mente em Foco</title>
+    <title>Ajustes - Mente em Foco</title>
     <link rel="stylesheet" href="../style/configuracoes.css">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -27,8 +28,8 @@
                 <a href="dashboard_psico.html" class="nav-link">
                     <i data-lucide="home"></i>
                     <span class="nav-title">Início</span>
-
-                <a href="tarefas_psico.html" class="nav-link">
+                </a>
+                 <a href="tarefas_psico.html" class="nav-link">
                     <i data-lucide="book-open"></i>
                     <span class="nav-title">Atividades</span>
                 </a>
@@ -42,19 +43,9 @@
                 </a>
                 <a href="turmas_psico.html" class="nav-link">
                     <i data-lucide="users"></i>
-                    <span class="nav-title">Minhas Turmas</span>
+                    <span class="nav-title">Turmas</span>
                 </a>
             </nav>
-
-    <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
-            </div>
-        </div>
-    </div>
 
             <div class="sidebar-footer">
                 <a href="../professor/configuracoes_prof.html" class="nav-link active">
@@ -70,7 +61,7 @@
 
         <main class="main-content">
             <div class="settings-container">
-                <h1 class="page-title">Configurações</h1>
+                <h1 class="page-title">Ajustes</h1>
                 
                 <div class="config-section">
                     <h2 class="section-title">Informações Pessoais</h2>
@@ -197,6 +188,11 @@
     </div>
 
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -204,12 +200,9 @@
         toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
 
         const logoutModal = document.getElementById('logout-modal');
-        document.getElementById('btn-open-logout').addEventListener('click', (e) => {
-            e.preventDefault();
-            logoutModal.classList.add('active');
-        });
-        document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
-        document.getElementById('btn-confirm-logout').addEventListener('click', () => window.location.href = '../login.html');
+        const btnOpenLogout = document.getElementById('btn-open-logout');
+        const btnCancelLogout = document.getElementById('btn-cancel-logout');
+        const btnConfirmLogout = document.getElementById('btn-confirm-logout');
 
         btnOpenLogout.addEventListener('click', (e) => {
             e.preventDefault();
@@ -221,7 +214,7 @@
         });
 
         btnConfirmLogout.addEventListener('click', () => {
-            window.location.href = '../login.html';
+            window.location.href = '../login/login.html';
         });
 
         const themeDropdown = document.getElementById('theme-dropdown');

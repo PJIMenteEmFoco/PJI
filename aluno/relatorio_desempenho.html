@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desempenho da Atividade - Mente em Foco</title>
     <link rel="stylesheet" href="../style/relatorio_desempenho.css">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -36,7 +37,7 @@
                     <i data-lucide="message-square"></i>
                     <span class="nav-title">Chat</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a href="calendario_aluno.html" class="nav-link">
                     <i data-lucide="calendar"></i>
                     <span class="nav-title">Calendário</span>
                 </a>
@@ -47,7 +48,7 @@
                     <i data-lucide="settings"></i>
                     <span class="nav-title">Ajustes</span>
                 </a>
-                <button class="nav-link">
+                <button class="nav-link" id="btn-open-logout">
                     <i data-lucide="log-out"></i>
                     <span class="nav-title">Sair</span>
                 </button>
@@ -67,8 +68,8 @@
                     </div>
 
                     <div>
-                        <h1 class="result-title" id="res-greeting">Excelente Trabalho, Levi!</h1>
-                        <p style="color:#637783; font-weight:700; font-size:0.9rem; margin-top:4px;">Atividade: Jogo da Memória (Ortografia Ç e S)</p>
+                        <h1 class="result-title" id="res-greeting">Desempenho Perfeito, Levi!</h1>
+                        <p id="res-subtitle" style="color:#637783; font-weight:700; font-size:0.9rem; margin-top:4px;">Atividade: Quiz Guiado</p>
                     </div>
 
                     <div class="result-stats-row">
@@ -86,19 +87,11 @@
                         </div>
                     </div>
 
-                    <div class="feedback-box">
-                        <i data-lucide="message-square-quote"></i>
-                        <div class="feedback-text">
-                            <strong>Observação do Psicopedagogo (Lucas Bonetti):</strong>
-                            <p id="res-feedback">"Ótima evolução na identificação da regra do Ç antes das vogais A, O e U! Continue mantendo essa constância."</p>
-                        </div>
-                    </div>
-
                     <div class="result-actions">
-                        <a href="../aluno/executar_atividade.html" class="btn-action btn-retry">
+                        <button class="btn-action btn-retry" id="btn-retry">
                             <i data-lucide="rotate-ccw"></i>
                             <span>Praticar Novamente</span>
-                        </a>
+                        </button>
                         <a href="../aluno/tarefas_aluno.html" class="btn-action btn-finish">
                             <span>Concluir</span>
                             <i data-lucide="check"></i>
@@ -109,47 +102,77 @@
         </main>
     </div>
 
-       <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-card-logout">
+            <h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+            <div class="modal-logout-actions">
+                <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
             </div>
         </div>
     </div>
 
-
     <script>
+        (function initTheme() {
+            if (localStorage.getItem('theme') === 'escuro') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
-        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+        }
+
+        const logoutModal = document.getElementById('logout-modal');
+        document.getElementById('btn-open-logout')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+        document.getElementById('btn-cancel-logout')?.addEventListener('click', () => logoutModal.classList.remove('active'));
+        document.getElementById('btn-confirm-logout')?.addEventListener('click', () => window.location.href = '../login/login.html');
 
         const savedData = localStorage.getItem('menteEmFoco_lastResult');
 
         if (savedData) {
             const data = JSON.parse(savedData);
 
-            document.getElementById('res-time').textContent = data.timeFormatted;
-            document.getElementById('res-xp').textContent = `+${data.xpGained} XP`;
-            document.getElementById('res-score').textContent = `${data.score}%`;
+            document.getElementById('res-time').textContent = data.timeFormatted || '00:00';
+            document.getElementById('res-xp').textContent = `+${data.xpGained ?? 50} XP`;
+            document.getElementById('res-score').textContent = `${data.score ?? 100}%`;
+
+            const subtitleEl = document.getElementById('res-subtitle');
+            if (subtitleEl && data.taskTitle) {
+                subtitleEl.textContent = `Atividade: ${data.taskTitle}`;
+            }
 
             const greetingEl = document.getElementById('res-greeting');
-            const feedbackEl = document.getElementById('res-feedback');
 
             if (data.score === 100) {
                 greetingEl.textContent = 'Desempenho Perfeito, Levi!';
-                feedbackEl.textContent = '"Incrível! Você acertou todos os pares sem cometer erros. Sua concentração na ortografia do Ç está excelente!"';
-            } else if (data.score >= 70) {
+            } else if (data.score >= 50) {
                 greetingEl.textContent = 'Excelente Trabalho, Levi!';
-                feedbackEl.textContent = `"Muito bom! Você completou em ${data.timeFormatted} cometendo apenas ${data.mistakes} tentativa(s) incorreta(s). Continue praticando!"`;
             } else {
-                greetingEl.textContent = 'Bom Esforço, Levi!';
-                feedbackEl.textContent = '"Você concluiu o desafio! Que tal praticar mais uma vez para memorizar melhor as palavras com Ç e S?"';
+                greetingEl.textContent = 'Continue Treinando, Levi!';
             }
         }
+
+        document.getElementById('btn-retry')?.addEventListener('click', () => {
+            let tarefas = JSON.parse(localStorage.getItem('mente_em_foco_tarefas')) || [];
+            
+            if (tarefas.length > 0) {
+                tarefas = tarefas.map(t => {
+                    t.status = 'Ativa';
+                    return t;
+                });
+                localStorage.setItem('mente_em_foco_tarefas', JSON.stringify(tarefas));
+            }
+
+            window.location.href = 'executar_atividade.html';
+        });
     </script>
 </body>
 </html>

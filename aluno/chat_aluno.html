@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat - Mente em Foco</title>
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="stylesheet" href="../style/chatAluno.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -265,6 +266,11 @@
             </div>
         </div>
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -286,7 +292,7 @@
         });
 
         btnConfirmLogout.addEventListener('click', () => {
-            window.location.href = '../login.html';
+            window.location.href = '../login/login.html';
         });
 
         const chatsDatabase = {

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/erro.css">
+    <link rel="stylesheet" href="../style/global.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -30,7 +31,7 @@
                     <button class="btn-error-primary" onclick="window.history.back()">
                         <i data-lucide="arrow-left"></i> Voltar página
                     </button>
-                    <a id="btn-go-home" href="dashboard_aluno.html" class="btn-error-secondary">
+                    <a id="btn-go-home" href="#" class="btn-error-secondary">
                         <i data-lucide="home"></i> Ir para o Início
                     </a>
                 </div>
@@ -40,19 +41,47 @@
     </div>
 
     <script>
+        (function initTheme() {
+            if (localStorage.getItem('theme') === 'escuro') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
         lucide.createIcons();
 
-        const referrer = document.referrer.toLowerCase();
-        const currentUrl = window.location.href.toLowerCase();
-        const homeBtn = document.getElementById('btn-go-home');
+        function determinarPaginaInicial() {
+            const referrer = document.referrer.toLowerCase();
+            const currentUrl = window.location.href.toLowerCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramRole = (urlParams.get('role') || '').toLowerCase();
+            const userRole = (localStorage.getItem('user_role') || localStorage.getItem('perfil') || '').toLowerCase();
 
-        if (referrer.includes('psico') || currentUrl.includes('psico')) {
-            homeBtn.href = 'dashboard_psico.html';
-        } else if (referrer.includes('prof') || currentUrl.includes('prof')) {
-            homeBtn.href = 'dashboard_prof.html';
-        } else {
-            homeBtn.href = 'dashboard_aluno.html';
+            if (
+                paramRole === 'psico' || 
+                userRole.includes('psico') || 
+                referrer.includes('psico') || 
+                currentUrl.includes('psico')
+            ) {
+                return '../psicopedagogo/dashboard_psico.html';
+            }
+
+            if (
+                paramRole === 'prof' || 
+                userRole.includes('prof') || 
+                referrer.includes('prof') || 
+                currentUrl.includes('prof')
+            ) {
+                return '../professor/dashboard_prof.html';
+            }
+
+            return '../aluno/dashboard_aluno.html';
         }
+
+        document.getElementById('btn-go-home').addEventListener('click', function(e) {
+            e.preventDefault();
+            const destino = determinarPaginaInicial();
+            window.location.href = destino;
+        });
     </script>
 </body>
 </html>

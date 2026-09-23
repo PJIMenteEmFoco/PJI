@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Psicopedagógico - Mente em Foco</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/dashboard_psico.css">
@@ -25,7 +26,7 @@
             </div>
 
             <nav class="sidebar-nav">
-                <a href="dashboard_psico.html" class="nav-link">
+                <a href="dashboard_psico.html" class="nav-link active">
                     <i data-lucide="home"></i>
                     <span class="nav-title">Início</span>
 
@@ -37,7 +38,7 @@
                     <i data-lucide="message-square"></i>
                     <span class="nav-title">Chat</span>
                 </a>
-                <a href="calendario_psico.html" class="nav-link active">
+                <a href="calendario_psico.html" class="nav-link">
                     <i data-lucide="calendar"></i>
                     <span class="nav-title">Calendário</span>
                 </a>
@@ -162,18 +163,21 @@
     </div>
 
     <div class="modal-overlay" id="logout-modal">
-        <div class="logout-outer-card">
-            <div class="logout-inner-card">
-                <h3>Tem certeza que deseja sair da sua conta?</h3>
-                <div class="logout-btn-row">
-                    <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
-                    <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
-                </div>
+        <div class="modal-card">
+            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+            <div class="modal-actions">
+                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
             </div>
         </div>
     </div>
 
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -189,7 +193,7 @@
             logoutModal.classList.remove('active');
         });
         document.getElementById('btn-confirm-logout').addEventListener('click', () => {
-            window.location.href = '../login.html';
+            window.location.href = '../login/login.html';
         });
     </script>
 </body>

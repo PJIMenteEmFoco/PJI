@@ -6,6 +6,7 @@
     <title>Turmas - Mente em Foco</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="../style/global.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/turmas-professor.css">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -145,18 +146,21 @@
     </div>
 
     <div class="modal-overlay" id="logout-modal">
-        <div class="logout-outer-card">
-            <div class="logout-inner-card">
-                <h3>Tem certeza que deseja sair da sua conta?</h3>
-                <div class="logout-btn-row">
-                    <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
-                    <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
-                </div>
-            </div>
+    <div class="modal-card-logout">
+        <h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+        <div class="modal-logout-actions">
+            <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+            <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
         </div>
     </div>
+</div>
 
     <script>
+        (function initTheme() {
+    if (localStorage.getItem('theme') === 'escuro') {
+        document.body.classList.add('dark-mode');
+    }
+})();
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
@@ -308,7 +312,7 @@
             logoutModal.classList.remove('active');
         });
         document.getElementById('btn-confirm-logout').addEventListener('click', () => {
-            window.location.href = '../login.html';
+            window.location.href = '../login/login.html';
         });
     </script>
 </body>

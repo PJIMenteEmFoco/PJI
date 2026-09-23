@@ -634,3 +634,83 @@ body {
 .hidden {
     display: none !important;
 }
+        .student-actions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        .btn-card-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 8px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+            background-color: #557D91;
+            color: #ffffff;
+        }
+
+        .btn-card-action:hover {
+            background-color: #3f6071;
+            transform: translateY(-1px);
+        }
+
+        .btn-card-action svg {
+            width: 15px;
+            height: 15px;
+            stroke-width: 2.2;
+        }
+
+        /* MODAL FICHA DO ALUNO */
+        .ficha-corpo {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin: 16px 0;
+            text-align: left;
+        }
+
+        .ficha-block {
+            background-color: #f1f5f8;
+            padding: 12px 16px;
+            border-radius: 12px;
+        }
+
+        body.dark-mode .ficha-block {
+            background-color: #0a1922;
+        }
+
+        .ficha-label {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #557D91;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .ficha-texto {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0F2D3C;
+        }
+
+        body.dark-mode .ficha-texto {
+            color: #ffffff;
+        }
+
+        @media (max-width: 480px) {
+            .student-actions-row {
+                grid-template-columns: 1fr;
+            }
+        }

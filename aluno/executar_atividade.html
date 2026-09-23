@@ -6,9 +6,11 @@
     <title>Executar Atividade - Mente em Foco</title>
     <link rel="stylesheet" href="../style/executar_atividade.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="../style/global.css">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+
 </head>
 <body>
 
@@ -28,7 +30,7 @@
                     <i data-lucide="home"></i>
                     <span class="nav-title">Início</span>
                 </a>
-                <a href="../aluno/tarefas_aluno.html" class="nav-link active">
+                <a href="tarefas_aluno.html" class="nav-link active">
                     <i data-lucide="book-open"></i>
                     <span class="nav-title">Atividades</span>
                 </a>
@@ -36,7 +38,7 @@
                     <i data-lucide="message-square"></i>
                     <span class="nav-title">Chat</span>
                 </a>
-                <a href="#" class="nav-link">
+                <a href="calendario_aluno.html" class="nav-link">
                     <i data-lucide="calendar"></i>
                     <span class="nav-title">Calendário</span>
                 </a>
@@ -57,7 +59,7 @@
         <main class="main-content">
             <div class="activity-container">
                 <div class="activity-header">
-                    <a href="../aluno/tarefas_aluno.html" class="btn-back">
+                    <a href="tarefas_aluno.html" class="btn-back">
                         <i data-lucide="arrow-left"></i>
                         <span>Voltar para Tarefas</span>
                     </a>
@@ -95,37 +97,66 @@
     </div>
 
     <div class="modal-overlay" id="logout-modal">
-        <div class="modal-card">
-            <h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-            <div class="modal-actions">
-                <button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-                <button class="btn-modal btn-modal-logout" id="btn-confirm-logout">Sair</button>
+        <div class="modal-card-logout">
+            <h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+            <div class="modal-logout-actions">
+                <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+                <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
             </div>
         </div>
     </div>
 
+    <div class="modal-overlay" id="warning-modal">
+        <div class="modal-card-warning">
+            <div class="warning-icon-circle">
+                <i data-lucide="alert-circle"></i>
+            </div>
+            <h3 class="modal-warning-title">Atenção!</h3>
+            <p class="modal-warning-text" id="warning-modal-text">Por favor, responda a todas as perguntas antes de entregar.</p>
+            <button class="btn-warning-ok" id="btn-warning-ok">Entendi</button>
+        </div>
+    </div>
+
     <script>
+        (function initTheme() {
+            if (localStorage.getItem('theme') === 'escuro') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
         lucide.createIcons();
 
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
-        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+        }
 
         const logoutModal = document.getElementById('logout-modal');
-        const btnOpenLogout = document.getElementById('btn-open-logout');
-        const btnCancelLogout = document.getElementById('btn-cancel-logout');
-        
-        if (btnOpenLogout) {
-            btnOpenLogout.addEventListener('click', (e) => {
-                e.preventDefault();
-                logoutModal.classList.add('active');
-            });
+        document.getElementById('btn-open-logout')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            logoutModal.classList.add('active');
+        });
+        document.getElementById('btn-cancel-logout')?.addEventListener('click', () => logoutModal.classList.remove('active'));
+        document.getElementById('btn-confirm-logout')?.addEventListener('click', () => window.location.href = '../login/login.html');
+
+        const warningModal = document.getElementById('warning-modal');
+        const warningModalText = document.getElementById('warning-modal-text');
+        const btnWarningOk = document.getElementById('btn-warning-ok');
+        let targetCardToScroll = null;
+
+        function mostrarAlertaPersonalizado(mensagem, targetCard = null) {
+            warningModalText.textContent = mensagem;
+            targetCardToScroll = targetCard;
+            warningModal.classList.add('active');
         }
-        if (btnCancelLogout) {
-            btnCancelLogout.addEventListener('click', () => {
-                logoutModal.classList.remove('active');
-            });
-        }
+
+        btnWarningOk.addEventListener('click', () => {
+            warningModal.classList.remove('active');
+            if (targetCardToScroll) {
+                targetCardToScroll.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
 
         let secondsPassed = 0;
         const timerDisplay = document.getElementById('timer-display');
@@ -133,22 +164,32 @@
             secondsPassed++;
             const mins = String(Math.floor(secondsPassed / 60)).padStart(2, '0');
             const secs = String(secondsPassed % 60).padStart(2, '0');
-            timerDisplay.textContent = `${mins}:${secs}`;
+            if (timerDisplay) timerDisplay.textContent = `${mins}:${secs}`;
         }, 1000);
 
         const tarefas = JSON.parse(localStorage.getItem('mente_em_foco_tarefas')) || [];
-        
-        const tarefaAtiva = tarefas.reverse().find(t => t.status === 'Ativa');
+        const tarefaAtiva = [...tarefas].reverse().find(t => t.status === 'Ativa');
 
         const titleEl = document.getElementById('task-display-title');
         const instructionsEl = document.getElementById('task-display-instructions');
         const containerEl = document.getElementById('quiz-dynamic-container');
+        const infoGroupEl = document.querySelector('.activity-info-group');
+        const finishBtn = document.getElementById('btn-finish-quiz');
 
-        if (!tarefaAtiva || !tarefaAtiva.perguntas || tarefaAtiva.perguntas.length === 0) {
+        const eQuizValido = tarefaAtiva && (tarefaAtiva.tipo === 'quiz' || tarefaAtiva.titulo.toLowerCase().includes('quiz')) && tarefaAtiva.perguntas && tarefaAtiva.perguntas.length > 0;
+
+        if (!eQuizValido) {
+            clearInterval(timerInterval);
+            if (infoGroupEl) infoGroupEl.style.display = 'none';
+            if (finishBtn) finishBtn.style.display = 'none';
+
             titleEl.textContent = "Nenhuma atividade pendente";
             instructionsEl.textContent = "Crie uma tarefa no painel do professor para visualizar aqui.";
-            containerEl.innerHTML = `<p style="text-align:center; color:#557D91;">Nenhuma pergunta disponível.</p>`;
+            containerEl.innerHTML = `<p style="text-align:center; color:#557D91; padding: 20px 0; font-weight:600;">Nenhuma pergunta disponível.</p>`;
         } else {
+            if (infoGroupEl) infoGroupEl.style.display = 'flex';
+            if (finishBtn) finishBtn.style.display = 'flex';
+
             titleEl.textContent = tarefaAtiva.titulo;
             instructionsEl.textContent = tarefaAtiva.instrucoes || "Responda às questões abaixo com atenção.";
 
@@ -157,6 +198,7 @@
             tarefaAtiva.perguntas.forEach((q, qIndex) => {
                 const qCard = document.createElement('div');
                 qCard.className = 'quiz-question-card';
+                qCard.id = `question-card-${qIndex}`;
 
                 let optionsHTML = '';
                 q.opcoes.forEach((optText, optIndex) => {
@@ -183,10 +225,40 @@
             });
         }
 
-        document.getElementById('btn-finish-quiz').addEventListener('click', () => {
-            clearInterval(timerInterval);
+        if (finishBtn) {
+            finishBtn.addEventListener('click', () => {
+                if (!eQuizValido) return;
 
-            if (tarefaAtiva) {
+                const totalPerguntas = tarefaAtiva.perguntas.length;
+                let acertos = 0;
+                let naoRespondidaIndex = -1;
+
+                for (let i = 0; i < totalPerguntas; i++) {
+                    const selectedOption = document.querySelector(`input[name="question_${i}"]:checked`);
+                    
+                    if (!selectedOption) {
+                        if (naoRespondidaIndex === -1) naoRespondidaIndex = i;
+                    } else {
+                        const respostaUsuario = parseInt(selectedOption.value);
+                        const respostaCorreta = tarefaAtiva.perguntas[i].correta ?? 0;
+                        
+                        if (respostaUsuario === respostaCorreta) {
+                            acertos++;
+                        }
+                    }
+                }
+
+                if (naoRespondidaIndex !== -1) {
+                    const targetCard = document.getElementById(`question-card-${naoRespondidaIndex}`);
+                    mostrarAlertaPersonalizado(`Por favor, responda a pergunta ${naoRespondidaIndex + 1} antes de entregar a atividade!`, targetCard);
+                    return;
+                }
+
+                clearInterval(timerInterval);
+
+                const scoreCalculado = Math.round((acertos / totalPerguntas) * 100);
+                const xpCalculado = Math.round((scoreCalculado / 100) * 50);
+
                 let todasTarefas = JSON.parse(localStorage.getItem('mente_em_foco_tarefas')) || [];
                 todasTarefas = todasTarefas.map(t => {
                     if (t.id === tarefaAtiva.id) {
@@ -195,19 +267,19 @@
                     return t;
                 });
                 localStorage.setItem('mente_em_foco_tarefas', JSON.stringify(todasTarefas));
-            }
 
-            const activityData = {
-                timeFormatted: timerDisplay.textContent,
-                timeSeconds: secondsPassed,
-                score: 100,
-                xpGained: 50
-            };
-            localStorage.setItem('menteEmFoco_lastResult', JSON.stringify(activityData));
+                const activityData = {
+                    taskTitle: tarefaAtiva.titulo,
+                    timeFormatted: timerDisplay.textContent,
+                    timeSeconds: secondsPassed,
+                    score: scoreCalculado,
+                    xpGained: xpCalculado
+                };
+                localStorage.setItem('menteEmFoco_lastResult', JSON.stringify(activityData));
 
-            alert('Atividade entregue com sucesso!');
-            window.location.href = 'relatorio_desempenho.html';
-        });
+                window.location.href = 'relatorio_desempenho.html';
+            });
+        }
     </script>
 </body>
-</html>                                                                                                                                                                                                          
+</html>
