@@ -101,6 +101,16 @@
             </div>
         </main>
     </div>
+	
+	<div class="modal-overlay" id="logout-modal">
+	    <div class="modal-card-logout">
+	        <h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+	        <div class="modal-logout-actions">
+	            <button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+	            <button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
+	        </div>
+	    </div>
+	</div>
 
     <script>
         lucide.createIcons();
@@ -213,6 +223,14 @@
         document.getElementById('btn-finish-manual').addEventListener('click', () => {
             finishActivity();
         });
+		
+		const logoutModal = document.getElementById('logout-modal');
+		document.getElementById('btn-open-logout').addEventListener('click', (e) => {
+		    e.preventDefault();
+		    logoutModal.classList.add('active');
+		});
+		document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
+		document.getElementById('btn-confirm-logout').addEventListener('click', () => document.getElementById('logoutForm').submit());
     </script>
 </body>
 </html>

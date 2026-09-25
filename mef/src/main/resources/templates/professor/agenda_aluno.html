@@ -38,10 +38,7 @@
                 data-month=${evento.dataInicio.monthValue - 1},
                 data-day=${evento.dataInicio.dayOfMonth},
                 data-title=${evento.nome},
-                data-desc=${evento.descricao},
-                data-priority=${evento.prioridade},
-                data-pillclass=${evento.prioridade == 'ALTA' ? 'orange' : (evento.prioridade == 'MEDIA' ? 'dark' : 'blue')},
-                data-labelpill=${evento.prioridade == 'ALTA' ? 'Alta prioridade' : (evento.prioridade == 'MEDIA' ? 'Média prioridade' : 'Baixa prioridade')}">
+                data-desc=${evento.descricao}">
 		</div>
 
 	</div>
@@ -142,7 +139,7 @@
 
 						<h1 class="page-title">
 							Agenda do
-							<span th:text="${aluno.nome}">Heitor</span>
+							<span class="page-title" th:text="${aluno.nome}">Aluno</span>
 						</h1>
 					</div>
 
