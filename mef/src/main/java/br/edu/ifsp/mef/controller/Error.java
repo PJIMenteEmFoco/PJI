@@ -16,6 +16,7 @@ import br.edu.ifsp.mef.service.UsuarioDetailsService;
 @Controller
 public class Error implements ErrorController {
 
+	/*
 	@Autowired
 	private UsuarioDetailsService usuarioService;
 
@@ -50,9 +51,10 @@ public class Error implements ErrorController {
 				model.addAttribute("codigoErro", 500);
 				return "error/500";
 			}
-		}*/
+		}
 		model.addAttribute("codigoErro", status);
 
 		return "error/error";
 	}
+	*/
 }

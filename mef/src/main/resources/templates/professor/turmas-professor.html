@@ -4,25 +4,21 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 	<title>Turmas - Mente em Foco</title>
 
-	<!-- CSS usado pela versão visual que já estava funcionando -->
-	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
-	<link rel="stylesheet" href="/css/turmas-professor.css" th:href="@{/css/turmas-professor.css}">
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/turmas-professor.css}">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link
-		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
-		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
 
 	<script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
 
-	<!-- Formulário de logout usado pelo Spring Security -->
+	<!-- Formulário de logout (Spring Security) -->
 	<form th:action="@{/logout}" method="post" id="logoutForm" style="display: none;">
 		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 	</form>
@@ -33,11 +29,8 @@
 		<aside class="sidebar" id="sidebar">
 
 			<div class="sidebar-header">
-				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
-					class="logo-symbol-only">
-
-				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
-					class="logo-full-white">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+				<img th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" class="logo-full-white">
 			</div>
 
 			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
@@ -45,46 +38,37 @@
 			</div>
 
 			<nav class="sidebar-nav">
-
-				<a href="/professor/dashboard" th:href="@{/professor/dashboard}" class="nav-link">
+				<a th:href="@{/professor/dashboard}" class="nav-link">
 					<i data-lucide="home"></i>
 					<span class="nav-title">Início</span>
 				</a>
-
-				<a href="/professor/tarefas" th:href="@{/professor/tarefas}" class="nav-link">
+				<a th:href="@{/professor/tarefas}" class="nav-link">
 					<i data-lucide="book-open"></i>
 					<span class="nav-title">Atividades</span>
 				</a>
-
-				<a href="/professor/chat" th:href="@{/professor/chat}" class="nav-link">
+				<a th:href="@{/professor/chat}" class="nav-link">
 					<i data-lucide="message-square"></i>
 					<span class="nav-title">Chat</span>
 				</a>
-
-				<a href="/professor/calendario" th:href="@{/professor/calendario}" class="nav-link">
+				<a th:href="@{/professor/calendario}" class="nav-link">
 					<i data-lucide="calendar"></i>
 					<span class="nav-title">Calendário</span>
 				</a>
-
-				<a href="/professor/turmas" th:href="@{/professor/turmas}" class="nav-link active">
+				<a th:href="@{/professor/turmas}" class="nav-link active">
 					<i data-lucide="users"></i>
 					<span class="nav-title">Turmas</span>
 				</a>
-
 			</nav>
 
 			<div class="sidebar-footer">
-
-				<a href="/professor/configuracoes" th:href="@{/professor/configuracoes}" class="nav-link">
+				<a th:href="@{/professor/configuracoes}" class="nav-link">
 					<i data-lucide="settings"></i>
 					<span class="nav-title">Ajustes</span>
 				</a>
-
 				<button type="button" class="nav-link" id="btn-open-logout">
 					<i data-lucide="log-out"></i>
 					<span class="nav-title">Sair</span>
 				</button>
-
 			</div>
 
 		</aside>
@@ -99,8 +83,7 @@
 				<!-- BARRA DE AÇÕES -->
 				<div class="toolbar-row">
 
-					<button type="button" class="btn-criar-turma"
-						th:onclick="|window.location.href='@{/professor/turmas/nova}'|">
+					<button type="button" class="btn-criar-turma" id="btn-open-criar-turma">
 						<i data-lucide="plus"></i>
 						Criar turma
 					</button>
@@ -109,22 +92,14 @@
 
 						<div class="search-box">
 							<i data-lucide="search" style="width: 16px; height: 16px; color: #8fa5b4;"></i>
-
-							<input type="text" id="input-search-turmas" placeholder="Pesquisar turmas..."
-								autocomplete="off">
+							<input type="text" id="input-search-turmas" placeholder="Pesquisar turmas..." autocomplete="off">
 						</div>
 
 						<select class="select-filter" id="select-filter-psico">
-
-							<option value="">
-								Todos os Psicopedagogos
-							</option>
-
-							<option th:each="psicopedagogo : ${psicopedagogos}" th:value="${psicopedagogo.id}"
-								th:text="${psicopedagogo.nome}">
-								Psicopedagogo
-							</option>
-
+							<option value="">Todos os Psicopedagogos</option>
+							<option th:each="psicopedagogo : ${psicopedagogos}"
+								th:value="${psicopedagogo.id}"
+								th:text="${psicopedagogo.nome}">Psicopedagogo</option>
 						</select>
 
 					</div>
@@ -137,42 +112,29 @@
 				<div class="turmas-grid" id="turmas-grid">
 
 					<div class="turma-card" th:each="turma : ${turmas}"
-						th:onclick="|window.location.href='/professor/turmas/${turma.id}'|">
+						th:data-href="@{/professor/turmas/{id}(id=${turma.id})}">
 
-						<h3 class="turma-card-title" th:text="${turma.nome}">
-							Turma
-						</h3>
+						<h3 class="turma-card-title" th:text="${turma.nome}">Turma</h3>
 
 						<div class="avatars-and-badge">
 
 							<div class="avatar-group">
-
-								<!-- Mostra no máximo os três primeiros ALUNOS -->
+								<!-- No máximo os três primeiros ALUNOS -->
 								<th:block th:each="aluno, iterStat : ${turma.usuarios.?[perfil == 'ALUNO']}"
 									th:if="${iterStat.index < 3}">
-
-									<div class="avatar-circle" th:text="${aluno.nome != null and !#strings.isEmpty(aluno.nome)
-                                             ? #strings.substring(aluno.nome, 0, 1).toUpperCase()
-                                             : '?'}">
-										A
-									</div>
-
+									<div class="avatar-circle"
+										th:text="${aluno.nome != null and !#strings.isEmpty(aluno.nome)
+											? #strings.substring(aluno.nome, 0, 1).toUpperCase()
+											: '?'}">A</div>
 								</th:block>
 
-								<!-- Caso a turma não tenha alunos -->
-								<div class="avatar-circle"
-									th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'ALUNO'])}">
-									--
-								</div>
-
+								<!-- Turma sem alunos -->
+								<div class="avatar-circle" th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'ALUNO'])}">--</div>
 							</div>
 
 							<span class="badge-alunos">
 								<i data-lucide="users" style="width:14px; height:14px;"></i>
-
-								<span th:text="${#lists.size(turma.usuarios.?[perfil == 'ALUNO'])} + ' Alunos'">
-									0 Alunos
-								</span>
+								<span th:text="${#lists.size(turma.usuarios.?[perfil == 'ALUNO'])} + ' Alunos'">0 Alunos</span>
 							</span>
 
 						</div>
@@ -181,29 +143,18 @@
 
 							<div>
 								Professor:
-
 								<strong th:each="usuario : ${turma.usuarios}" th:if="${usuario.perfil == 'PROFESSOR'}"
-									th:text="${usuario.nome}">
-									Professor
-								</strong>
-
-								<strong th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'PROFESSOR'])}">
-									Não informado
-								</strong>
+									th:text="${usuario.nome}">Professor</strong>
+								<strong th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'PROFESSOR'])}">Não informado</strong>
 							</div>
 
 							<div>
 								Psicopedagogo:
-
 								<strong class="psicopedagogo" th:each="usuario : ${turma.usuarios}"
 									th:if="${usuario.perfil == 'PSICOPEDAGOGO'}"
-									th:attr="data-psicopedagogo-id=${usuario.id}" th:text="${usuario.nome}">
-									Psicopedagogo
-								</strong>
-
-								<strong th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'PSICOPEDAGOGO'])}">
-									Não informado
-								</strong>
+									th:attr="data-psicopedagogo-id=${usuario.id}"
+									th:text="${usuario.nome}">Psicopedagogo</strong>
+								<strong th:if="${#lists.isEmpty(turma.usuarios.?[perfil == 'PSICOPEDAGOGO'])}">Não informado</strong>
 							</div>
 
 						</div>
@@ -231,232 +182,221 @@
 
 	</div>
 
-	<!-- MODAL DE LOGOUT -->
-	<div class="modal-overlay" id="logout-modal">
+	<!-- MODAL: CRIAR TURMA
+	     Envia um POST para /professor/turmas/nova.
+	     Espera no model: ${professores} e ${psicopedagogos} (listas com id e nome).
+	     Se a validação falhar no servidor, devolva ${abrirModalTurma} = true e ${erroTurma} = mensagem. -->
+	<div class="modal-overlay" id="modal-criar-turma" th:classappend="${abrirModalTurma != null and abrirModalTurma} ? 'active'">
+		<div class="create-turma-outer-card">
+			<div class="create-turma-inner-card">
 
-		<div class="modal-card-logout">
+				<div class="modal-header">
+					<h3>Criar Nova Turma</h3>
+					<p>Preencha as informações necessárias para cadastrar uma nova turma.</p>
+				</div>
 
-			<h3 class="modal-logout-title">
-				Tem certeza que deseja sair da sua conta?
-			</h3>
+				<p class="form-error" th:if="${erroTurma != null}" th:text="${erroTurma}"
+					style="color: #c0392b; font-weight: 700; margin-bottom: 12px;"></p>
 
-			<div class="modal-logout-actions">
+				<form id="form-criar-turma" th:action="@{/professor/turmas/nova}" method="post">
 
-				<button type="button" class="btn-logout-cancel" id="btn-cancel-logout">
-					Cancelar
-				</button>
+					<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-				<button type="button" class="btn-logout-confirm" id="btn-confirm-logout">
-					Sair
-				</button>
+					<div class="form-group">
+						<label for="nome-turma">Nome da Turma</label>
+						<input type="text" id="nome-turma" name="nome" class="form-control" placeholder="Ex: Turma 7" required>
+					</div>
+
+					<div class="form-group">
+						<label for="emails-turma">E-mails dos Integrantes (Opcional)</label>
+						<textarea id="emails-turma" name="emailsIntegrantes" class="form-control textarea"
+							placeholder="aluno1@email.com, aluno2@email.com&#10;aluno3@email.com"
+							th:text="${emailsIntegrantes}"></textarea>
+						<small id="emails-turma-feedback" style="display: block; margin-top: 6px; color: #557D91;">
+							Separe os e-mails por vírgula, ponto e vírgula, espaço ou quebra de linha.
+						</small>
+					</div>
+
+					<div class="form-group">
+						<label for="desc-turma">Descrição ou Observações (Opcional)</label>
+						<textarea id="desc-turma" name="descricao" class="form-control textarea"
+							placeholder="Adicione notas adicionais sobre a turma..."></textarea>
+					</div>
+
+					<div class="modal-btn-row">
+						<button type="button" class="btn-turma-cancel" id="btn-fechar-modal-turma">Cancelar</button>
+						<button type="submit" class="btn-turma-save" id="btn-salvar-turma">Salvar Turma</button>
+					</div>
+
+				</form>
 
 			</div>
-
 		</div>
+	</div>
 
+	<!-- MODAL DE LOGOUT -->
+	<div class="modal-overlay" id="logout-modal">
+		<div class="modal-card-logout">
+			<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+			<div class="modal-logout-actions">
+				<button type="button" class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+				<button type="button" class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
+			</div>
+		</div>
 	</div>
 
 	<script>
 
-		/*
-		 * TEMA
-		 */
+		/* TEMA */
 		(function initTheme() {
 			if (localStorage.getItem('theme') === 'escuro') {
 				document.body.classList.add('dark-mode');
 			}
 		})();
 
-
-		/*
-		 * LUCIDE
-		 */
 		lucide.createIcons();
 
-
-		/*
-		 * SIDEBAR
-		 */
-		const sidebar =
-			document.getElementById('sidebar');
-
-		const toggleBtn =
-			document.getElementById('toggle-btn');
-
+		/* SIDEBAR */
+		const sidebar = document.getElementById('sidebar');
+		const toggleBtn = document.getElementById('toggle-btn');
 		if (sidebar && toggleBtn) {
-			toggleBtn.addEventListener('click', () => {
-				sidebar.classList.toggle('expanded');
-			});
+			toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
 		}
 
+		/* CLIQUE NO CARD -> DETALHES DA TURMA */
+		document.querySelectorAll('.turma-card[data-href]').forEach(card => {
+			card.addEventListener('click', () => {
+				window.location.href = card.dataset.href;
+			});
+		});
 
-		/*
-		 * PESQUISA E FILTRO
-		 *
-		 * Os cards já vieram renderizados do banco pelo Thymeleaf.
-		 * O JavaScript apenas decide quais cards ficam visíveis.
-		 */
-		const searchInput =
-			document.getElementById('input-search-turmas');
-
-		const filterPsico =
-			document.getElementById('select-filter-psico');
-
-		const teamCards =
-			document.querySelectorAll('.turma-card');
-
-		const noResultsMessage =
-			document.getElementById('no-results-message');
-
+		/* PESQUISA E FILTRO (sobre os cards renderizados pelo servidor) */
+		const searchInput = document.getElementById('input-search-turmas');
+		const filterPsico = document.getElementById('select-filter-psico');
+		const teamCards = document.querySelectorAll('.turma-card');
+		const noResultsMessage = document.getElementById('no-results-message');
 
 		function filtrarTurmas() {
-
-			const pesquisa =
-				(searchInput?.value || '')
-					.trim()
-					.toLocaleLowerCase('pt-BR');
-
-			const psicopedagogoSelecionado =
-				filterPsico?.value || '';
-
+			const pesquisa = (searchInput?.value || '').trim().toLocaleLowerCase('pt-BR');
+			const psicoSelecionado = filterPsico?.value || '';
 			let turmasVisiveis = 0;
 
-
 			teamCards.forEach(card => {
+				const textoCard = card.textContent.toLocaleLowerCase('pt-BR');
+				const psicopedagogos = card.querySelectorAll('.psicopedagogo');
 
-				/*
-				 * Pesquisar em todo o texto do card:
-				 * nome da turma, professor e psicopedagogo.
-				 */
-				const textoCard =
-					card.textContent
-						.toLocaleLowerCase('pt-BR');
+				const correspondePsico =
+					psicoSelecionado === '' ||
+					Array.from(psicopedagogos).some(p => p.dataset.psicopedagogoId === psicoSelecionado);
 
+				const deveExibir = textoCard.includes(pesquisa) && correspondePsico;
 
-				/*
-				 * Cada psicopedagogo renderizado recebe
-				 * data-psicopedagogo-id com o ID vindo do banco.
-				 */
-				const psicopedagogos =
-					card.querySelectorAll('.psicopedagogo');
-
-
-				const correspondePsicopedagogo =
-					psicopedagogoSelecionado === '' ||
-					Array.from(psicopedagogos).some(
-						psicopedagogo =>
-							psicopedagogo.dataset.psicopedagogoId ===
-							psicopedagogoSelecionado
-					);
-
-
-				const correspondePesquisa =
-					textoCard.includes(pesquisa);
-
-
-				const deveExibir =
-					correspondePesquisa &&
-					correspondePsicopedagogo;
-
-
-				card.style.display =
-					deveExibir ? '' : 'none';
-
-
-				if (deveExibir) {
-					turmasVisiveis++;
-				}
-
+				card.style.display = deveExibir ? '' : 'none';
+				if (deveExibir) turmasVisiveis++;
 			});
 
-
-			/*
-			 * Não mostra esta mensagem se o professor
-			 * realmente não possuir nenhuma turma.
-			 * Nesse caso o Thymeleaf já mostra a mensagem
-			 * "Você ainda não possui nenhuma turma".
-			 */
 			if (noResultsMessage) {
-
 				noResultsMessage.style.display =
-					teamCards.length > 0 &&
-						turmasVisiveis === 0
-						? 'flex'
-						: 'none';
+					(teamCards.length > 0 && turmasVisiveis === 0) ? '' : 'none';
 			}
 		}
 
+		if (searchInput) searchInput.addEventListener('input', filtrarTurmas);
+		if (filterPsico) filterPsico.addEventListener('change', filtrarTurmas);
 
-		if (searchInput) {
-			searchInput.addEventListener(
-				'input',
-				filtrarTurmas
-			);
+		/* MODAL: CRIAR TURMA */
+		const modalCriarTurma = document.getElementById('modal-criar-turma');
+		const btnOpenCriarTurma = document.getElementById('btn-open-criar-turma');
+		const btnFecharModalTurma = document.getElementById('btn-fechar-modal-turma');
+		const formCriarTurma = document.getElementById('form-criar-turma');
+
+		if (modalCriarTurma && btnOpenCriarTurma && btnFecharModalTurma && formCriarTurma) {
+			btnOpenCriarTurma.addEventListener('click', () => modalCriarTurma.classList.add('active'));
+
+			function fecharModalTurma() {
+				modalCriarTurma.classList.remove('active');
+				formCriarTurma.reset();
+				limparFeedbackEmails();
+			}
+
+			btnFecharModalTurma.addEventListener('click', fecharModalTurma);
+
+			modalCriarTurma.addEventListener('click', event => {
+				if (event.target === modalCriarTurma) fecharModalTurma();
+			});
+
+			/* Normaliza e valida a lista de e-mails dos integrantes */
+			const emailsInput = document.getElementById('emails-turma');
+			const emailsFeedback = document.getElementById('emails-turma-feedback');
+			const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			const EMAILS_DICA = 'Separe os e-mails por vírgula, ponto e vírgula, espaço ou quebra de linha.';
+
+			function extrairEmails(texto) {
+				const lista = (texto || '')
+					.split(/[\s,;]+/)
+					.map(e => e.trim().toLowerCase())
+					.filter(Boolean);
+				return [...new Set(lista)]; // remove duplicados
+			}
+
+			function validarEmails() {
+				const emails = extrairEmails(emailsInput.value);
+				const invalidos = emails.filter(e => !EMAIL_REGEX.test(e));
+
+				if (invalidos.length > 0) {
+					emailsFeedback.style.color = '#c0392b';
+					emailsFeedback.textContent = 'E-mail(s) inválido(s): ' + invalidos.join(', ');
+					return false;
+				}
+
+				emailsFeedback.style.color = '#557D91';
+				emailsFeedback.textContent = emails.length > 0
+					? emails.length + (emails.length === 1 ? ' e-mail válido.' : ' e-mails válidos.')
+					: EMAILS_DICA;
+				return true;
+			}
+
+			function limparFeedbackEmails() {
+				emailsFeedback.style.color = '#557D91';
+				emailsFeedback.textContent = EMAILS_DICA;
+			}
+
+			emailsInput.addEventListener('input', validarEmails);
+
+			formCriarTurma.addEventListener('submit', event => {
+				if (!validarEmails()) {
+					event.preventDefault();
+					emailsInput.focus();
+					return;
+				}
+
+				/* Envia já normalizado: "a@x.com, b@y.com" (minúsculas, sem duplicados) */
+				emailsInput.value = extrairEmails(emailsInput.value).join(', ');
+
+				/* Evita duplo clique no envio */
+				document.getElementById('btn-salvar-turma').disabled = true;
+			});
 		}
 
+		/* LOGOUT */
+		const logoutModal = document.getElementById('logout-modal');
+		const btnOpenLogout = document.getElementById('btn-open-logout');
+		const btnCancelLogout = document.getElementById('btn-cancel-logout');
+		const btnConfirmLogout = document.getElementById('btn-confirm-logout');
 
-		if (filterPsico) {
-			filterPsico.addEventListener(
-				'change',
-				filtrarTurmas
-			);
-		}
-
-
-		/*
-		 * LOGOUT
-		 */
-		const logoutModal =
-			document.getElementById('logout-modal');
-
-		const btnOpenLogout =
-			document.getElementById('btn-open-logout');
-
-		const btnCancelLogout =
-			document.getElementById('btn-cancel-logout');
-
-		const btnConfirmLogout =
-			document.getElementById('btn-confirm-logout');
-
-
-		if (
-			logoutModal &&
-			btnOpenLogout &&
-			btnCancelLogout &&
-			btnConfirmLogout
-		) {
-
+		if (logoutModal && btnOpenLogout && btnCancelLogout && btnConfirmLogout) {
 			btnOpenLogout.addEventListener('click', event => {
 				event.preventDefault();
 				logoutModal.classList.add('active');
 			});
-
-
-			btnCancelLogout.addEventListener('click', () => {
-				logoutModal.classList.remove('active');
-			});
-
-
+			btnCancelLogout.addEventListener('click', () => logoutModal.classList.remove('active'));
 			btnConfirmLogout.addEventListener('click', () => {
-
-				const logoutForm =
-					document.getElementById('logoutForm');
-
-				if (logoutForm) {
-					logoutForm.submit();
-				}
-
+				const logoutForm = document.getElementById('logoutForm');
+				if (logoutForm) logoutForm.submit();
 			});
-
-
 			logoutModal.addEventListener('click', event => {
-
-				if (event.target === logoutModal) {
-					logoutModal.classList.remove('active');
-				}
-
+				if (event.target === logoutModal) logoutModal.classList.remove('active');
 			});
-
 		}
 
 	</script>

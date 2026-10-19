@@ -5,6 +5,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import br.edu.ifsp.mef.model.Professor;
 import br.edu.ifsp.mef.model.Turma;
 import br.edu.ifsp.mef.model.Usuario;
 import br.edu.ifsp.mef.repository.TurmaRepository;
@@ -20,9 +22,12 @@ public class TurmaService {
 	@Autowired
 	ConviteService conviteService;
 
-	public Turma criarTurma(String nome) {
+	public Turma criarTurma(String nome, String comentarios, Professor professor) {
 		Turma turma = new Turma();
 		turma.setNome(nome);
+		turma.setComentarios(comentarios);
+		turma.setProfessorResponsavel(professor);
+		turma.addUsuario(professor);
 		return turmaRepository.save(turma);
 	}
 

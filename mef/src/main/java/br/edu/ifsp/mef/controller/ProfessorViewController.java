@@ -1,6 +1,10 @@
 package br.edu.ifsp.mef.controller;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,19 +13,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import br.edu.ifsp.mef.model.Aluno;
 import br.edu.ifsp.mef.model.Atividade;
 import br.edu.ifsp.mef.model.Calendario;
+import br.edu.ifsp.mef.model.ConviteTurma;
+import br.edu.ifsp.mef.model.Professor;
 import br.edu.ifsp.mef.model.Turma;
 import br.edu.ifsp.mef.model.Usuario;
 import br.edu.ifsp.mef.model.UsuarioDetails;
+import br.edu.ifsp.mef.repository.ConviteTurmaRepository;
 import br.edu.ifsp.mef.repository.TurmaRepository;
 import br.edu.ifsp.mef.service.AlunoService;
 import br.edu.ifsp.mef.service.AtividadeService;
 import br.edu.ifsp.mef.service.CalendarioService;
+import br.edu.ifsp.mef.service.EmailService;
 import br.edu.ifsp.mef.service.ProfessorService;
+import br.edu.ifsp.mef.service.TurmaService;
 import br.edu.ifsp.mef.service.UsuarioDetailsService;
 
 @Controller
@@ -39,6 +50,12 @@ public class ProfessorViewController {
 	CalendarioService calendarioService;
 	@Autowired
 	AtividadeService atividadeService;
+	@Autowired
+	TurmaService turmaService;
+	@Autowired
+	ConviteTurmaRepository conviteTurmaRepository;
+	@Autowired
+	EmailService emailService;
 
 	@GetMapping("/professor/dashboard")
 	public String dashboard(Authentication authentication, Model model) {
@@ -59,7 +76,8 @@ public class ProfessorViewController {
 	}
 
 	@GetMapping("/professor/tarefas")
-	public String tarefas() {
+	public String tarefas(Authentication authentication, Model model) {
+
 		return "professor/tarefas_professor";
 	}
 
@@ -83,10 +101,29 @@ public class ProfessorViewController {
 		return "professor/turmas-professor";
 	}
 
-	@GetMapping("/professor/turmas/nova")
-	public String cadastrarTurma(Authentication authentication, Model model) {
+	@PostMapping("/professor/turmas/nova")
+	public String criarTurma(Authentication authentication, @RequestParam String nome, @RequestParam(required = false) String descricao,
+			@RequestParam(required = false) String emailsIntegrantes) {
 
-		return "professor/criar_nova_turma";
+		List<String> emails = Arrays.stream(Optional.ofNullable(emailsIntegrantes).orElse("").split("[\\s,;]+"))
+				.map(String::trim).map(String::toLowerCase).filter(e -> !e.isEmpty()).distinct().toList();
+		Professor professor = (Professor) usuarioService.getByEmail(authentication.getName());
+		Turma turma = turmaService.criarTurma(nome, descricao, professor);
+
+		
+		if (!emails.isEmpty()) {
+			for (String email : emails) {
+				ConviteTurma convite = new ConviteTurma();
+				convite.setEmail(email);
+				convite.setIdTurma(turma.getId());
+				convite.setToken(UUID.randomUUID().toString());
+				convite.setExpiracao(LocalDateTime.now().plusDays(7));
+				conviteTurmaRepository.save(convite);
+
+				emailService.enviarConvite(email, turma.getNome(), convite.getToken());
+			}
+		}
+		return "redirect:/professor/turmas";
 	}
 
 	@GetMapping("/professor/turmas/{id}")

@@ -21,32 +21,24 @@ import org.springframework.boot.CommandLineRunner;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	
-	//Método de configuração do spring security, nele controlamos quais páginas podem ser acessadas sem o usúario se logar
+	// Método de configuração do spring security, nele controlamos quais páginas
+	// podem ser acessadas sem o usúario se logar
 	@Bean
 	public SecurityFilterChain seguranca(HttpSecurity https) throws Exception {
 		return https
 				.authorizeHttpRequests((auth) -> auth
-						.requestMatchers("/login", "/cadastro", "/cadastrar", "/css/**", "/img/**", "/error").permitAll()
-						.requestMatchers("/categoria/excluirContaPsico/**").hasAnyRole("PSICOPEDAGOGO", "ADMIN")
-						.requestMatchers("/categoria/excluirContaProfessor/**").hasAnyRole("PROFESSOR", "ADMIN")
-						.requestMatchers("/categoria/excluirContaAluno/**")
-						.hasAnyRole("ALUNO", "PSICOPEDAGOGO", "ADMIN")
-						.anyRequest().authenticated())
-				.formLogin(login -> login
-						.loginPage("/login")
-						.successHandler(authenticationSuccessHandler())
-						.failureUrl("/login?error")
-						.permitAll())
-				.exceptionHandling(exception -> exception
-					    .accessDeniedPage("/acesso-negado")
-					)
-				.logout(sair -> sair
-						.logoutSuccessUrl("/?logout")
-						.permitAll()).build();
+						.requestMatchers("/login", "/cadastro", "/cadastrar", "/css/**", "/img/**", "/error")
+						.permitAll().requestMatchers("/categoria/excluirContaPsico/**")
+						.hasAnyRole("PSICOPEDAGOGO", "ADMIN").requestMatchers("/categoria/excluirContaProfessor/**")
+						.hasAnyRole("PROFESSOR", "ADMIN").requestMatchers("/categoria/excluirContaAluno/**")
+						.hasAnyRole("ALUNO", "PSICOPEDAGOGO", "ADMIN").anyRequest().authenticated())
+				.formLogin(login -> login.loginPage("/login").successHandler(authenticationSuccessHandler())
+						.failureUrl("/login?error").permitAll())
+				.exceptionHandling(exception -> exception.accessDeniedPage("/acesso-negado"))
+				.logout(sair -> sair.logoutSuccessUrl("/?logout").permitAll()).build();
 	}
 
-	//Método que cria o usuário administrador caso não exista no banco de dados
+	// Método que cria o usuário administrador caso não exista no banco de dados
 	@Bean
 	CommandLineRunner criarAdmin(UsuarioRepository repoUsuario, PasswordEncoder encoder) {
 		return args -> {
@@ -63,7 +55,7 @@ public class SecurityConfiguration {
 		};
 	};
 
-	//Método que controla o redirecionamento do usuário logado
+	// Método que controla o redirecionamento do usuário logado
 	@Bean
 	public AuthenticationSuccessHandler authenticationSuccessHandler() {
 		return (request, response, authentication) -> {
@@ -83,16 +75,16 @@ public class SecurityConfiguration {
 		};
 	}
 
-	//Método que cria a criptografia para as senhas da aplicação
+	// Método que cria a criptografia para as senhas da aplicação
 	@Bean
 	public PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
-	//Método para garantir a randomização da geração de códigos para recuperação de senha e etc
+
+	// Método para garantir a randomização da geração de códigos par
 	@Bean
 	public SecureRandom secureRandom() {
-	    return new SecureRandom();
+		return new SecureRandom();
 	}
 
 }

@@ -19,87 +19,86 @@ import br.edu.ifsp.mef.repository.UsuarioRepository;
 
 @Service
 public class UsuarioDetailsService implements UserDetailsService {
-	
+
 	@Autowired
 	UsuarioRepository usuarioRepository;
 	@Autowired
 	CalendarioService calendarioService;
 	@Autowired
 	PasswordEncoder encoder;
-	
+
 	public boolean cadastrarUsuario(Usuario usuario, String perfil) {
 
-	    Optional<Usuario> usuarioExistente =
-	            usuarioRepository.findByEmailIgnoreCase(usuario.getEmail());
+		Optional<Usuario> usuarioExistente = usuarioRepository.findByEmailIgnoreCase(usuario.getEmail());
 
-	    if (usuarioExistente.isPresent()) {
-	        return false;
-	    }
+		if (usuarioExistente.isPresent()) {
+			return false;
+		}
 
-	    Usuario novoUsuario;
+		Usuario novoUsuario;
 
-	    switch (perfil) {
-	        case "ALUNO":
-	            novoUsuario = new Aluno();
-	            break;
+		switch (perfil) {
+		case "ALUNO":
+			novoUsuario = new Aluno();
+			break;
 
-	        case "PROFESSOR":
-	            novoUsuario = new Professor();
-	            break;
+		case "PROFESSOR":
+			novoUsuario = new Professor();
+			break;
 
-	        case "PSICOPEDAGOGO":
-	            novoUsuario = new Psicopedagogo();
-	            break;
+		case "PSICOPEDAGOGO":
+			novoUsuario = new Psicopedagogo();
+			break;
 
-	        default:
-	            throw new IllegalArgumentException("Perfil inválido");
-	    }
+		default:
+			throw new IllegalArgumentException("Perfil inválido");
+		}
 
-	    novoUsuario.setNome(usuario.getNome());
-	    novoUsuario.setEmail(usuario.getEmail());
-	    novoUsuario.setSenha(encoder.encode(usuario.getSenha()));
-	    novoUsuario.setTelefone(usuario.getTelefone());
-	    novoUsuario.setDataNascimento(usuario.getDataNascimento());
-	    novoUsuario.setPerfil(perfil);
-	    novoUsuario.setAtivado(true);
+		novoUsuario.setNome(usuario.getNome());
+		novoUsuario.setEmail(usuario.getEmail());
+		novoUsuario.setSenha(encoder.encode(usuario.getSenha()));
+		novoUsuario.setTelefone(usuario.getTelefone());
+		novoUsuario.setDataNascimento(usuario.getDataNascimento());
+		novoUsuario.setPerfil(perfil);
+		novoUsuario.setAtivado(true);
 
-	    usuarioRepository.save(novoUsuario);
-	    if (perfil.equals("ALUNO")) {
-	    	calendarioService.criarCalendario((Aluno) novoUsuario);
-	    }
-	    return true;
+		usuarioRepository.save(novoUsuario);
+		if (perfil.equals("ALUNO")) {
+			calendarioService.criarCalendario((Aluno) novoUsuario);
+		}
+		return true;
 	}
-	
-	    public boolean alterarStatusUsuario(Long id) {
-	    	try {
-	    		Usuario user = getById(id);
-	    		if (user == null) {
-	    			return false;
-	    		}
-	    		user.setAtivado(!user.isAtivado());
-	    		usuarioRepository.save(user);	
-	    		return true;
-	    		} catch (Exception e) {
-	    			return false;
-	    		}
-	    	}
-	    
-		public Usuario getById(long id) {
-			Optional<Usuario> byId = usuarioRepository.findById(id);
-			if(byId.isEmpty()) {
-				return null;
+
+	public boolean alterarStatusUsuario(Long id) {
+		try {
+			Usuario user = getById(id);
+			if (user == null) {
+				return false;
 			}
-			return byId.get();
+			user.setAtivado(!user.isAtivado());
+			usuarioRepository.save(user);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
-	
-		public Usuario getByEmail(String email) {
-			Optional<Usuario> byEmail = usuarioRepository.findByEmailIgnoreCase(email);
-			if(byEmail.isEmpty()) {
-				return null;
-			}
-			return byEmail.get();
+
+	public Usuario getById(long id) {
+		Optional<Usuario> byId = usuarioRepository.findById(id);
+		if (byId.isEmpty()) {
+			return null;
+		}
+		return byId.get();
 	}
-		
+
+	public Usuario getByEmail(String email) {
+		Optional<Usuario> byEmail = usuarioRepository.findByEmailIgnoreCase(email);
+		if (byEmail.isEmpty()) {
+			return null;
+		}
+		return byEmail.get();
+	}
+
 	public boolean atualizarNome(long id, String nome) {
 		Usuario user = getById(id);
 		if (user == null) {
@@ -107,14 +106,14 @@ public class UsuarioDetailsService implements UserDetailsService {
 		}
 		user.setNome(nome);
 		usuarioRepository.save(user);
-		
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		UsuarioDetails details = (UsuarioDetails) authentication.getPrincipal();
 		details.getUsuario().setNome(nome);
 		return true;
 	}
-	
+
 	public boolean atualizarSenha(long id, String senha) {
 		Usuario user = getById(id);
 		if (user == null) {
@@ -125,7 +124,7 @@ public class UsuarioDetailsService implements UserDetailsService {
 
 		return true;
 	}
-	
+
 	public boolean atualizarTelefone(long id, String telefone) {
 		Usuario user = getById(id);
 		if (user == null) {
@@ -141,22 +140,17 @@ public class UsuarioDetailsService implements UserDetailsService {
 		return true;
 	}
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-	    @Override
-	    public UserDetails loadUserByUsername(String username)
-	            throws UsernameNotFoundException {
+		Usuario usuario = usuarioRepository.findByEmailIgnoreCase(username)
+				.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-	    	 Usuario usuario = usuarioRepository
-	    	            .findByEmailIgnoreCase(username)
-	    	            .orElseThrow(() -> new UsernameNotFoundException(
-	    	                    "Usuário não encontrado"
-	    	            ));
+		return new UsuarioDetails(usuario);
+	}
 
-	    	 return new UsuarioDetails(usuario);
-	    }
-	    
-	    public List<Usuario> buscarPsicopedagogos() {
-	        return usuarioRepository.findByPerfil("PSICOPEDAGOGO");
-	    }
+	public List<Usuario> buscarPsicopedagogos() {
+		return usuarioRepository.findByPerfil("PSICOPEDAGOGO");
+	}
 
-}	    
+}

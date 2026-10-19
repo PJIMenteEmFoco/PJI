@@ -175,7 +175,7 @@
 							<i data-lucide="user"></i>
 						</div>
 						<div>
-							<span class="active-contact-title" id="active-contact-name">Cauê Campos</span>
+							<span class="active-contact-title" id="active-contact-name">Sem usuário definido</span>
 						</div>
 					</div>
 				</div>
@@ -237,9 +237,6 @@
 		    reconnectDelay: 5000,
 		    onConnect: () => {
 		        console.log('WebSocket conectado!');
-		        
-		        // MUDANÇA AQUI: Trocamos '/user/queue/messages' 
-		        // por '/queue/messages/' + usuarioLogadoId
 		        stompClient.subscribe(
 		            '/queue/messages/' + usuarioLogadoId,
 		            function (message) {

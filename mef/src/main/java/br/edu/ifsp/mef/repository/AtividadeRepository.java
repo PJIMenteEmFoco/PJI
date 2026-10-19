@@ -1,6 +1,8 @@
 package br.edu.ifsp.mef.repository;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,13 +63,23 @@ public interface AtividadeRepository extends JpaRepository<Atividade, Long> {
 			    ORDER BY a.prazo ASC
 			""")
 	List<Atividade> findAtividadesDoAluno(@Param("idAluno") Long idAluno);
-	
+
 	@Query("""
-		    SELECT COUNT(DISTINCT a.id)
-		    FROM Atividade a
-		    JOIN a.alunos aluno
-		    JOIN aluno.turmas turma
-		    WHERE turma.id = :idTurma
-		""")
-		long countAtividadesDaTurma(@Param("idTurma") Long idTurma);
+			    SELECT COUNT(DISTINCT a.id)
+			    FROM Atividade a
+			    JOIN a.alunos aluno
+			    JOIN aluno.turmas turma
+			    WHERE turma.id = :idTurma
+			""")
+	long countAtividadesDaTurma(@Param("idTurma") Long idTurma);
+
+	@Query("""
+			select a from Atividade a join a.alunos al
+			where al.id = :alunoId
+			  and a.professor.id = :professorId
+			  and a.dataCriacao >= :desde
+			order by a.dataCriacao desc, a.id desc
+			""")
+	List<Atividade> ultimasDoAluno(@Param("alunoId") Long alunoId, @Param("professorId") Long professorId,
+			@Param("desde") LocalDateTime desde, Pageable pageable);
 }

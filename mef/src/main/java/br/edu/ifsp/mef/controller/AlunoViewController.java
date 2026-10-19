@@ -1,19 +1,16 @@
 package br.edu.ifsp.mef.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import br.edu.ifsp.mef.model.Aluno;
 import br.edu.ifsp.mef.model.Atividade;
 import br.edu.ifsp.mef.model.Calendario;
 import br.edu.ifsp.mef.model.Usuario;
 import br.edu.ifsp.mef.model.UsuarioDetails;
-import br.edu.ifsp.mef.repository.UsuarioRepository;
 import br.edu.ifsp.mef.service.AlunoService;
 import br.edu.ifsp.mef.service.CalendarioService;
 
@@ -24,14 +21,12 @@ public class AlunoViewController {
 	AlunoService alunoService;
 	@Autowired
 	CalendarioService calendarioService;
-    @Autowired
-    UsuarioRepository usuarioRepository;
 	
 	@GetMapping("/aluno/dashboard")
     public String dashboard(Model model, Authentication authentication) {
         
         String emailLogado = authentication.getName();
-        Usuario aluno = usuarioRepository.findByEmailIgnoreCase(emailLogado).orElse(null);
+        Usuario aluno = alunoService.getByEmail(emailLogado);
         model.addAttribute("metaConcluidas", 7);
         model.addAttribute("metaTotal", 10);
         model.addAttribute("metaPorcentagem", 70);

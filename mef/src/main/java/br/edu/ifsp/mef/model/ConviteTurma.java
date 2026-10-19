@@ -1,7 +1,6 @@
 package br.edu.ifsp.mef.model;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,7 +11,9 @@ public class ConviteTurma {
 	@Id
 	@GeneratedValue
 	private Long id;
-	private Long idTurma;	
+	private String email;
+	private Long idTurma;
+	private String token;
 	private LocalDateTime expiracao;
 	
 	public Long getId() {
@@ -23,6 +24,20 @@ public class ConviteTurma {
 	}
 	public Long getIdTurma() {
 		return idTurma;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 	public void setIdTurma(Long turmaId) {
 		this.idTurma = turmaId;
