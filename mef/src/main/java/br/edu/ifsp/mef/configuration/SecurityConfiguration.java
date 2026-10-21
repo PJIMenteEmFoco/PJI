@@ -68,6 +68,8 @@ public class SecurityConfiguration {
 					redirectUrl = "/aluno/dashboard";
 				} else if ("PROFESSOR".equals(perfil)) {
 					redirectUrl = "/professor/dashboard";
+				} else if ("PSICOPEDAGOGO".equals(perfil)) {
+					redirectUrl = "/psicopedagogo/dashboard";
 				}
 			}
 

@@ -147,11 +147,6 @@ public class ProfessorViewController {
 		return "professor/configuracoes_professor";
 	}
 
-	@GetMapping("/professor/calendario")
-	public String calendario() {
-		return "professor/calendario_prof";
-	}
-
 	@GetMapping("/professor/calendario/{id}")
 	public String calendarioEspecifico(@PathVariable Long id, Model model) {
 

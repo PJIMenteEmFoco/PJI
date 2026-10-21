@@ -29,7 +29,6 @@ public class Usuario {
 	@ManyToMany(mappedBy = "usuarios")
 	private Set<Turma> turmas = new HashSet<>();
 	
-	
 	public Long getId() {
 		return id;
 	}
