@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Email de verificação - Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}" />
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}" />
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}" />
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<script src="/script/senha-contexto.js" th:src="@{/script/senha-contexto.js}"></script>
+	<meta name="_csrf" th:content="${_csrf.token}" />
+</head>
+
+<body>
+	<div class="toast-notification" id="toast" role="status" aria-live="polite">
+		<span id="toast-message">Informe o e-mail para continuar.</span>
+		<button class="toast-close-btn" type="button" onclick="hideToast()" aria-label="Fechar">
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+				stroke-linecap="round" stroke-linejoin="round">
+				<circle cx="12" cy="12" r="10"></circle>
+				<line x1="15" y1="9" x2="9" y2="15"></line>
+				<line x1="9" y1="9" x2="15" y2="15"></line>
+			</svg>
+		</button>
+	</div>
+	<div class="top-logo">
+		<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" />
+	</div>
+
+	<main class="verify-container">
+		<button type="button" class="review-back" data-review-back="true" aria-label="Voltar"
+			onclick="location.href='/login'"><i data-lucide="arrow-left"></i><span>Voltar</span></button>
+		<h1 class="verify-title">Digite um e-mail para enviarmos um código de validação para você</h1>
+		<form class="verify-form" id="recovery-email-form" method="post" th:action="@{/email-verificacao}">
+			<div class="error-message show" role="alert" th:if="${erroMensagem}" th:text="${erroMensagem}"></div>
+			<div class="form-group">
+				<label for="recoveryEmail">Email de recuperação</label>
+				<input type="email" id="recoveryEmail" name="email" class="form-control" autocomplete="email" required
+					th:value="${emailPreenchido}" th:readonly="${emailSomenteLeitura}" />
+			</div>
+			<input type="hidden" name="origem" th:value="${origem}" />
+			<input type="hidden" name="perfil" th:value="${perfil}" />
+			<button type="submit" class="btn btn-secondary">Enviar E-mail</button>
+			<a href="/login" th:href="@{/login}" class="form-link">Lembrou a senha? Clique aqui para entrar!</a>
+		</form>
+	</main>
+
+	<script>
+		function hideToast() {document.getElementById('toast')?.classList.remove('show');}
+	</script>
+	<script src="/script/popups.js" th:src="@{/script/popups.js}"></script>
+	<script src="/script/revisao.js" th:src="@{/script/revisao.js}"></script>
+	<script src="/script/escolhas.js" th:src="@{/script/escolhas.js}"></script>
+</body>
+
+</html>

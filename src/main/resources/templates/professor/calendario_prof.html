@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Calendário - Professor | Mente em Foco</title>
+	<link rel="stylesheet" href="/css/calendario_prof.css" th:href="@{/css/calendario_prof.css}">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+	<!-- Metadados para POST com Spring Security; não interferem no layout. -->
+	<meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}">
+	<meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : ''}">
+<link rel="stylesheet" href="/css/ajustes-front.css" th:href="@{/css/ajustes-front.css}">
+<meta name="_csrf_parameter" th:if="${_csrf != null}" th:content="${_csrf.parameterName}">
+</head>
+
+<body data-mef-profile="professor" data-original="true" th:attr="data-mef-server=${true}">
+	<div class="app-layout">
+
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-right"></i>
+			</div>
+
+			<nav class="sidebar-nav">
+				<a href="/professor/dashboard" th:href="@{/professor/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a href="/professor/tarefas" th:href="@{/professor/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a href="/professor/chat" th:href="@{/professor/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a href="/professor/calendario" th:href="@{/professor/calendario}" class="nav-link active">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a href="/professor/turmas" th:href="@{/professor/turmas}" class="nav-link">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+			<button type="button" class="nav-link" data-mef-notifications aria-label="Notificações" title="Notificações"><i data-lucide="bell" aria-hidden="true"></i><span class="nav-title">Notificações</span></button></nav>
+
+			<div class="sidebar-footer">
+				<a href="/professor/configuracoes" th:href="@{/professor/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="dashboard-calendar-container">
+
+				<div class="calendar-page-header">
+					<div>
+						<h1 class="page-title">Agenda do Professor</h1>
+						<p class="page-subtitle">Organize suas aulas, datas de avaliações e entregas das turmas</p>
+					</div>
+					<button class="btn-primary-action" id="btn-open-new-event">
+						<i data-lucide="plus"></i> Novo Evento
+					</button>
+				</div>
+
+				<div class="stats-overview-row">
+					<div class="stat-mini-card">
+						<div class="stat-icon-wrapper orange">
+							<i data-lucide="book-open-check"></i>
+						</div>
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-aulas">0</span>
+							<span class="stat-label">Atividades este mês</span>
+						</div>
+					</div>
+
+					<div class="stat-mini-card">
+						<div class="stat-icon-wrapper blue">
+							<i data-lucide="file-text"></i>
+						</div>
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-corrigir"
+								th:text="${quantidadeAvaliar != null ? quantidadeAvaliar : 14}">14</span>
+							<span class="stat-label">Atividades a avaliar</span>
+						</div>
+					</div>
+
+					<div class="stat-mini-card">
+						<div class="stat-icon-wrapper dark">
+							<i data-lucide="alert-circle"></i>
+						</div>
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-pendentes">0</span>
+							<span class="stat-label">Alta prioridade</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="main-calendar-grid">
+
+					<div class="calendar-card-panel">
+						<div class="calendar-toolbar-header">
+							<div class="month-navigation">
+								<button class="btn-month-nav" id="btn-prev-month"><i
+										data-lucide="chevron-left"></i></button>
+								<h2 id="calendar-month-year">Setembro 2026</h2>
+								<button class="btn-month-nav" id="btn-next-month"><i
+										data-lucide="chevron-right"></i></button>
+							</div>
+							<div class="legend-inline">
+								<span class="legend-chip high"><span class="dot-color"></span> Alta</span>
+								<span class="legend-chip medium"><span class="dot-color"></span> Média</span>
+								<span class="legend-chip low"><span class="dot-color"></span> Baixa</span>
+							</div>
+						</div>
+
+						<table class="grid-calendar-table">
+							<thead>
+								<tr>
+									<th>Dom</th>
+									<th>Seg</th>
+									<th>Ter</th>
+									<th>Qua</th>
+									<th>Qui</th>
+									<th>Sex</th>
+									<th>Sáb</th>
+								</tr>
+							</thead>
+							<tbody id="calendar-body">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="agenda-sidebar-panel">
+						<div class="section-sub-header">
+							<h3>Aulas e Compromissos</h3>
+							<span id="agenda-month-label">Setembro</span>
+						</div>
+
+						<div class="events-stack-list" id="events-stack-list">
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</main>
+	</div>
+
+	<div class="modal-overlay" id="modal-view-event">
+		<div class="wireframe-popup-card">
+			<div class="wireframe-popup-inner">
+				<div class="wireframe-field">
+					<label>Título do compromisso</label>
+					<div class="wireframe-box-text" id="view-title">--</div>
+				</div>
+
+				<div class="wireframe-field">
+					<label>Descrição / Observações para a Turma</label>
+					<div class="wireframe-box-textarea" id="view-description">--</div>
+				</div>
+
+				<div class="wireframe-date-info">
+					<strong id="view-date">--</strong>
+				</div>
+
+				<div class="wireframe-actions-grid">
+					<button class="btn-popup-action btn-popup-secondary" id="btn-close-view-event">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-new-event">
+		<div class="wireframe-popup-card">
+			<div class="wireframe-popup-inner">
+				<h3 style="color:#0F2D3C; font-size:1.1rem; font-weight:800; margin-bottom: 16px;">Agendar Novo Evento
+				</h3>
+
+				<div class="wireframe-field">
+					<label for="new-event-title">Título do Evento</label>
+					<input type="text" class="wireframe-box-text" id="new-event-title"
+						placeholder="Ex: Atividade de Gramática">
+				</div>
+
+				<div class="wireframe-row-2col">
+					<div class="wireframe-field">
+						<label for="new-event-date">Data</label>
+						<input type="date" class="wireframe-box-text" id="new-event-date">
+					</div>
+					<div class="wireframe-field">
+						<label for="new-event-time">Horário</label>
+						<input type="time" class="wireframe-box-text" id="new-event-time" value="14:00">
+					</div>
+				</div>
+
+				<div class="wireframe-field">
+					<label for="new-event-priority">Prioridade</label>
+					<select class="wireframe-box-text" id="new-event-priority">
+						<option value="high">Alta Prioridade</option>
+						<option value="medium" selected>Média Prioridade</option>
+						<option value="low">Baixa Prioridade</option>
+					</select>
+				</div>
+
+				<div class="wireframe-field">
+					<label for="new-event-desc">Descrição</label>
+					<textarea class="wireframe-box-textarea" id="new-event-desc"
+						placeholder="Instruções ou resumo da aula..."></textarea>
+				</div>
+
+				<div class="wireframe-actions-grid">
+					<button class="btn-popup-action btn-popup-secondary" id="btn-cancel-new-event">Cancelar</button>
+					<button class="btn-popup-action btn-popup-primary" id="btn-save-new-event">Salvar Evento</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="logout-modal">
+		<div class="modal-card-logout">
+			<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+			<div class="modal-logout-actions">
+				<button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+				<button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Os dados reais vêm do Controller; a mesma estrutura visual é montada pelo JS original. -->
+	<div id="mef-eventos" hidden>
+		<span th:each="evento : ${eventos}"
+			th:attr="data-date=${evento.dataEvento},data-title=${evento.titulo},data-description=${evento.descricao},data-priority=${evento.prioridade}"></span>
+	</div>
+	<!-- Opcional: se seu Controller fornecer feriados, eles mantêm o estilo original. -->
+	<div id="mef-feriados" hidden>
+		<span th:each="feriado : ${feriados}" th:attr="data-date=${feriado.dataFeriado},data-title=${feriado.nome}"></span>
+	</div>
+	<form id="logoutForm" th:action="@{/logout}" method="post" hidden>
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+
+	<script th:inline="javascript">
+		// O script permanece no HTML original, trocando apenas o armazenamento pelo backend.
+		const URL_CRIAR_EVENTO = /*[[@{/professor/calendario/eventos}]]*/ '/professor/calendario/eventos';
+		const isServerRendered = document.body.dataset.mefServer === 'true';
+		if (localStorage.getItem('theme') === 'escuro') {
+			document.body.classList.add('dark-mode');
+		}
+		lucide.createIcons();
+
+		const sidebar = document.getElementById('sidebar');
+		document.getElementById('toggle-btn').addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+		const initialEvents = [
+			{year: 2026, month: 8, day: 7, title: "Independência do Brasil", desc: "Feriado Nacional.", isHoliday: true, pillClass: "holiday", labelPill: "Feriado", time: "Dia Todo"},
+			{year: 2026, month: 8, day: 10, title: "Aplicação: Avaliação de Gramática", desc: "Aplicação da avaliação para a Turma 4A.", priority: "high", pillClass: "orange", labelPill: "Avaliação de Português", time: "14:00"},
+			{year: 2026, month: 8, day: 15, title: "Prazo de Entrega: Ortografia", desc: "Prazo final para os alunos enviarem a atividade no portal.", priority: "medium", pillClass: "dark", labelPill: "Prazo Entrega", time: "23:59"},
+			{year: 2026, month: 8, day: 18, title: "Atividade de Reforço Pedagógico", desc: "Atendimento em grupo focado em estudantes com dificuldades em leitura.", priority: "low", pillClass: "blue", labelPill: "Reforço", time: "10:30"},
+			{year: 2026, month: 9, day: 12, title: "Nossa Senhora Aparecida", desc: "Feriado Nacional.", isHoliday: true, pillClass: "holiday", labelPill: "Feriado", time: "Dia Todo"}
+		];
+
+		// Prioridades da API usam ALTA/MEDIA/BAIXA; o CSS definitivo usa high/medium/low.
+		function normalizarPrioridade(valor) {
+			const v = String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+			return ['HIGH', 'ALTA'].includes(v) ? 'high'
+				: (['LOW', 'BAIXA'].includes(v) ? 'low' : 'medium');
+		}
+
+		function lerDataEvento(valor) {
+			// Aceita LocalDate (2026-10-21) e LocalDateTime (2026-10-21T14:00).
+			const match = String(valor || '').match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/);
+			if (!match) return null;
+			const y = Number(match[1]), m = Number(match[2]), d = Number(match[3]);
+			const dt = new Date(y, m - 1, d);
+			if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return null;
+			return {year: y, month: m - 1, day: d, time: match[4] ? match[4] + ':' + match[5] : null};
+		}
+
+		function lerEventosDoModel() {
+			const eventos = [];
+			document.querySelectorAll('#mef-eventos [data-date]').forEach(el => {
+				const data = lerDataEvento(el.dataset.date);
+				if (!data) return;
+				const priority = normalizarPrioridade(el.dataset.priority);
+				const title = el.dataset.title || 'Evento';
+				eventos.push({
+					...data, title, desc: el.dataset.description || 'Sem descrição informada.',
+					priority, pillClass: {high: 'orange', medium: 'dark', low: 'blue'}[priority],
+					labelPill: title, time: el.dataset.time || data.time || 'Dia Todo'
+				});
+			});
+			document.querySelectorAll('#mef-feriados [data-date]').forEach(el => {
+				const data = lerDataEvento(el.dataset.date);
+				if (!data) return;
+				eventos.push({
+					...data, title: el.dataset.title || 'Feriado',
+					desc: 'Feriado Nacional.', isHoliday: true, pillClass: 'holiday',
+					labelPill: 'Feriado', time: 'Dia Todo'
+				});
+			});
+			return eventos.sort((a, b) => a.year - b.year || a.month - b.month || a.day - b.day);
+		}
+
+		let databaseEvents = isServerRendered ? lerEventosDoModel()
+			: (JSON.parse(localStorage.getItem('mente_em_foco_prof_eventos')) || initialEvents);
+
+		function salvarEventosNoStorage() {
+			// Modo estático original, útil para visualizar o HTML sem o Spring Boot.
+			if (!isServerRendered) {
+				localStorage.setItem('mente_em_foco_prof_eventos', JSON.stringify(databaseEvents));
+			}
+		}
+
+		function avisoCalendario(mensagem) {
+			if (window.MEFPopups && typeof window.MEFPopups.alert === 'function') {
+				window.MEFPopups.alert(mensagem);
+			} else {
+				window.alert(mensagem);
+			}
+		}
+
+		async function salvarEventoNoBackend(evento) {
+			const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+			const headers = {'Content-Type': 'application/json'};
+			if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+			const response = await fetch(URL_CRIAR_EVENTO, {
+				method: 'POST', credentials: 'same-origin', headers, body: JSON.stringify(evento)
+			});
+			if (!response.ok || (response.redirected && /\/login(?:[?\/]|$)/.test(new URL(response.url).pathname))) {
+				throw new Error('Falha ao gravar evento no servidor (HTTP ' + response.status + ')');
+			}
+		}
+
+		function escaparHTML(valor) {
+			return String(valor ?? '').replace(/[&<>"']/g, ch => ({
+				'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+			})[ch]);
+		}
+
+		const monthNames = [
+			"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+			"Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+		];
+
+		const hoje = new Date();
+		let currentYear = isServerRendered ? hoje.getFullYear() : 2026;
+		let currentMonth = isServerRendered ? hoje.getMonth() : 8;
+
+		const calendarBody = document.getElementById('calendar-body');
+		const calendarHeader = document.getElementById('calendar-month-year');
+		const agendaMonthLabel = document.getElementById('agenda-month-label');
+		const eventsStackList = document.getElementById('events-stack-list');
+
+		function renderCalendar(year, month) {
+			calendarBody.innerHTML = '';
+			eventsStackList.innerHTML = '';
+
+			calendarHeader.textContent = `${monthNames[month]} ${year}`;
+			agendaMonthLabel.textContent = monthNames[month];
+
+			const firstDayIndex = new Date(year, month, 1).getDay();
+			const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+			const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+			let daysHtml = '';
+			let dayCounter = 1;
+			let nextMonthDayCounter = 1;
+
+			let aulasNoMes = 0;
+			let altasPrioridades = 0;
+
+			for (let row = 0; row < 6; row++) {
+				let rowHtml = '<tr>';
+
+				for (let col = 0; col < 7; col++) {
+					const cellIndex = row * 7 + col;
+
+					if (cellIndex < firstDayIndex) {
+						const prevDay = prevMonthLastDay - (firstDayIndex - cellIndex - 1);
+						rowHtml += `<td class="muted-day"><span class="num">${prevDay}</span></td>`;
+					} else if (dayCounter > totalDaysInMonth) {
+						rowHtml += `<td class="muted-day"><span class="num">${nextMonthDayCounter}</span></td>`;
+						nextMonthDayCounter++;
+					} else {
+						const currentDayNum = dayCounter;
+						const isToday = isServerRendered
+							? (dayCounter === hoje.getDate() && month === hoje.getMonth() && year === hoje.getFullYear())
+							: (dayCounter === 15 && month === 8 && year === 2026);
+						const cellClass = isToday ? 'active-today' : '';
+						const todayTag = isToday ? '<span class="day-tag">Hoje</span>' : '';
+
+						const dayEvents = databaseEvents.filter(e => e.year === year && e.month === month && e.day === currentDayNum);
+						let eventPillsHtml = '';
+						let isClickable = dayEvents.length > 0 ? 'clickable-day' : '';
+
+						if (dayEvents.length > 0) {
+							dayEvents.forEach(evt => {
+								eventPillsHtml += `<div class="event-pill-item ${evt.pillClass}">${escaparHTML(evt.labelPill || evt.title)}</div>`;
+								if (!evt.isHoliday) aulasNoMes++;
+								if (evt.priority === 'high') altasPrioridades++;
+							});
+						}
+
+						rowHtml += `
+                            <td class="${cellClass} ${isClickable}" onclick="handleCellClick(${year}, ${month}, ${currentDayNum})">
+                                <span class="num">${currentDayNum}</span>
+                                ${todayTag}
+                                ${eventPillsHtml}
+                            </td>
+                        `;
+
+						dayCounter++;
+					}
+				}
+
+				rowHtml += '</tr>';
+				daysHtml += rowHtml;
+
+				if (dayCounter > totalDaysInMonth && (row + 1) * 7 >= firstDayIndex + totalDaysInMonth) {
+					break;
+				}
+			}
+
+			calendarBody.innerHTML = daysHtml;
+			document.getElementById('stat-aulas').textContent = aulasNoMes;
+			document.getElementById('stat-pendentes').textContent = altasPrioridades;
+
+			renderAgendaList(year, month);
+		}
+
+		function renderAgendaList(year, month) {
+			const monthEvents = databaseEvents.filter(e => e.year === year && e.month === month);
+
+			if (monthEvents.length === 0) {
+				eventsStackList.innerHTML = `<p style="font-size:0.85rem; color:#8fa5b4; text-align:center; padding:20px;">Nenhum compromisso agendado para este mês.</p>`;
+				return;
+			}
+
+			let stackHtml = '';
+			monthEvents.forEach(evt => {
+				const idx = databaseEvents.indexOf(evt);
+				const tituloSeguro = escaparHTML(evt.title);
+				const descricaoSegura = escaparHTML(evt.desc);
+				if (evt.isHoliday) {
+					stackHtml += `
+                        <div class="event-item-card is-holiday-card" data-event-index="${idx}">
+                            <div class="event-card-header">
+                                <span class="badge-holiday">Feriado Nacional</span>
+                                <span class="event-date-time">${evt.day} ${monthNames[month].substring(0, 3).toUpperCase()} • ${evt.time}</span>
+                            </div>
+                            <h4>${tituloSeguro}</h4>
+                            <p>${descricaoSegura}</p>
+                        </div>
+                    `;
+				} else {
+					const priorityClass = evt.priority === 'high' ? 'high' : (evt.priority === 'medium' ? 'medium' : 'low');
+					const priorityText = evt.priority === 'high' ? 'Alta Prioridade' : (evt.priority === 'medium' ? 'Média Prioridade' : 'Baixa Prioridade');
+
+					stackHtml += `
+                        <div class="event-item-card priority-${priorityClass}" data-event-index="${idx}">
+                            <div class="event-card-header">
+                                <span class="badge-priority ${priorityClass}">${priorityText}</span>
+                                <span class="event-date-time">${evt.day} ${monthNames[month].substring(0, 3).toUpperCase()} • ${evt.time}</span>
+                            </div>
+                            <h4>${tituloSeguro}</h4>
+                            <p>${descricaoSegura}</p>
+                        </div>
+                    `;
+				}
+			});
+
+			eventsStackList.innerHTML = stackHtml;
+			// Mesmo comportamento de clique, sem montar código JavaScript a partir do título.
+			eventsStackList.querySelectorAll('[data-event-index]').forEach(card => {
+				card.addEventListener('click', () => {
+					const evt = databaseEvents[Number(card.dataset.eventIndex)];
+					if (evt) openEventDetails(evt.title, evt.desc,
+						`${evt.day} de ${monthNames[month].toLowerCase()} de ${year}`);
+				});
+			});
+		}
+
+		function handleCellClick(year, month, day) {
+			const event = databaseEvents.find(e => e.year === year && e.month === month && e.day === day);
+			if (event) {
+				openEventDetails(event.title, event.desc, `${day} de ${monthNames[month].toLowerCase()} de ${year}`);
+			}
+		}
+
+		document.getElementById('btn-prev-month').addEventListener('click', () => {
+			currentMonth--;
+			if (currentMonth < 0) {currentMonth = 11; currentYear--;}
+			renderCalendar(currentYear, currentMonth);
+		});
+
+		document.getElementById('btn-next-month').addEventListener('click', () => {
+			currentMonth++;
+			if (currentMonth > 11) {currentMonth = 0; currentYear++;}
+			renderCalendar(currentYear, currentMonth);
+		});
+
+		const modalNewEvent = document.getElementById('modal-new-event');
+		document.getElementById('btn-open-new-event').addEventListener('click', () => modalNewEvent.classList.add('active'));
+		document.getElementById('btn-cancel-new-event').addEventListener('click', () => modalNewEvent.classList.remove('active'));
+
+		document.getElementById('btn-save-new-event').addEventListener('click', async () => {
+			const title = document.getElementById('new-event-title').value.trim();
+			const dateVal = document.getElementById('new-event-date').value;
+			const timeVal = document.getElementById('new-event-time').value || "14:00";
+			const priorityVal = document.getElementById('new-event-priority').value;
+			const descVal = document.getElementById('new-event-desc').value.trim();
+
+			if (!title || !dateVal) {
+				avisoCalendario('Por favor, preencha o título e a data do evento.');
+				return;
+			}
+
+			const [y, m, d] = dateVal.split('-').map(Number);
+			const pillClassMap = {high: 'orange', medium: 'dark', low: 'blue'};
+
+			const newEvt = {
+				year: y,
+				month: m - 1, // 0-indexed
+				day: d,
+				title: title,
+				desc: descVal || "Sem descrição informada.",
+				priority: priorityVal,
+				pillClass: pillClassMap[priorityVal] || 'dark',
+				labelPill: title,
+				time: timeVal
+			};
+
+			if (isServerRendered) {
+				const botaoSalvar = document.getElementById('btn-save-new-event');
+				botaoSalvar.disabled = true;
+				try {
+					await salvarEventoNoBackend({
+						titulo: title,
+						descricao: descVal || 'Sem descrição informada.',
+						dataEvento: dateVal,
+						horario: timeVal,
+						prioridade: {high: 'ALTA', medium: 'MEDIA', low: 'BAIXA'}[priorityVal] || 'MEDIA'
+					});
+				} catch (erro) {
+					console.error(erro);
+					avisoCalendario('Não foi possível salvar o evento. Verifique a conexão e tente novamente.');
+					return;
+				} finally {
+					botaoSalvar.disabled = false;
+				}
+			}
+
+			databaseEvents.push(newEvt);
+			salvarEventosNoStorage();
+
+			document.getElementById('new-event-title').value = '';
+			document.getElementById('new-event-date').value = '';
+			document.getElementById('new-event-desc').value = '';
+
+			modalNewEvent.classList.remove('active');
+
+			currentYear = y;
+			currentMonth = m - 1;
+			renderCalendar(currentYear, currentMonth);
+		});
+
+		const modalViewEvent = document.getElementById('modal-view-event');
+		function openEventDetails(title, description, date) {
+			document.getElementById('view-title').textContent = title;
+			document.getElementById('view-description').textContent = description;
+			document.getElementById('view-date').textContent = date;
+			modalViewEvent.classList.add('active');
+		}
+		document.getElementById('btn-close-view-event').addEventListener('click', () => modalViewEvent.classList.remove('active'));
+
+		const logoutModal = document.getElementById('logout-modal');
+		document.getElementById('btn-open-logout').addEventListener('click', (e) => {e.preventDefault(); logoutModal.classList.add('active');});
+		document.getElementById('btn-cancel-logout').addEventListener('click', () => logoutModal.classList.remove('active'));
+		document.getElementById('btn-confirm-logout').addEventListener('click', () => {
+			if (isServerRendered) document.getElementById('logoutForm').submit();
+			else window.location.href = '../login/login.html';
+		});
+
+		renderCalendar(currentYear, currentMonth);
+	</script>
+	<script src="/script/dados.js" th:src="@{/script/dados.js}"></script>
+	<script src="/script/cruzadas.js" th:src="@{/script/cruzadas.js}"></script>
+	<script src="/script/progresso.js" th:src="@{/script/progresso.js}"></script>
+	<script src="/script/documentos.js" th:src="@{/script/documentos.js}"></script>
+	<script src="/script/cruzadas-navegacao.js" th:src="@{/script/cruzadas-navegacao.js}"></script>
+	<script src="/script/recursos.js" th:src="@{/script/recursos.js}"></script>
+	<script src="/script/interface-original.js" th:src="@{/script/interface-original.js}"></script>
+	<script src="/script/popups.js" th:src="@{/script/popups.js}"></script>
+	<script src="/script/convites.js" th:src="@{/script/convites.js}"></script>
+	<script src="/script/revisao.js" th:src="@{/script/revisao.js}"></script>
+	<script src="/script/escolhas.js" th:src="@{/script/escolhas.js}"></script>
+<script defer src="/script/ajustes-front.js" th:src="@{/script/ajustes-front.js}"></script>
+</body>
+
+</html>

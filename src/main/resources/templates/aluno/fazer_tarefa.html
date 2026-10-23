@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Realizar Atividade - Mente em Foco</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="/css/fazer_tarefa.css" rel="stylesheet" th:href="@{/css/fazer_tarefa.css}"/>
+<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+<link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
+<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/><link rel="stylesheet" href="/css/ajustes-front.css" th:href="@{/css/ajustes-front.css}">
+<meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
+</head>
+<body data-mef-profile="aluno">
+<div class="activity-container">
+<header class="activity-header">
+<a class="btn-back" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
+<i data-lucide="arrow-left"></i> Sair da Atividade
+            </a>
+<div class="header-titles">
+<span class="badge-tipo" id="atividade-tipo">Atividade</span>
+<h1 id="atividade-titulo" th:text="${atividade != null ? atividade.nome : 'Atividade indisponível'}">Título da Tarefa</h1>
+</div>
+<div class="user-badge">
+<i data-lucide="user"></i>
+<span id="atividade-aluno">Aluno</span>
+</div>
+</header>
+<main class="activity-card">
+<div class="question-box">
+<span class="question-number">Questão 1 de 1</span>
+<h2 id="atividade-pergunta">Pergunta ou instrução principal aqui...</h2>
+</div>
+<div class="options-grid" id="options-container">
+</div>
+<div class="feedback-box hidden" id="feedback-box">
+<div class="feedback-content">
+<i data-lucide="check-circle" id="feedback-icon"></i>
+<p id="feedback-text">Mensagem de feedback...</p>
+</div>
+<button class="btn-primary" id="btn-concluir">Voltar para Atividades</button>
+</div>
+</main>
+</div>
+<script defer="defer" src="/script/mef-comum.js"></script><script defer src="/script/ajustes-front.js" th:src="@{/script/ajustes-front.js}"></script>
+</body>
+</html>

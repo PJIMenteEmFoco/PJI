@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Código de verificação - Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}" />
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}" />
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}" />
+	<script src="/script/senha-contexto.js" th:src="@{/script/senha-contexto.js}"></script>
+	<meta name="_csrf" th:content="${_csrf.token}" />
+</head>
+
+<body>
+	<div class="toast-notification" id="toast" role="status" aria-live="polite"
+		th:classappend="${codigoEnviado or erroCodigo} ? ' show' : ''">
+		<span id="toast-message"
+			th:text="${erroCodigo} ? 'O código é inválido ou expirou. Confira os dígitos ou solicite um novo código.' : 'Se o e-mail estiver cadastrado, enviaremos um código de verificação.'">Código
+			de verificação</span>
+		<button class="toast-close-btn" type="button" onclick="hideToast()" aria-label="Fechar">
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+				stroke-linecap="round" stroke-linejoin="round">
+				<circle cx="12" cy="12" r="10"></circle>
+				<line x1="15" y1="9" x2="9" y2="15"></line>
+				<line x1="9" y1="9" x2="15" y2="15"></line>
+			</svg>
+		</button>
+	</div>
+	<div class="top-logo">
+		<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" />
+	</div>
+
+	<main class="verify-container">
+		<button type="button" class="review-back" data-review-back="true" aria-label="Voltar"
+			onclick="location.href='/email-verificacao'"><i data-lucide="arrow-left"></i><span>Voltar</span></button>
+		<h1 class="verify-title">Digite o código enviado para o seu e-mail</h1>
+		<p class="verify-subtitle">Enviamos um código de 6 dígitos para o seu endereço cadastrado.</p>
+		<form class="verify-form" id="otp-form" method="post" th:action="@{/codigo-verificacao}">
+			<div class="otp-inputs">
+				<input type="text" class="otp-box" maxlength="1" pattern="[0-9]" inputmode="numeric"
+					autocomplete="one-time-code" autofocus required aria-label="Dígito 1" />
+				<input type="text" class="otp-box" maxlength="1" pattern="[0-9]" inputmode="numeric" required
+					aria-label="Dígito 2" />
+				<input type="text" class="otp-box" maxlength="1" pattern="[0-9]" inputmode="numeric" required
+					aria-label="Dígito 3" />
+				<input type="text" class="otp-box" maxlength="1" pattern="[0-9]" inputmode="numeric" required
+					aria-label="Dígito 4" />
+				<input type="text" class="otp-box" maxlength="1" pattern="[0-9]" inputmode="numeric" required
+					aria-label="Dígito 5" />
+				<input type="text" class="otp-box" maxlength="1" pattern="[0-9]" inputmode="numeric" required
+					aria-label="Dígito 6" />
+			</div>
+			<input type="hidden" id="completeCode" name="codigo" />
+			<button type="submit" class="btn btn-secondary">Verificar Código</button>
+			<a th:href="@{/email-verificacao(origem=${origem},perfil=${perfil})}" class="form-link">Não recebeu o
+				código? Clique para reenviar</a>
+		</form>
+	</main>
+
+	<script>
+		(() => {
+			'use strict';
+			const boxes = [...document.querySelectorAll('.otp-box')];
+			const form = document.getElementById('otp-form');
+			boxes.forEach((box, index) => {
+				box.addEventListener('input', () => {
+					box.value = box.value.replace(/\D/g, '').slice(-1);
+					if (box.value && index < boxes.length - 1) boxes[index + 1].focus();
+				});
+				box.addEventListener('keydown', event => {
+					if (event.key === 'Backspace' && !box.value && index > 0) boxes[index - 1].focus();
+				});
+				box.addEventListener('paste', event => {
+					const clipboard = event.clipboardData?.getData('text')?.replace(/\D/g, '').slice(0, 6);
+					if (!clipboard) return;
+					event.preventDefault();
+					clipboard.split('').forEach((digit, digitIndex) => {if (boxes[digitIndex]) boxes[digitIndex].value = digit;});
+					boxes[Math.min(clipboard.length, boxes.length) - 1]?.focus();
+				});
+			});
+			form.addEventListener('submit', event => {
+				const code = boxes.map(box => box.value).join('');
+				if (!/^\d{6}$/.test(code)) {
+					event.preventDefault();
+					boxes.find(box => !box.value)?.focus();
+					boxes[0].setCustomValidity('Preencha os seis dígitos do código.');
+					boxes[0].reportValidity();
+					boxes[0].addEventListener('input', () => boxes[0].setCustomValidity(''), {once: true});
+					return;
+				}
+				document.getElementById('completeCode').value = code;
+			});
+			window.hideToast = () => document.getElementById('toast')?.classList.remove('show');
+		})();
+	</script>
+	<script src="/script/popups.js" th:src="@{/script/popups.js}"></script>
+	<script src="/script/revisao.js" th:src="@{/script/revisao.js}"></script>
+	<script src="/script/escolhas.js" th:src="@{/script/escolhas.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Turmas - Mente em Foco</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="/css/turmas-professor.css" rel="stylesheet" th:href="@{/css/turmas-professor.css}"/>
+<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
+<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/><link rel="stylesheet" href="/css/ajustes-front.css" th:href="@{/css/ajustes-front.css}">
+<meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
+</head>
+<body data-mef-profile="psicopedagogo" data-original="true">
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+</div>
+<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+<i data-lucide="chevron-right"></i>
+</div>
+<nav class="sidebar-nav">
+<a class="nav-link" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}">
+<i data-lucide="home"></i>
+<span class="nav-title">Início</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}">
+<i data-lucide="book-open"></i>
+<span class="nav-title">Atividades</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}">
+<i data-lucide="message-square"></i>
+<span class="nav-title">Chat</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}">
+<i data-lucide="calendar"></i>
+<span class="nav-title">Calendário</span>
+</a>
+<a class="nav-link active" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}">
+<i data-lucide="users"></i>
+<span class="nav-title">Turmas</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a></nav>
+<div class="sidebar-footer">
+<a class="nav-link" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}">
+<i data-lucide="settings"></i>
+<span class="nav-title">Ajustes</span>
+</a>
+<button class="nav-link" id="btn-open-logout">
+<i data-lucide="log-out"></i>
+<span class="nav-title">Sair</span>
+</button>
+</div>
+</aside>
+<main class="main-content">
+<div class="page-container">
+<h1 class="page-title">Turmas</h1>
+<div class="toolbar-row">
+<button class="btn-criar-turma" disabled="disabled" id="btn-open-criar-turma" title="Criação de turma disponível para o professor responsável">
+<i data-lucide="plus"></i> Criar turma
+                    </button>
+<div class="filters-group">
+<div class="search-box">
+<i data-lucide="search" style="width: 16px; height: 16px; color: #8fa5b4;"></i>
+<input id="input-search-turmas" placeholder="Pesquisar turmas..." type="text"/>
+</div>
+<select class="select-filter" id="select-filter-psico"><option value="todos">Todos os psicopedagogos</option></select>
+</div>
+</div>
+<h2 class="section-title">Turmas</h2>
+<div class="turmas-grid" id="turmas-grid"><a class="turma-card" href="/psicopedagogo/turmas" th:each="turma : ${turmas}" th:href="@{/psicopedagogo/detalhes-turma-psico/{id}(id=${turma.id})}">
+<div class="avatars-and-badge"><div class="avatar-group"><span class="avatar-circle">MEF</span></div><span class="badge-alunos"><i data-lucide="users"></i> Turma</span></div><span class="turma-icon"><i data-lucide="users"></i></span>
+<span class="turma-card-title" th:text="${turma.nome}">Turma</span>
+<div class="turma-info-text"><div>Professor: <strong th:text="${turma.professorResponsavel != null ? turma.professorResponsavel.nome : 'Não informado'}">Professor</strong></div></div>
+</a><p class="mef-vazio" th:if="${#lists.isEmpty(turmas)}">Nenhuma turma encontrada.</p></div>
+</div>
+</main>
+</div>
+<div class="modal-overlay" id="modal-criar-turma">
+<div class="create-turma-outer-card">
+<div class="create-turma-inner-card">
+<div class="modal-header">
+<h3>Criar Nova Turma</h3>
+<p>Preencha as informações necessárias para cadastrar uma nova turma.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="logout-modal">
+<div class="modal-card-logout">
+<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+<div class="modal-logout-actions">
+<button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+<button class="btn-logout-confirm" id="btn-confirm-logout" type="button">Sair</button>
+</div>
+</div>
+</div>
+<script defer="defer" src="/script/mef-comum.js"></script><script defer="defer" src="/script/mef-turmas.js"></script><script defer src="/script/ajustes-front.js" th:src="@{/script/ajustes-front.js}"></script>
+</body>
+</html>

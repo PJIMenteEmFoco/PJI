@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<title>Tarefas - Mente em Foco</title>
+	<link rel="stylesheet" th:href="@{/css/tarefas.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" th:href="@{/css/revisao.css}">
+	<link rel="stylesheet" th:href="@{/css/escolhas.css}">
+	<script th:src="@{/script/icones.js}"></script>
+	<script th:src="@{/script/tema.js}"></script>
+
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}" />
+<link rel="stylesheet" href="/css/ajustes-front.css" th:href="@{/css/ajustes-front.css}">
+<meta name="_csrf_header" th:if="${_csrf != null}" th:content="${_csrf.headerName}">
+</head>
+
+<body data-mef-profile="professor">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" />
+				<img alt="Mente em Foco" class="logo-full-white" src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" />
+			</div>
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-right"></i>
+			</div>
+			<nav class="sidebar-nav">
+				<a class="nav-link" href="/professor/dashboard" th:href="@{/professor/dashboard}">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a class="nav-link active" href="/professor/tarefas" th:href="@{/professor/tarefas}">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a class="nav-link" href="/professor/chat" th:href="@{/professor/chat}">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a class="nav-link" href="/professor/calendario" th:href="@{/professor/calendario}">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a class="nav-link" href="/professor/turmas" th:href="@{/professor/turmas}">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+			<button type="button" class="nav-link" data-mef-notifications aria-label="Notificações" title="Notificações"><i data-lucide="bell" aria-hidden="true"></i><span class="nav-title">Notificações</span></button></nav>
+			<div class="sidebar-footer">
+				<a class="nav-link" href="/professor/configuracoes" th:href="@{/professor/configuracoes}">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+		<main class="main-content">
+			<svg class="bg-watermark-book" fill="none" stroke="#557D91" stroke-width="1.2" viewbox="0 0 24 24">
+				<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+				<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+			</svg>
+			<div class="tasks-container">
+				<h1 class="page-title">Tarefas</h1>
+				<div class="section-block">
+					<h2 class="section-title">Criar Nova Tarefa</h2>
+					<div class="templates-row">
+						<a class="template-card create-blank" href="/professor/tarefas/nova"
+							th:href="@{/professor/tarefas/nova}" title="Criar do zero">
+							<div class="template-icon-box">
+								<i data-lucide="plus"></i>
+							</div>
+							<span class="template-name">Nova Tarefa em Branco</span>
+						</a>
+						<a class="template-card" href="/professor/tarefas/nova?tipo=memoria">
+							<div class="template-icon-box">
+								<i data-lucide="layers"></i>
+							</div>
+							<span class="template-name">Jogo da Memória</span>
+						</a>
+						<a class="template-card" href="/professor/tarefas/nova?tipo=quiz">
+							<div class="template-icon-box">
+								<i data-lucide="help-circle"></i>
+							</div>
+							<span class="template-name">Quiz</span>
+						</a>
+						<a class="template-card" href="/professor/tarefas/nova?tipo=cruzadas">
+							<div class="template-icon-box">
+								<i data-lucide="grid"></i>
+							</div>
+							<span class="template-name">Palavras Cruzadas</span>
+						</a>
+						<a class="template-card" href="/professor/tarefas/nova?tipo=leitura">
+							<div class="template-icon-box">
+								<i data-lucide="image"></i>
+							</div>
+							<span class="template-name">Leitura Guiada</span>
+						</a>
+					</div>
+				</div>
+				<div class="section-block">
+					<div class="controls-header">
+						<h2 class="section-title">Abrir tarefas anteriores</h2>
+						<div class="controls-group">
+							<div class="search-box">
+								<i data-lucide="search"></i>
+								<input id="task-search-input" placeholder="Buscar por título ou aluno..." type="text" />
+							</div>
+							<div class="filter-pills">
+								<button class="pill-btn active" data-filter="all">Todas</button>
+								<button class="pill-btn" data-filter="pending">Pendentes</button>
+							</div>
+							<select class="sort-select" id="sort-select">
+								<option value="recent">Mais recentes</option>
+								<option value="old">Mais antigas</option>
+							</select>
+						</div>
+					</div>
+					<div class="previous-tasks-grid" id="tasks-grid">
+						<div class="task-card" data-status="active" th:each="atividade : ${atividades}">
+							<div class="task-card-header"><span class="task-type-tag quiz"
+									th:text="${atividade.tipoAtividade}">Atividade</span><span
+									class="task-status-dot active"></span></div>
+							<h3 class="task-card-title" th:text="${atividade.nome}">Atividade</h3>
+							<div class="task-card-meta">
+								<div class="task-meta-row"><i data-lucide="users"></i><span
+										th:text="${#sets.size(atividade.alunos)} + ' aluno(s)'">Alunos</span></div>
+								<div class="task-meta-row"><i data-lucide="clock"></i><span
+										th:text="${atividade.prazo != null ? 'Prazo: ' + #temporals.format(atividade.prazo,'dd/MM/yyyy') : 'Sem prazo'}">Prazo</span>
+								</div>
+							</div>
+						</div>
+						<p class="mef-vazio" th:if="${#lists.isEmpty(atividades)}">Nenhuma atividade cadastrada.</p>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+	<div class="modal-overlay" id="logout-modal">
+		<div class="modal-card-logout">
+			<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+			<div class="modal-logout-actions">
+				<button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+				<button class="btn-logout-confirm" id="btn-confirm-logout" type="button">Sair</button>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/script/dados.js}"></script>
+	<script th:src="@{/script/cruzadas.js}"></script>
+	<script th:src="@{/script/progresso.js}"></script>
+	<script th:src="@{/script/documentos.js}"></script>
+	<script th:src="@{/script/cruzadas-navegacao.js}"></script>
+	<script th:src="@{/script/recursos.js}"></script>
+	<script th:src="@{/script/interface-original.js}"></script>
+	<script th:src="@{/script/popups.js}"></script>
+	<script th:src="@{/script/convites.js}"></script>
+	<script th:src="@{/script/revisao.js}"></script>
+	<script th:src="@{/script/escolhas.js}"></script>
+
+<script defer src="/script/ajustes-front.js" th:src="@{/script/ajustes-front.js}"></script>
+</body>
+
+</html>

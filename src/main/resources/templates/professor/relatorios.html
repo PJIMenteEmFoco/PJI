@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Relatórios | Mente em Foco</title>
+
+	<link rel="stylesheet" href="/css/detalhes-turma.css" th:href="@{/css/detalhes-turma.css}" />
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet" />
+
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}" />
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}" />
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}" />
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}" />
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}" />
+
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<link rel="stylesheet" href="/css/ajustes-front.css" th:href="@{/css/ajustes-front.css}">
+<meta name="_csrf_parameter" th:if="${_csrf != null}" th:content="${_csrf.parameterName}">
+</head>
+
+<body data-mef-profile="professor" data-page="relatorios">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-symbol-only" />
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-full-white" />
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav">
+				<a href="/professor/dashboard" th:href="@{/professor/dashboard}" class="nav-link">
+					<i data-lucide="home"></i><span class="nav-title">Início</span>
+				</a>
+				<a href="/professor/tarefas" th:href="@{/professor/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i><span class="nav-title">Atividades</span>
+				</a>
+				<a href="/professor/chat" th:href="@{/professor/chat}" class="nav-link">
+					<i data-lucide="message-square"></i><span class="nav-title">Chat</span>
+				</a>
+				<a href="/professor/calendario" th:href="@{/professor/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i><span class="nav-title">Calendário</span>
+				</a>
+				<a href="/professor/turmas" th:href="@{/professor/turmas}" class="nav-link">
+					<i data-lucide="users"></i><span class="nav-title">Turmas</span>
+				</a>
+			<button type="button" class="nav-link" data-mef-notifications aria-label="Notificações" title="Notificações"><i data-lucide="bell" aria-hidden="true"></i><span class="nav-title">Notificações</span></button></nav>
+
+			<div class="sidebar-footer">
+				<a href="/professor/configuracoes" th:href="@{/professor/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i><span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i><span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="mef-page" id="mef-root">
+				<header class="mef-header">
+					<div>
+						<h1>Relatórios dos alunos</h1>
+						<p class="mef-sub">Consulte resultados automáticos e registros pedagógicos.</p>
+					</div>
+					<div class="mef-actions">
+						<a class="mef-btn primary" id="btn-escrever-relatorio" href="/professor/relatorios/escrever"
+							th:href="@{/professor/relatorios/escrever}">
+							<i data-lucide="file-pen-line"></i> Escrever relatório
+						</a>
+					</div>
+				</header>
+
+				<div class="mef-filters" aria-label="Filtros de relatórios">
+					<label class="mef-field" for="search">Buscar título ou aluno
+						<input id="search" name="search" type="search" placeholder="Digite um nome ou título"
+							autocomplete="off" />
+					</label>
+					<label class="mef-field" for="student-filter">Aluno
+						<select id="student-filter" name="aluno">
+							<option value="">Todos</option>
+							<option th:each="aluno : ${alunos}" th:value="${aluno.id}"
+								th:selected="${alunoSelecionadoId != null and alunoSelecionadoId.equals(aluno.id)}"
+								th:text="${aluno.nome}">Nome do aluno</option>
+						</select>
+					</label>
+					<label class="mef-field" for="kind-filter">Tipo
+						<select id="kind-filter" name="tipo">
+							<option value="">Todos</option>
+							<option value="automatico">Automático</option>
+							<option value="manual">Manual</option>
+						</select>
+					</label>
+					<label class="mef-field" for="date-filter">Data da conclusão
+						<input id="date-filter" name="data" type="date" />
+					</label>
+				</div>
+
+				<p class="mef-error" id="reports-error" role="alert" hidden></p>
+				<div id="report-list" aria-live="polite" aria-busy="true">
+					<p class="mef-empty">Carregando relatórios...</p>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<dialog class="mef-dialog" id="logout-dialog" aria-labelledby="logout-dialog-title">
+		<h2 id="logout-dialog-title">Sair da conta?</h2>
+		<p>Deseja encerrar sua sessão?</p>
+		<div class="mef-actions">
+			<button class="mef-btn" id="cancelar-logout" type="button">Cancelar</button>
+			<form th:action="@{/logout}" action="/logout" method="post">
+				<button class="mef-btn primary" type="submit">Sair</button>
+			</form>
+		</div>
+	</dialog>
+
+	<script defer src="/script/popups.js" th:src="@{/script/popups.js}"></script>
+	<script defer src="/script/mef-relatorios-backend.js" th:src="@{/script/mef-relatorios-backend.js}"></script>
+<script defer src="/script/ajustes-front.js" th:src="@{/script/ajustes-front.js}"></script>
+</body>
+
+</html>
