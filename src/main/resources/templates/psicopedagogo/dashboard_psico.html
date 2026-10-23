@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Painel Psicopedagógico - Mente em Foco</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="/css/dashboard_psico.css" rel="stylesheet" th:href="@{/css/dashboard_psico.css}"/>
+<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
+<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head>
+<body data-original="true">
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+</div>
+<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+<i data-lucide="chevron-right"></i>
+</div>
+<nav class="sidebar-nav">
+<a class="nav-link active" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}">
+<i data-lucide="home"></i>
+<span class="nav-title">Início</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}">
+<i data-lucide="book-open"></i>
+<span class="nav-title">Atividades</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}">
+<i data-lucide="message-square"></i>
+<span class="nav-title">Chat</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}">
+<i data-lucide="calendar"></i>
+<span class="nav-title">Calendário</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}">
+<i data-lucide="users"></i>
+<span class="nav-title">Minhas Turmas</span>
+</a>
+<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a></nav>
+<div class="sidebar-footer">
+<a class="nav-link" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}">
+<i data-lucide="settings"></i>
+<span class="nav-title">Ajustes</span>
+</a>
+<button class="nav-link" id="btn-open-logout">
+<i data-lucide="log-out"></i>
+<span class="nav-title">Sair</span>
+</button>
+</div>
+</aside>
+<main class="main-content">
+<div class="dashboard-container">
+<div>
+<h1 class="page-title">Painel Psicopedagógico</h1>
+<p class="page-subtitle">Acompanhamento e suporte em Língua Portuguesa para alunos com TDAH</p>
+</div>
+<div class="stats-row">
+<div class="stat-card">
+<div class="stat-icon orange">
+<i data-lucide="user-check"></i>
+</div>
+<div>
+<div class="stat-value">12</div>
+<div class="stat-label">Alunos Vinculados (TDAH)</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon blue">
+<i data-lucide="file-text"></i>
+</div>
+<div>
+<div class="stat-value">—</div>
+<div class="stat-label">Relatórios Pendentes</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon dark">
+<i data-lucide="trending-up"></i>
+</div>
+<div>
+<div class="stat-value">—</div>
+<div class="stat-label">Taxa de Conclusão dos Jogos</div>
+</div>
+</div>
+</div>
+<div class="grid-two-columns">
+<div class="panel-card">
+<div class="panel-header">
+<h3>Acompanhamento Individual (Português)</h3>
+</div>
+<div class="students-list"><div class="student-item-card" th:each="aluno, it : ${alunos}" th:if="${it.index &lt; 6}"><div class="student-details"><div class="student-name" th:text="${aluno.nome}">Aluno</div><div class="student-meta" th:text="${aluno.email}">E-mail</div></div></div><p class="mef-vazio" th:if="${#lists.isEmpty(alunos)}">Nenhum aluno em acompanhamento.</p></div>
+</div>
+<div class="panel-card">
+<div class="panel-header">
+<h3>Alertas de Aprendizagem</h3>
+</div>
+<div class="alerts-stack"><p class="mef-vazio">Sem alertas integrados.</p></div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div class="modal-overlay" id="logout-modal">
+<div class="modal-card">
+<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+<div class="modal-actions">
+<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="button">Sair</button>
+</div>
+</div>
+</div>
+<script defer="defer" src="/script/mef-comum.js"></script></body>
+</html>

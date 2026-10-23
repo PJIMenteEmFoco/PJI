@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Aluno - Mente em Foco</title>
+<link href="/css/dashboard_aluno.css" rel="stylesheet" th:href="@{/css/dashboard_aluno.css}"/>
+<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
+<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head>
+<body data-original="true">
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+</div>
+<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+<i data-lucide="chevron-left"></i>
+</div>
+<nav class="sidebar-nav">
+<a class="nav-link active" href="/aluno/dashboard" th:href="@{/aluno/dashboard}">
+<i data-lucide="home"></i>
+<span class="nav-title">Início</span>
+</a>
+<a class="nav-link" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
+<i data-lucide="book-open"></i>
+<span class="nav-title">Atividades</span>
+</a>
+<a class="nav-link" href="/aluno/chat" th:href="@{/aluno/chat}">
+<i data-lucide="message-square"></i>
+<span class="nav-title">Chat</span>
+</a>
+<a class="nav-link" href="/aluno/calendario" th:href="@{/aluno/calendario}">
+<i data-lucide="calendar"></i>
+<span class="nav-title">Calendário</span>
+</a>
+</nav>
+<div class="sidebar-footer">
+<a class="nav-link" href="/aluno/configuracoes" th:href="@{/aluno/configuracoes}">
+<i data-lucide="settings"></i>
+<span class="nav-title">Ajustes</span>
+</a>
+<button class="nav-link" id="btn-open-logout">
+<i data-lucide="log-out"></i>
+<span class="nav-title">Sair</span>
+</button>
+</div>
+</aside>
+<main class="main-content">
+<div class="dashboard-container">
+<div class="top-header-row">
+<h1 class="greeting-title" th:text="${'Bem-vindo(a), '+#authentication.principal.usuario.nome+'!'}">—</h1>
+<div class="streak-card" title="Mantenha o foco diariamente!">
+<div class="streak-icon-box">
+<i data-lucide="flame"></i>
+</div>
+<div class="streak-info">
+<span class="streak-count">5 Dias</span>
+<span class="streak-label">Ofensiva ativa! 🔥</span>
+</div>
+</div>
+</div>
+<div class="content-columns">
+<div class="column-left">
+<div>
+<div class="section-header-flex">
+<span class="section-title">Atividades pendentes</span>
+<a class="section-link" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">+ Ver todas</a>
+</div>
+<div class="task-grid-4"><a class="student-task-card" th:each="atividade, it : ${atividadesPendentes}" th:href="@{/aluno/tarefas}" th:if="${it.index &lt; 4}">
+<div class="task-card-header"><span>ENTREGA</span><span th:text="${atividade.prazo != null ? #temporals.format(atividade.prazo,'dd/MM') : '—'}">Data</span></div>
+<div class="task-card-body"><h4 class="task-title" th:text="${atividade.nome}">Atividade</h4><span class="task-tag" th:text="${atividade.tipoAtividade}">Tipo</span></div></a><p class="mef-vazio" th:if="${#lists.isEmpty(atividadesPendentes)}">Nenhuma atividade pendente.</p></div>
+</div>
+<div>
+<div class="section-header-flex">
+<span class="section-title">Atividades atrasadas</span>
+</div>
+<div class="task-grid-4"><a class="student-task-card" th:each="atividade, it : ${atividadesAtrasadas}" th:href="@{/aluno/tarefas}" th:if="${it.index &lt; 4}"><div class="task-card-header urgent"><span>ATRASADA</span><span th:text="${atividade.prazo != null ? #temporals.format(atividade.prazo,'dd/MM') : '—'}">Prazo</span></div><div class="task-card-body"><h4 class="task-title" th:text="${atividade.nome}">Atividade</h4><span class="task-tag" th:text="${atividade.tipoAtividade}">Tipo</span></div></a><p class="mef-vazio" th:if="${#lists.isEmpty(atividadesAtrasadas)}">Nenhuma atividade atrasada.</p></div>
+</div>
+</div>
+<div class="column-right">
+<div>
+<div class="section-header-flex">
+<span class="section-title">Calendário</span>
+</div>
+<div class="calendar-card-container">
+<div class="calendar-header-bar">
+<select class="cal-select" id="cal-month-select">
+<option selected="" value="8">Setembro</option>
+</select>
+<select class="cal-select" id="cal-year-select">
+<option selected="" value="2026">2026</option>
+</select>
+</div>
+<table class="calendar-table">
+<thead>
+<tr>
+<th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Qui</th><th>Sex</th><th>Sáb</th>
+</tr>
+</thead>
+<tbody id="calendar-body"></tbody>
+</table>
+</div>
+</div>
+<div class="goal-card">
+<div class="goal-header">
+<span class="goal-title">Meta da Semana</span>
+<span class="goal-count">7/10 Feitas</span>
+</div>
+<div class="progress-bar-track">
+<div class="progress-bar-fill" style="width:0%" th:style="'width:' + ${metaPorcentagem} + '%'"></div>
+</div>
+<p class="goal-subtext">
+        Complete mais 3 atividades esta semana para ganhar a insígnia de Leitor Focado! 🏅
+    </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div class="modal-overlay" id="logout-modal">
+<div class="modal-card">
+<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+<div class="modal-actions">
+<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="button">Sair</button>
+</div>
+</div>
+</div>
+<script defer="defer" src="/script/mef-comum.js"></script><script defer="defer" src="/script/mef-dashboard-calendar.js"></script></body>
+</html>

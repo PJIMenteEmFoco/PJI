@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Desempenho da Atividade - Mente em Foco</title>
+<link href="/css/relatorio_desempenho.css" rel="stylesheet" th:href="@{/css/relatorio_desempenho.css}"/>
+<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
+<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head>
+<body data-original="true">
+<div class="app-layout">
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
+</div>
+<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+<i data-lucide="chevron-left"></i>
+</div>
+<nav class="sidebar-nav">
+<a class="nav-link" href="/aluno/dashboard" th:href="@{/aluno/dashboard}">
+<i data-lucide="home"></i>
+<span class="nav-title">Início</span>
+</a>
+<a class="nav-link active" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
+<i data-lucide="book-open"></i>
+<span class="nav-title">Atividades</span>
+</a>
+<a class="nav-link" href="/aluno/chat" th:href="@{/aluno/chat}">
+<i data-lucide="message-square"></i>
+<span class="nav-title">Chat</span>
+</a>
+<a class="nav-link" href="/aluno/calendario" th:href="@{/aluno/calendario}">
+<i data-lucide="calendar"></i>
+<span class="nav-title">Calendário</span>
+</a>
+</nav>
+<div class="sidebar-footer">
+<a class="nav-link" href="/aluno/configuracoes" th:href="@{/aluno/configuracoes}">
+<i data-lucide="settings"></i>
+<span class="nav-title">Ajustes</span>
+</a>
+<button class="nav-link" id="btn-open-logout">
+<i data-lucide="log-out"></i>
+<span class="nav-title">Sair</span>
+</button>
+</div>
+</aside>
+<main class="main-content">
+<div class="result-container">
+<a class="btn-back" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
+<i data-lucide="arrow-left"></i>
+<span>Voltar para Tarefas</span>
+</a>
+<div class="result-card">
+<div class="trophy-badge">
+<i data-lucide="trophy"></i>
+</div>
+<div>
+<h1 class="result-title" id="res-greeting">Desempenho Perfeito, Levi!</h1>
+<p id="res-subtitle" style="color:#637783; font-weight:700; font-size:0.9rem; margin-top:4px;">Atividade: Quiz Guiado</p>
+</div>
+<div class="result-stats-row">
+<div class="result-stat-box">
+<span>Pontuação</span>
+<div class="result-score" id="res-score" style="color:#E69C2E;">100%</div>
+</div>
+<div class="result-stat-box">
+<span>Tempo Gasto</span>
+<div class="result-score" id="res-time">00:00</div>
+</div>
+<div class="result-stat-box">
+<span>XP Ganho</span>
+<div class="result-score" id="res-xp" style="color:#27ae60;">+50 XP</div>
+</div>
+</div>
+<div class="result-actions">
+<button class="btn-action btn-retry" id="btn-retry">
+<i data-lucide="rotate-ccw"></i>
+<span>Praticar Novamente</span>
+</button>
+<a class="btn-action btn-finish" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
+<span>Concluir</span>
+<i data-lucide="check"></i>
+</a>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div class="modal-overlay" id="logout-modal">
+<div class="modal-card-logout">
+<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+<div class="modal-logout-actions">
+<button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+<button class="btn-logout-confirm" id="btn-confirm-logout" type="button">Sair</button>
+</div>
+</div>
+</div>
+<script defer="defer" src="/script/mef-comum.js"></script></body>
+</html>

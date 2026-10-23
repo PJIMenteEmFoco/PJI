@@ -1,0 +1,84 @@
+package br.edu.ifsp.mef.model;
+
+import java.util.HashSet;
+import java.util.Set;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Turma {
+	
+	@Id
+	@GeneratedValue
+	private Long id;
+	private String nome;
+	private String codigoTurma;
+	private String comentarios;
+	@ManyToOne
+	@JoinColumn(name="idProfessor")
+	private Professor professorResponsavel;
+	@ManyToMany
+	@JoinTable (
+	  name = "turma_usuario", 
+	  joinColumns = @JoinColumn(name = "idTurma"), 
+	  inverseJoinColumns = @JoinColumn(name = "idUsuario"))
+	private Set<Usuario> usuarios = new HashSet<>();
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	
+	public Professor getProfessorResponsavel() {
+		return professorResponsavel;
+	}
+	public void setProfessorResponsavel(Professor professorResponsavel) {
+		this.professorResponsavel = professorResponsavel;
+	}
+	public String getCodigoTurma() {
+		return codigoTurma;
+	}
+	public void setCodigoTurma(String codigoTurma) {
+		this.codigoTurma = codigoTurma;
+	}
+	
+	public String getComentarios() {
+		return comentarios;
+	}
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
+	}
+	public Set<Usuario> getUsuarios() {
+	    return usuarios;
+	}
+
+	public void setUsuarios(Set<Usuario> usuarios) {
+	    this.usuarios = usuarios;
+	}
+	
+	public void addUsuario(Usuario usuario) {
+	    this.usuarios.add(usuario);
+	    usuario.getTurmas().add(this);
+	}
+
+	public void removeUsuario(Usuario usuario) {
+	    this.usuarios.remove(usuario);
+	    usuario.getTurmas().remove(this);
+	}
+
+	
+}

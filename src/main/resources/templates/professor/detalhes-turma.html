@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title
+		th:text="${turma != null ? 'Detalhes de ' + turma.nome + ' | Mente em Foco' : 'Detalhes da Turma | Mente em Foco'}">
+		Detalhes da Turma - Mente em Foco</title>
+
+	<link rel="stylesheet" th:href="@{/css/detalhes-turma.css}">
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" th:href="@{/css/revisao.css}">
+	<link rel="stylesheet" th:href="@{/css/escolhas.css}">
+	<link rel="stylesheet" th:href="@{/css/mef-detalhes.css}">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script th:src="@{/script/icones.js}"></script>
+	<script th:src="@{/script/tema.js}"></script>
+	<meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}">
+	<meta name="_csrf_parameter" th:content="${_csrf != null ? _csrf.parameterName : '_csrf'}">
+</head>
+
+<body data-original="true">
+	<form th:action="@{/logout}" method="post" id="logoutForm" hidden>
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+			</div>
+			<button type="button" class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu"
+				aria-label="Expandir ou recolher menu">
+				<i data-lucide="chevron-left"></i>
+			</button>
+			<nav class="sidebar-nav">
+				<a th:href="@{/professor/dashboard}" class="nav-link"><i data-lucide="home"></i><span
+						class="nav-title">Início</span></a>
+				<a th:href="@{/professor/tarefas}" class="nav-link"><i data-lucide="book-open"></i><span
+						class="nav-title">Atividades</span></a>
+				<a th:href="@{/professor/chat}" class="nav-link"><i data-lucide="message-square"></i><span
+						class="nav-title">Chat</span></a>
+				<a th:href="@{/professor/calendario}" class="nav-link"><i data-lucide="calendar"></i><span
+						class="nav-title">Calendário</span></a>
+				<a th:href="@{/professor/turmas}" class="nav-link active"><i data-lucide="users"></i><span
+						class="nav-title">Turmas</span></a>
+			</nav>
+			<div class="sidebar-footer">
+				<a th:href="@{/professor/configuracoes}" class="nav-link"><i data-lucide="settings"></i><span
+						class="nav-title">Ajustes</span></a>
+				<button type="button" class="nav-link" id="btn-open-logout"><i data-lucide="log-out"></i><span
+						class="nav-title">Sair</span></button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="details-container">
+				<div th:if="${conviteSucesso}" class="mef-integracao-alerta sucesso" role="status"
+					th:text="${conviteSucesso}"></div>
+				<div th:if="${conviteErro}" class="mef-integracao-alerta erro" role="alert" th:text="${conviteErro}">
+				</div>
+
+				<div class="team-header-card">
+					<div class="team-title-group">
+						<a th:href="@{/professor/turmas}" class="btn-back-link" title="Voltar para Turmas"
+							aria-label="Voltar para Turmas"><i data-lucide="arrow-left"></i></a>
+						<div class="team-header-info">
+							<h1 id="turma-titulo" th:text="${turma.nome}">Turma</h1>
+							<p id="turma-professores">
+								<span
+									th:text="${professorTurma != null ? 'Prof. ' + professorTurma.nome : (turma.professorResponsavel != null ? 'Prof. ' + turma.professorResponsavel.nome : 'Professor não informado')}">Professor
+									não informado</span>
+								<span> | </span>
+								<span
+									th:text="${psicopedagogoTurma != null ? 'Psicopedagogo: ' + psicopedagogoTurma.nome : 'Sem psicopedagogo vinculado'}">Sem
+									psicopedagogo vinculado</span>
+							</p>
+						</div>
+					</div>
+					<div class="team-quick-stats">
+						<div class="stat-badge"><span class="metric-val" id="total-alunos-val"
+								th:text="${#lists.size(alunos)}">0</span><span class="metric-lbl">Alunos</span></div>
+						<div class="stat-badge"><span class="metric-val" id="total-atividades-val"
+								th:text="${totalAtividades}">0</span><span class="metric-lbl">Atividades</span></div>
+					</div>
+				</div>
+
+				<div class="controls-row">
+					<div class="search-student-box">
+						<i data-lucide="search"></i>
+						<input id="search-student" type="search" placeholder="Buscar aluno nesta turma..."
+							aria-label="Buscar aluno nesta turma">
+					</div>
+					<button type="button" class="btn-add-student" id="btn-open-vincular-aluno"><i
+							data-lucide="user-plus"></i> Convidar integrante</button>
+				</div>
+
+				<h2 class="section-title">Alunos em Acompanhamento</h2>
+				<div class="students-list-grid" id="students-grid">
+					<article class="student-card" th:each="aluno : ${alunos}"
+						th:attr="data-nome=${aluno.nome},data-email=${aluno.email}">
+						<div class="student-profile-group">
+							<div class="student-avatar"><i data-lucide="user"></i></div>
+							<div>
+								<h3 class="student-name" th:text="${aluno.nome}">Aluno</h3><span class="student-sub"
+									th:text="${aluno.email}">email@exemplo.com</span>
+							</div>
+						</div>
+						<div class="student-info-pill"><span class="info-label">Acompanhamento</span><span
+								class="info-value">Aluno vinculado à turma</span></div>
+						<div class="student-actions-row">
+							<a class="btn-card-action" th:href="@{/professor/alunos/{id}/ficha(id=${aluno.id})}"><i
+									data-lucide="clipboard-list"></i> Ficha</a>
+							<a class="btn-card-action" th:href="@{/professor/calendario/{id}(id=${aluno.id})}"><i
+									data-lucide="calendar"></i> Calendário</a>
+						</div>
+					</article>
+					<p class="mef-sem-resultados" id="students-empty-search" hidden>Nenhum aluno corresponde à busca.
+					</p>
+					<div class="empty-state-card" th:if="${#lists.isEmpty(alunos)}"><i data-lucide="users"
+							class="empty-icon"></i>
+						<h3>Nenhum aluno vinculado</h3>
+						<p>Quando um aluno aceitar um convite para esta turma, ele aparecerá nesta lista.</p>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<!-- Convite por e-mail: a pessoa entra na turma ao aceitar o link enviado. -->
+	<div class="modal-overlay" id="vincular-aluno-modal" aria-hidden="true">
+		<div class="vincular-outer-card" role="dialog" aria-modal="true" aria-labelledby="convite-modal-titulo">
+			<div class="vincular-inner-card">
+				<div class="modal-header">
+					<h3 id="convite-modal-titulo">Convidar integrante para a turma</h3>
+					<p>Enviaremos um link por e-mail. A pessoa precisará acessar o convite para entrar na turma.</p>
+				</div>
+				<form id="form-vincular-aluno" method="post"
+					th:action="@{/professor/turmas/{id}/convites(id=${turma.id})}">
+					<div class="form-group"><label for="email-integrante">E-mail do aluno ou psicopedagogo</label><input
+							class="form-control" type="email" id="email-integrante" name="email" autocomplete="email"
+							maxlength="254" placeholder="nome@exemplo.com" required></div>
+					<div class="modal-btn-row"><button type="button" class="btn-modal-cancel"
+							id="btn-cancel-vincular">Cancelar</button><button type="submit"
+							class="btn-modal-confirm">Enviar convite</button></div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="logout-modal" aria-hidden="true">
+		<div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="logout-title">
+			<h2 class="modal-title" id="logout-title">Tem certeza que deseja sair da sua conta?</h2>
+			<div class="modal-actions"><button type="button" class="btn-modal btn-modal-cancel"
+					id="btn-cancel-logout">Cancelar</button><button type="button" class="btn-modal btn-modal-logout"
+					id="btn-confirm-logout">Sair</button></div>
+		</div>
+	</div>
+
+	<script th:src="@{/script/mef-detalhes.js}" defer></script>
+</body>
+
+</html>
