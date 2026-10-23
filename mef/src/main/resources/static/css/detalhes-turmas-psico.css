@@ -634,3 +634,146 @@ body {
 .hidden {
     display: none !important;
 }
+/* =========================================
+   BOTÕES DE AÇÃO DO CARD DE ALUNO
+   ========================================= */
+
+/* Container para os 3 botões alinhados */
+.student-actions-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+    width: 100%;
+}
+
+/* Estilo padrão para todos os botões */
+.btn-card-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    background-color: #557D91;
+    color: #ffffff;
+}
+
+/* Efeito ao passar o mouse */
+.btn-card-action:hover {
+    background-color: #3f6071;
+    transform: translateY(-1px);
+}
+
+/* Tamanho do ícone (Lucide) */
+.btn-card-action svg {
+    width: 15px;
+    height: 15px;
+    stroke-width: 2.2;
+}
+
+/* Cor alternativa vermelha para o botão de Excluir */
+.btn-remove-action {
+    background-color: #c0392b;
+}
+
+.btn-remove-action:hover {
+    background-color: #962d22;
+}
+
+/* Responsividade: empilha os botões em telas muito pequenas */
+@media (max-width: 480px) {
+    .student-actions-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+        .student-actions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+            width: 100%;
+        }
+        .btn-card-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 8px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+            background-color: #557D91;
+            color: #ffffff;
+        }
+        .btn-card-action:hover {
+            background-color: #3f6071;
+            transform: translateY(-1px);
+        }
+        .btn-card-action svg {
+            width: 15px;
+            height: 15px;
+            stroke-width: 2.2;
+        }
+        .btn-remove-action {
+            background-color: #c0392b;
+        }
+        .btn-remove-action:hover {
+            background-color: #962d22;
+        }
+        @media (max-width: 480px) {
+            .student-actions-row {
+                grid-template-columns: 1fr;
+            }
+        }
+                .student-actions-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+            width: 100%;
+        }
+        .btn-card-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 8px;
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+            background-color: #557D91;
+            color: #ffffff;
+        }
+        .btn-card-action:hover {
+            background-color: #3f6071;
+            transform: translateY(-1px);
+        }
+        .btn-card-action svg {
+            width: 15px;
+            height: 15px;
+            stroke-width: 2.2;
+        }
+        @media (max-width: 480px) {
+            .student-actions-row {
+                grid-template-columns: 1fr;
+            }
+        }
