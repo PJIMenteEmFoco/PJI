@@ -1,52 +1,175 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Mente em Foco</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="/css/detalhes-turma.css" rel="stylesheet" th:href="@{/css/detalhes-turma.css}"/>
-<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
-<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
-<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head><body data-page="ficha"><div class="app-layout"><aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-</div>
-<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-<i data-lucide="chevron-right"></i>
-</div>
-<nav class="sidebar-nav">
-<a class="nav-link" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}">
-<i data-lucide="home"></i>
-<span class="nav-title">Início</span>
-<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}">
-<i data-lucide="book-open"></i>
-<span class="nav-title">Atividades</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}">
-<i data-lucide="message-square"></i>
-<span class="nav-title">Chat</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}">
-<i data-lucide="calendar"></i>
-<span class="nav-title">Calendário</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}">
-<i data-lucide="users"></i>
-<span class="nav-title">Minhas Turmas</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a></a></nav>
-<div class="sidebar-footer">
-<a class="nav-link" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}">
-<i data-lucide="settings"></i>
-<span class="nav-title">Ajustes</span>
-</a>
-<button class="nav-link" id="btn-open-logout">
-<i data-lucide="log-out"></i>
-<span class="nav-title">Sair</span>
-</button>
-</div>
-</aside><main class="main-content"><div class="mef-page" id="mef-root"></div></main></div><script defer="defer" src="/script/mef-comum.js"></script></body></html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Ficha do aluno | Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" href="/css/detalhes-turma.css" th:href="@{/css/detalhes-turma.css}" />
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}" />
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}" />
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}" />
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}" />
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}" />
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}" />
+</head>
+
+<body data-page="ficha">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<script src="/script/menu.js" th:src="@{/script/menu.js}"></script>
+			<div class="sidebar-header">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-symbol-only" />
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-full-white" />
+			</div>
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu"><i data-lucide="chevron-right"></i></div>
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a class="nav-link" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}"><i
+						data-lucide="home"></i><span class="nav-title">Início</span></a>
+				<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}"><i
+						data-lucide="book-open"></i><span class="nav-title">Atividades</span></a>
+				<a class="nav-link" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}"><i
+						data-lucide="message-square"></i><span class="nav-title">Chat</span></a>
+				<a class="nav-link" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}"><i
+						data-lucide="calendar"></i><span class="nav-title">Calendário</span></a>
+				<a class="nav-link" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}"><i
+						data-lucide="users"></i><span class="nav-title">Minhas Turmas</span></a>
+				<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}"
+					title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a>
+			</nav>
+			<div class="sidebar-footer">
+				<a class="nav-link" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}"><i
+						data-lucide="settings"></i><span class="nav-title">Ajustes</span></a>
+				<button class="nav-link" id="btn-open-logout" type="button"><i data-lucide="log-out"></i><span
+						class="nav-title">Sair</span></button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="mef-page" id="mef-root" th:attr="data-aluno-id=${aluno.id}">
+				<header class="mef-header">
+					<div>
+						<h1 th:text="${aluno.nome}">Nome do aluno</h1>
+						<p class="mef-sub" th:text="${turmasTexto}">Turmas do aluno</p>
+					</div>
+					<div class="mef-actions">
+						<button class="mef-btn" type="button" disabled
+							title="Relatórios para psicopedagogos ainda não possuem uma rota persistente no backend.">Relatórios</button>
+						<a class="mef-btn" href="/psicopedagogo/alunos" th:href="@{/psicopedagogo/alunos}"><i
+								data-lucide="arrow-left"></i> Voltar aos alunos</a>
+					</div>
+				</header>
+
+				<article class="mef-card">
+					<h2>Ficha do aluno</h2>
+					<dl class="mef-detail">
+						<div>
+							<dt>Nome completo</dt>
+							<dd th:text="${aluno.nome}">Nome do aluno</dd>
+						</div>
+						<div>
+							<dt>E-mail</dt>
+							<dd
+								th:text="${aluno.email != null and !#strings.isEmpty(aluno.email) ? aluno.email : 'Não informado'}">
+								Não informado</dd>
+						</div>
+						<div>
+							<dt>Telefone</dt>
+							<dd
+								th:text="${aluno.telefone != null and !#strings.isEmpty(aluno.telefone) ? aluno.telefone : 'Não informado'}">
+								Não informado</dd>
+						</div>
+						<div>
+							<dt>Data de nascimento</dt>
+							<dd th:text="${dataNascimentoTexto}">Não informado</dd>
+						</div>
+						<div>
+							<dt>Hiperfoco / interesses</dt>
+							<dd
+								th:text="${aluno.hiperfoco != null and !#strings.isEmpty(aluno.hiperfoco) ? aluno.hiperfoco : 'Não informado'}">
+								Não informado</dd>
+						</div>
+						<div>
+							<dt>Tempo de foco</dt>
+							<dd th:text="${tempoFocoTexto}">Não informado</dd>
+						</div>
+						<div>
+							<dt>Desregulação informada</dt>
+							<dd
+								th:text="${aluno.desregulacao != null and !#strings.isEmpty(aluno.desregulacao) ? aluno.desregulacao : 'Não informado'}">
+								Não informado</dd>
+						</div>
+						<div>
+							<dt>Laudo informado</dt>
+							<dd
+								th:text="${aluno.laudo != null and !#strings.isEmpty(aluno.laudo) ? aluno.laudo : 'Não informado'}">
+								Não informado</dd>
+						</div>
+						<div>
+							<dt>Nível atual</dt>
+							<dd th:text="${nivelNome}">Não definido</dd>
+						</div>
+						<div>
+							<dt>XP acumulado</dt>
+							<dd th:text="${xpTexto}">0</dd>
+						</div>
+						<div>
+							<dt>Turmas vinculadas</dt>
+							<dd><span class="mef-tag" th:each="turma : ${turmasAluno}" th:text="${turma}">Turma</span>
+							</dd>
+						</div>
+					</dl>
+				</article>
+
+				<div class="mef-stats">
+					<div class="mef-stat">Atividades atribuídas<strong th:text="${quantidadeAtividades}">0</strong>
+					</div>
+					<div class="mef-stat">Turmas vinculadas<strong th:text="${quantidadeTurmas}">0</strong></div>
+					<div class="mef-stat">XP acumulado<strong th:text="${xpTexto}">0</strong></div>
+				</div>
+
+				<section class="mef-card">
+					<h2>Atividades atribuídas</h2>
+					<p class="mef-muted">Atividades atualmente associadas ao aluno.</p>
+					<div class="mef-grid" th:if="${!#lists.isEmpty(atividades)}">
+						<article class="mef-card" th:each="atividade : ${atividades}">
+							<span class="mef-tag" th:text="${atividade.tipo}">Tipo</span>
+							<h3 th:text="${atividade.nome}">Atividade</h3>
+							<p class="mef-muted">Prazo: <span th:text="${atividade.prazo}">Sem prazo</span></p>
+							<p th:if="${atividade.descricao != null and !#strings.isEmpty(atividade.descricao)}"
+								th:text="${atividade.descricao}">Descrição</p>
+						</article>
+					</div>
+					<p class="mef-empty" th:if="${#lists.isEmpty(atividades)}">Nenhuma atividade atribuída foi
+						encontrada para este aluno.</p>
+				</section>
+				<p class="mef-note">Esta ficha exibe somente informações que estão persistidas no cadastro atual do
+					aluno. Dados não existentes no banco não são simulados.</p>
+			</div>
+		</main>
+	</div>
+
+	<dialog class="mef-dialog" id="logout-dialog" aria-labelledby="logout-title">
+		<h2 id="logout-title">Sair da sua conta?</h2>
+		<p>Tem certeza de que deseja encerrar sua sessão?</p>
+		<div class="mef-actions"><button class="mef-btn" id="cancel-logout" type="button">Cancelar</button>
+			<form th:action="@{/logout}" action="/logout" method="post"><button class="mef-btn primary"
+					type="submit">Sair</button></form>
+		</div>
+	</dialog>
+	<script defer src="/script/mef-alunos-psico.js" th:src="@{/script/mef-alunos-psico.js}"></script>
+</body>
+
+</html>

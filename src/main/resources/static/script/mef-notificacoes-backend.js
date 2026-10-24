@@ -1,4 +1,4 @@
-/* Notificações persistidas no backend. Estrutura e classes visuais baseadas no PJI-main. */
+/* Notificações persistidas no backend para os perfis. Estrutura e classes visuais baseadas no PJI-main. */
 (() => {
   'use strict';
 
@@ -7,6 +7,9 @@
   if (!root) return;
 
   const apiBase = '/api/notificacoes';
+  const dashboardFallback = location.pathname.startsWith('/aluno/') ? '/aluno/dashboard'
+    : location.pathname.startsWith('/psicopedagogo/') ? '/psicopedagogo/dashboard'
+    : '/professor/dashboard';
   const csrfToken = $('meta[name="_csrf"]')?.content || '';
   const csrfHeader = $('meta[name="_csrf_header"]')?.content || 'X-CSRF-TOKEN';
   let state = { notificacoes: [], receberNotificacoes: true, naoLidas: 0 };
@@ -81,8 +84,9 @@
   }
 
   function safeInternalLink(value) {
-    const link = String(value || '/professor/dashboard');
-    return link.startsWith('/') && !link.startsWith('//') ? link : '/professor/dashboard';
+    const link = String(value || dashboardFallback);
+    return link.startsWith('/') && !link.startsWith('//') && !link.startsWith('/\\')
+      ? link : dashboardFallback;
   }
 
   function render() {

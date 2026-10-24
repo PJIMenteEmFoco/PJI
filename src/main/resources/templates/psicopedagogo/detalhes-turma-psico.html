@@ -1,109 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Detalhes da Turma - Mente em Foco</title>
-<link href="/css/detalhes-turmas-psico.css" rel="stylesheet" th:href="@{/css/detalhes-turmas-psico.css}"/>
-<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
-<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
-<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head>
-<body data-original="true">
-<div class="app-layout">
-<aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-</div>
-<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-<i data-lucide="chevron-left"></i>
-</div>
-<nav class="sidebar-nav">
-<a class="nav-link" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}">
-<i data-lucide="home"></i>
-<span class="nav-title">Início</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}">
-<i data-lucide="book-open"></i>
-<span class="nav-title">Atividades</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}">
-<i data-lucide="message-square"></i>
-<span class="nav-title">Chat</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}">
-<i data-lucide="calendar"></i>
-<span class="nav-title">Calendário</span>
-</a>
-<a class="nav-link active" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}">
-<i data-lucide="users"></i>
-<span class="nav-title">Turmas</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a></nav>
-<div class="sidebar-footer">
-<a class="nav-link" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}">
-<i data-lucide="settings"></i>
-<span class="nav-title">Ajustes</span>
-</a>
-<button class="nav-link" id="btn-open-logout">
-<i data-lucide="log-out"></i>
-<span class="nav-title">Sair</span>
-</button>
-</div>
-</aside>
-<main class="main-content">
-<div class="details-container">
-<div class="team-header-card">
-<div class="team-title-group">
-<a class="btn-back-link" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}" title="Voltar para Turmas">
-<i data-lucide="arrow-left"></i>
-</a>
-<div class="team-header-info">
-<h1 id="turma-titulo" th:text="${turma.nome}">—</h1>
-<p id="turma-professores" th:text="${turma.professorResponsavel != null ? turma.professorResponsavel.nome : 'Professor não informado'}">—</p>
-</div>
-</div>
-<div class="team-quick-stats">
-<div class="stat-badge">
-<span class="metric-val" id="total-alunos-val" th:text="${#lists.size(alunos)}">0</span>
-<span class="metric-lbl">Alunos</span>
-</div>
-<div class="stat-badge">
-<span class="metric-val" id="total-atividades-val" th:text="0">0</span>
-<span class="metric-lbl">Atividades</span>
-</div>
-</div>
-</div>
-<div class="controls-row">
-<div class="search-student-box">
-<i data-lucide="search"></i>
-<input id="search-student" placeholder="Buscar aluno nesta turma..." type="text"/>
-</div>
-<button class="btn-add-student" disabled="disabled" id="btn-open-vincular-aluno" title="A vinculação exige um endpoint no backend">
-<i data-lucide="user-plus"></i> Vincular Aluno
-                    </button>
-</div>
-<h2 class="section-title">Alunos em Acompanhamento</h2>
-<div class="students-list-grid" id="students-grid"><div class="student-card" th:attr="data-nome=${aluno.nome}" th:each="aluno : ${alunos}"><div class="student-profile-group"><div class="student-avatar"><i data-lucide="user"></i></div><div><h3 class="student-name" th:text="${aluno.nome}">Aluno</h3><span class="student-sub" th:text="${aluno.email}">Email</span></div></div><div class="student-info-pill"><span class="info-label">Acompanhamento</span><span class="info-value">Aluno vinculado à turma</span></div><div class="student-actions-row"><a class="btn-card-action" th:href="@{/professor/calendario/{id}(id=${aluno.id})}" th:if="${#authentication.principal.usuario.perfil == 'PROFESSOR'}"><i data-lucide="calendar"></i> Calendário</a></div></div><p class="mef-vazio" th:if="${#lists.isEmpty(alunos)}">Nenhum aluno vinculado a esta turma.</p></div>
-</div>
-</main>
-</div>
-<!-- MODAL RELATÓRIO -->
-<!-- MODAL VINCULAR ALUNO -->
-<!-- MODAL LOGOUT -->
-<div class="modal-overlay" id="logout-modal">
-<div class="modal-card">
-<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-<div class="modal-actions">
-<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="button">Sair</button>
-</div>
-</div>
-</div>
-<!-- JAVASCRIPT -->
-<script defer="defer" src="/script/mef-comum.js"></script><script defer="defer" src="/script/mef-detalhes.js"></script></body>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Detalhes da Turma - Mente em Foco</title>
+	<link rel="stylesheet" href="/css/detalhes-turmas-psico.css" th:href="@{/css/detalhes-turmas-psico.css}">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+	<meta name="_csrf" th:content="${_csrf.token}">
+	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}">
+</head>
+
+<body data-original="true" data-page="detalhes-turma-psico">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu" aria-controls="sidebar" aria-expanded="false">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a th:href="@{/psicopedagogo/dashboard}" class="nav-link">
+					<i data-lucide="home"></i><span class="nav-title">Início</span>
+				</a>
+				<a th:href="@{/psicopedagogo/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i><span class="nav-title">Atividades</span>
+				</a>
+				<a th:href="@{/psicopedagogo/chat}" class="nav-link">
+					<i data-lucide="message-square"></i><span class="nav-title">Chat</span>
+				</a>
+				<a th:href="@{/psicopedagogo/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i><span class="nav-title">Calendário</span>
+				</a>
+				<a th:href="@{/psicopedagogo/turmas}" class="nav-link active" aria-current="page">
+					<i data-lucide="users"></i><span class="nav-title">Turmas</span>
+				</a>
+				<a th:href="@{/psicopedagogo/notificacoes}" class="nav-link" title="Notificações">
+					<i data-lucide="bell"></i><span class="nav-title">Notificações</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a th:href="@{/psicopedagogo/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i><span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i><span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="details-container">
+				<div class="team-header-card">
+					<div class="team-title-group">
+						<a th:href="@{/psicopedagogo/turmas}" class="btn-back-link" title="Voltar para Turmas"
+							aria-label="Voltar para Turmas">
+							<i data-lucide="arrow-left"></i>
+						</a>
+						<div class="team-header-info">
+							<h1 id="turma-titulo" th:text="${turma.nome}">Turma</h1>
+							<p id="turma-professores"
+								th:text="${'Professor: ' + professorTexto + ' | Psicopedagogo(s): ' + psicopedagogosTexto}">
+								Professor | Psicopedagogo</p>
+						</div>
+					</div>
+
+					<div class="team-quick-stats">
+						<div class="stat-badge">
+							<span class="metric-val" id="total-alunos-val"
+								th:text="${#lists.size(alunosResumo)}">0</span>
+							<span class="metric-lbl">Alunos</span>
+						</div>
+						<div class="stat-badge">
+							<span class="metric-val" id="total-atividades-val" th:text="${totalAtividades}">0</span>
+							<span class="metric-lbl">Atividades</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="controls-row">
+					<div class="search-student-box">
+						<i data-lucide="search"></i>
+						<input type="text" id="search-student" placeholder="Buscar aluno nesta turma..."
+							aria-label="Buscar aluno nesta turma">
+					</div>
+					<button class="btn-add-student" id="btn-open-vincular-aluno" type="button" disabled
+						title="Os alunos são vinculados pelo fluxo de turmas e convites do professor responsável.">
+						<i data-lucide="user-plus"></i> Vincular Aluno
+					</button>
+				</div>
+
+				<h2 class="section-title">Alunos em Acompanhamento</h2>
+
+				<div class="students-list-grid" id="students-grid">
+					<article class="student-card" th:each="aluno : ${alunosResumo}"
+						th:attr="data-nome=${aluno.nome},data-email=${aluno.email}">
+						<div class="student-profile-group">
+							<div class="student-avatar" aria-hidden="true" th:text="${aluno.inicial}">A</div>
+							<div>
+								<h3 class="student-name" th:text="${aluno.nome}">Nome do aluno</h3>
+								<span class="student-sub"
+									th:text="${aluno.email != null and !#strings.isEmpty(aluno.email) ? aluno.email : 'E-mail não informado'}">E-mail</span>
+							</div>
+						</div>
+
+						<div class="student-info-pill">
+							<span class="info-label">Hiperfoco</span>
+							<span class="info-value" th:text="${aluno.hiperfocoTexto}">Não informado</span>
+						</div>
+						<div class="student-info-pill">
+							<span class="info-label">Tempo Médio de Foco</span>
+							<span class="info-value" th:text="${aluno.tempoFocoTexto}">Não informado</span>
+						</div>
+
+						<div class="student-actions-row">
+							<a class="btn-card-action btn-view-report"
+								th:href="@{/psicopedagogo/relatorios(aluno=${aluno.id})}"
+								th:attr="aria-label=${'Ver relatórios de ' + aluno.nome}">
+								<i data-lucide="file-text"></i> Relatório
+							</a>
+							<a class="btn-card-action" th:href="@{/psicopedagogo/alunos/{id}/ficha(id=${aluno.id})}"
+								th:attr="aria-label=${'Ver ficha de ' + aluno.nome}">
+								<i data-lucide="clipboard-list"></i> Ficha
+							</a>
+							<a class="btn-card-action" th:href="@{/psicopedagogo/calendario}"
+								aria-label="Abrir calendário do psicopedagogo">
+								<i data-lucide="calendar"></i> Calendário
+							</a>
+						</div>
+					</article>
+
+					<div class="empty-state-card" th:if="${#lists.isEmpty(alunosResumo)}">
+						<i data-lucide="users" class="empty-icon"></i>
+						<h3>Nenhum aluno vinculado</h3>
+						<p>Esta turma ainda não possui alunos vinculados. Para incluir estudantes, utilize o fluxo de
+							convite gerenciado pelo professor responsável.</p>
+					</div>
+
+					<div class="empty-state-card" id="students-empty-search" role="status" aria-live="polite"
+						style="display: none;">
+						<i data-lucide="search" class="empty-icon"></i>
+						<h3>Nenhum aluno encontrado</h3>
+						<p>Tente buscar por outro nome ou e-mail.</p>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<div class="modal-overlay" id="logout-modal" aria-hidden="true">
+		<div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="logout-title">
+			<h2 class="modal-title" id="logout-title">Tem certeza que deseja sair da sua conta?</h2>
+			<div class="modal-actions">
+				<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout" type="button">Cancelar</button>
+				<form id="logoutForm" th:action="@{/logout}" action="/logout" method="post" style="display: contents;">
+					<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="submit">Sair</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script defer src="/script/mef-detalhes-turma-psico.js" th:src="@{/script/mef-detalhes-turma-psico.js}"></script>
+</body>
+
 </html>

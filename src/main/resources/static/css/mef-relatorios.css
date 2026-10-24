@@ -1,0 +1,56 @@
+/* Complemento para os componentes de relatórios utilizados pelo frontend do PJI-main.
+   Usa a paleta e a tipografia que já existem no Mente em Foco. */
+.mef-page { width: 100%; max-width: 1280px; margin: 0 auto; color: #0F2D3C; }
+.mef-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 22px; margin: 8px 0 26px; }
+.mef-header h1 { margin: 0 0 8px; font-family: 'Montserrat', sans-serif; font-weight: 800; color: #0F2D3C; font-size: clamp(1.6rem, 2.3vw, 2.1rem); }
+.mef-sub, .mef-muted { color: #557D91; line-height: 1.55; }
+.mef-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.mef-btn { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 10px 15px; border: 1px solid #557D91; border-radius: 10px; background: #fff; color: #315b70; font: 700 .92rem 'Lato', sans-serif; text-decoration: none; cursor: pointer; transition: background .18s ease, transform .18s ease; }
+.mef-btn:hover { background: #edf4f7; transform: translateY(-1px); }
+.mef-btn.primary { background: #0F2D3C; color: #fff; border-color: #0F2D3C; }
+.mef-btn.primary:hover { background: #244b5e; }
+.mef-btn:disabled { cursor: not-allowed; opacity: .55; transform: none; }
+.mef-filters { display: grid; grid-template-columns: minmax(200px, 1.6fr) repeat(3, minmax(150px, 1fr)); gap: 14px; padding: 18px; margin-bottom: 22px; background: #fff; border: 1px solid #dce6eb; border-radius: 16px; box-shadow: 0 3px 12px rgba(15,45,60,.04); }
+.mef-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; color: #315b70; font-size: .9rem; font-weight: 700; }
+.mef-field input, .mef-field select, .mef-field textarea { width: 100%; min-width: 0; padding: 11px 12px; border: 1px solid #cbd9e0; border-radius: 9px; background: #fff; color: #0F2D3C; font: 400 .95rem 'Lato', sans-serif; }
+.mef-field textarea { min-height: 110px; resize: vertical; }
+#report-list { display: grid; gap: 16px; }
+.mef-card { padding: 22px; background: #fff; border: 1px solid #dce6eb; border-radius: 16px; box-shadow: 0 4px 15px rgba(15,45,60,.05); min-width: 0; }
+.mef-card h2 { margin: 9px 0; font: 700 1.2rem 'Montserrat', sans-serif; color: #0F2D3C; }
+.mef-card h3 { margin: 18px 0 6px; font: 700 1rem 'Montserrat', sans-serif; color: #0F2D3C; }
+.mef-card p { margin: 7px 0; line-height: 1.55; overflow-wrap: anywhere; }
+.mef-tag { display: inline-flex; align-items: center; padding: 5px 9px; border-radius: 999px; background: #eaf2f6; color: #315b70; font-size: .78rem; font-weight: 800; }
+.mef-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 18px 0; }
+.mef-stat { display: flex; flex-direction: column; gap: 7px; min-width: 0; padding: 14px; border: 1px solid #dce6eb; border-radius: 11px; color: #557D91; background: #f8fbfc; font-size: .86rem; }
+.mef-stat strong { color: #0F2D3C; font: 800 1.1rem 'Montserrat', sans-serif; overflow-wrap: anywhere; }
+.mef-note { padding: 12px 14px; border-left: 3px solid #E69C2E; background: #fff8ed; color: #5d4a2f; border-radius: 6px; }
+.mef-empty { padding: 24px; text-align: center; color: #557D91; background: #fff; border: 1px dashed #b7cbd5; border-radius: 14px; }
+.mef-error { padding: 12px 14px; margin: 12px 0; color: #8d2b32; border: 1px solid #e5b8bb; border-radius: 10px; background: #fff0f0; }
+.mef-prose { white-space: pre-wrap; overflow-wrap: anywhere; }
+.mef-dialog { width: min(780px, calc(100vw - 32px)); max-height: 88vh; overflow: auto; margin: auto; padding: 24px; border: 1px solid #dce6eb; border-radius: 18px; color: #0F2D3C; background: #f1f5f8; box-shadow: 0 20px 65px rgba(0,0,0,.25); }
+.mef-dialog::backdrop { background: rgba(8, 27, 37, .58); }
+.mef-dialog > h2 { margin: 0 0 15px; font-family: 'Montserrat', sans-serif; }
+.mef-dialog .mef-card { box-shadow: none; }
+.mef-table-wrap { overflow-x: auto; margin: 18px 0; }
+.mef-table { border-collapse: collapse; width: 100%; font-size: .9rem; background: #fff; }
+.mef-table caption { padding: 9px; text-align: left; font-weight: 700; }
+.mef-table th, .mef-table td { border: 1px solid #dce6eb; padding: 10px; text-align: left; vertical-align: top; }
+.mef-table th { background: #eaf2f6; }
+#report-students-source { display: none !important; }
+body.dark-mode .mef-page, html[data-theme="escuro"] .mef-page { color: #e1ebf0; }
+body.dark-mode .mef-header h1, body.dark-mode .mef-card h2, body.dark-mode .mef-card h3,
+html[data-theme="escuro"] .mef-header h1, html[data-theme="escuro"] .mef-card h2, html[data-theme="escuro"] .mef-card h3 { color: #fff; }
+body.dark-mode .mef-card, body.dark-mode .mef-filters, body.dark-mode .mef-empty,
+html[data-theme="escuro"] .mef-card, html[data-theme="escuro"] .mef-filters, html[data-theme="escuro"] .mef-empty { background: #122834; color: #e1ebf0; border-color: #294857; }
+body.dark-mode .mef-field, body.dark-mode .mef-sub, body.dark-mode .mef-muted,
+html[data-theme="escuro"] .mef-field, html[data-theme="escuro"] .mef-sub, html[data-theme="escuro"] .mef-muted { color: #b9cdd7; }
+body.dark-mode .mef-field input, body.dark-mode .mef-field select, body.dark-mode .mef-field textarea,
+html[data-theme="escuro"] .mef-field input, html[data-theme="escuro"] .mef-field select, html[data-theme="escuro"] .mef-field textarea { background: #0b1b24; color: #e1ebf0; border-color: #355767; }
+body.dark-mode .mef-stat, html[data-theme="escuro"] .mef-stat { background: #0b1b24; color: #b9cdd7; border-color: #294857; }
+body.dark-mode .mef-stat strong, html[data-theme="escuro"] .mef-stat strong { color: #fff; }
+body.dark-mode .mef-dialog, html[data-theme="escuro"] .mef-dialog { background: #122834; color: #e1ebf0; border-color: #294857; }
+body.dark-mode .mef-table, html[data-theme="escuro"] .mef-table { background: #0b1b24; color: #e1ebf0; }
+body.dark-mode .mef-table th, body.dark-mode .mef-table td, html[data-theme="escuro"] .mef-table th, html[data-theme="escuro"] .mef-table td { border-color: #294857; }
+body.dark-mode .mef-table th, html[data-theme="escuro"] .mef-table th { background: #193746; }
+@media (max-width: 900px) { .mef-filters { grid-template-columns: repeat(2, minmax(0,1fr)); } .mef-header { flex-direction: column; } }
+@media (max-width: 560px) { .mef-filters { grid-template-columns: minmax(0,1fr); padding: 14px; } .mef-card { padding: 16px; } .mef-actions { width: 100%; } .mef-btn { max-width: 100%; } }

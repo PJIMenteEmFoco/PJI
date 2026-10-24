@@ -2,12 +2,12 @@ package br.edu.ifsp.mef.model;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 
 @Entity
 public class Aluno extends Usuario {
@@ -25,6 +25,10 @@ public class Aluno extends Usuario {
 	@OneToOne(mappedBy = "aluno")
 	private Calendario calendario;
 
+	@PrePersist
+    void iniciarXp() {
+        this.xp = 0.0;
+    }
 
 	public String getDesregulacao() {
 		return desregulacao;

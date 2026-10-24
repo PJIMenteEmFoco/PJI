@@ -45,20 +45,27 @@ public class Atividade {
 	@ManyToMany
 	@JoinTable(name = "atividade_aluno", joinColumns = @JoinColumn(name = "idAtividade"), inverseJoinColumns = @JoinColumn(name = "idAluno"))
 	private Set<Aluno> alunos = new HashSet<>();
+	@ElementCollection
+	@CollectionTable(name = "atividade_rascunho_destinatario", joinColumns = @JoinColumn(name = "id_atividade"))
+	@Column(name = "id_aluno", nullable = false)
+	private Set<Long> destinatariosRascunho = new HashSet<>();
 
-    // Os alunos escolhidos no rascunho não podem entrar em atividade_aluno antes da publicação.
-    @ElementCollection
-    @CollectionTable(name = "atividade_rascunho_destinatario", joinColumns = @JoinColumn(name = "id_atividade"))
-    @Column(name = "id_aluno", nullable = false)
-    private Set<Long> destinatariosRascunho = new HashSet<>();
+	public Set<Long> getDestinatariosRascunho() {
+		return destinatariosRascunho;
+	}
 
-    public Set<Long> getDestinatariosRascunho() { return destinatariosRascunho; }
-    public void setDestinatariosRascunho(Set<Long> ids) { this.destinatariosRascunho = ids; }
+	public void setDestinatariosRascunho(Set<Long> ids) {
+		this.destinatariosRascunho = ids;
+	}
+
 	@ManyToMany(mappedBy = "atividades")
 	private Set<Calendario> calendarios = new HashSet<>();
 	@ManyToOne
 	@JoinColumn(name = "idProfessor")
 	private Professor professor;
+	@ManyToOne
+	@JoinColumn(name = "idPsicopedagogo")
+	private Psicopedagogo psicopedagogo;
 
 	public Long getId() {
 		return id;
@@ -106,6 +113,14 @@ public class Atividade {
 
 	public void setProfessor(Professor professor) {
 		this.professor = professor;
+	}
+
+	public Psicopedagogo getPsicopedagogo() {
+		return psicopedagogo;
+	}
+
+	public void setPsicopedagogo(Psicopedagogo psicopedagogo) {
+		this.psicopedagogo = psicopedagogo;
 	}
 
 	public int getTempoAtividade() {

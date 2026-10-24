@@ -97,7 +97,9 @@
           const bytes=Uint8Array.from(atob(data64.split(',')[1]),c=>c.charCodeAt(0));
           const form=new FormData();form.append('arquivo',new Blob([bytes],{type:'application/pdf'}),pdf.name);
           const uploadHeaders={};if(csrf && headerName)uploadHeaders[headerName]=csrf;
-          const upload=await fetch(`/professor/tarefas/${identificador}/pdf`,{method:'POST',credentials:'same-origin',headers:uploadHeaders,body:form});
+          const pdfPattern=document.body.dataset.taskPdfUrlPattern||'/professor/tarefas/{id}/pdf';
+          const uploadUrl=pdfPattern.replace('{id}',encodeURIComponent(identificador));
+          const upload=await fetch(uploadUrl,{method:'POST',credentials:'same-origin',headers:uploadHeaders,body:form});
           if(!upload.ok){const info=await upload.json().catch(()=>({}));
             throw new Error(`O rascunho foi salvo (#${identificador}), mas o PDF não foi anexado: ${info.mensagem||upload.status}. Reabra o rascunho para reenviar o PDF.`);}
         }

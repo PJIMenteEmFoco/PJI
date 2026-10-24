@@ -1,0 +1,51 @@
+/* Complementos do chat do aluno. O layout principal permanece em chatAluno.css. */
+.chat-sidebar .contact-search {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    width: calc(100% - 28px);
+    margin: 12px 14px;
+    padding: 9px 12px;
+    border: 1px solid #b5cbd8;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #0F2D3C;
+}
+
+.chat-sidebar .contact-search:focus {
+    outline: 2px solid #557D91;
+    outline-offset: 1px;
+}
+
+.chat-empty {
+    margin: 0;
+    padding: 18px 20px;
+    color: #557D91;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.contact-item[hidden] {
+    display: none !important;
+}
+
+.chat-status-message {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 1200;
+    max-width: min(420px, calc(100vw - 44px));
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #0F2D3C;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(15, 45, 60, 0.22);
+    font: 600 0.9rem/1.4 Lato, sans-serif;
+}
+
+@media (max-width: 650px) {
+    .chat-sidebar .contact-search {
+        width: calc(100% - 20px);
+        margin: 10px;
+    }
+}

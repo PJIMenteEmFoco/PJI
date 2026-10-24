@@ -1,174 +1,345 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Ajustes - Mente em Foco</title>
-<link href="/css/configuracoes.css" rel="stylesheet" th:href="@{/css/configuracoes.css}"/>
-<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
-<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
-<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head>
-<body data-original="true" th:attr="data-user-id=${#authentication.principal.usuario.id}">
-<div class="app-layout">
-<aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-</div>
-<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-<i data-lucide="chevron-left"></i>
-</div>
-<nav class="sidebar-nav">
-<a class="nav-link" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}">
-<i data-lucide="home"></i>
-<span class="nav-title">Início</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}">
-<i data-lucide="book-open"></i>
-<span class="nav-title">Atividades</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}">
-<i data-lucide="message-square"></i>
-<span class="nav-title">Chat</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}">
-<i data-lucide="calendar"></i>
-<span class="nav-title">Calendário</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}">
-<i data-lucide="users"></i>
-<span class="nav-title">Turmas</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a></nav>
-<div class="sidebar-footer">
-<a class="nav-link active" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}">
-<i data-lucide="settings"></i>
-<span class="nav-title">Ajustes</span>
-</a>
-<button class="nav-link" id="btn-open-logout">
-<i data-lucide="log-out"></i>
-<span class="nav-title">Sair</span>
-</button>
-</div>
-</aside>
-<main class="main-content">
-<div class="settings-container">
-<h1 class="page-title">Ajustes</h1>
-<div class="config-section">
-<h2 class="section-title">Informações Pessoais</h2>
-<div class="config-card-group">
-<div class="config-item">
-<div class="config-info-text">
-<span class="config-label">Foto de Perfil</span>
-<div class="profile-avatar-large" style="margin-top: 6px;">
-<i data-lucide="user"></i>
-</div>
-</div>
-<button class="btn-config-edit" disabled="disabled" title="Esta alteração ainda não tem integração completa">Editar</button>
-</div>
-<div class="config-item">
-<div class="config-info-text">
-<span class="config-label">Telefone</span>
-<span class="config-value" id="val-phone" th:text="${#authentication.principal.usuario.telefone}">—</span>
-</div>
-<button class="btn-config-edit" onclick="openEditModal('Telefone', 'val-phone')">Editar</button>
-</div>
-<div class="config-item">
-<div class="config-info-text">
-<span class="config-label">Nome</span>
-<span class="config-value" id="val-name" th:text="${#authentication.principal.usuario.nome}">—</span>
-</div>
-<button class="btn-config-edit" onclick="openEditModal('Nome', 'val-name')">Editar</button>
-</div>
-</div>
-</div>
-<div class="config-section">
-<h2 class="section-title">Aparência</h2>
-<div class="config-card-group">
-<div class="config-item">
-<span class="config-label">Esquema de cores</span>
-<div class="custom-dropdown" id="theme-dropdown">
-<button class="custom-dropdown-btn" onclick="toggleThemeDropdown()">
-<span id="theme-btn-label">Claro</span>
-<i data-lucide="chevron-down"></i>
-</button>
-<div class="custom-dropdown-menu">
-<div class="custom-dropdown-option selected" id="opt-claro" onclick="selectTheme('claro')">
-<span>Claro</span>
-</div>
-<div class="custom-dropdown-option" id="opt-escuro" onclick="selectTheme('escuro')">
-<span>Escuro</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="config-section">
-<h2 class="section-title">Notificações</h2>
-<div class="config-card-group">
-<div class="config-item">
-<span class="config-label">Notificações gerais</span>
-<button class="btn-toggle-status" disabled="disabled" title="Esta alteração ainda não tem integração completa">Ativado</button>
-</div>
-<div class="config-item">
-<span class="config-label">Status de atividades</span>
-<button class="btn-toggle-status" disabled="disabled" title="Esta alteração ainda não tem integração completa">Ativado</button>
-</div>
-<div class="config-item">
-<span class="config-label">Novidades do Mente em Foco</span>
-<button class="btn-toggle-status disabled" disabled="disabled" title="Esta alteração ainda não tem integração completa">Desativado</button>
-</div>
-</div>
-</div>
-<div class="config-section">
-<h2 class="section-title">Segurança</h2>
-<div class="config-card-group">
-<div class="config-item">
-<span class="config-label">Senha</span>
-<button class="btn-config-edit" disabled="disabled" title="Esta alteração ainda não tem integração completa">Editar</button>
-</div>
-<div class="config-item">
-<span class="config-label">Excluir conta</span>
-<button class="btn-config-delete" disabled="disabled" title="Esta alteração ainda não tem integração completa">Excluir</button>
-</div>
-</div>
-</div>
-</div>
-</main>
-</div>
-<div class="modal-overlay" id="logout-modal">
-<div class="modal-card">
-<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-<div class="modal-actions">
-<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="button">Sair</button>
-</div>
-</div>
-</div>
-<div class="modal-overlay" id="edit-modal">
-<div class="modal-card">
-<h3 class="modal-title" id="modal-title-text">Editar Informação</h3>
-<input class="modal-input" id="modal-field-input" placeholder="Digite aqui..." type="text"/>
-<div class="modal-actions">
-<button class="btn-modal btn-modal-cancel" onclick="closeEditModal()">Cancelar</button>
-<button class="btn-modal btn-modal-save" onclick="saveEditModal()">Salvar</button>
-</div>
-</div>
-</div>
-<div class="modal-overlay" id="delete-modal">
-<div class="delete-modal-card">
-<h3 class="delete-modal-title">Tem certeza que deseja excluir a conta?</h3>
-<p class="delete-modal-subtitle">Todos seus dados serão perdidos.</p>
-<div class="delete-modal-actions">
-<button class="btn-delete-cancel" onclick="closeDeleteModal()">Cancelar</button>
-<button class="btn-delete-confirm" onclick="confirmDeleteAccount()">Excluir</button>
-</div>
-</div>
-</div>
-<script defer="defer" src="/script/mef-comum.js"></script><script defer="defer" src="/script/mef-configuracoes.js"></script></body>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ajustes - Mente em Foco</title>
+	<link rel="stylesheet" href="/css/configuracoes.css" th:href="@{/css/configuracoes.css}">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+	<meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}">
+	<meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : 'X-CSRF-TOKEN'}">
+</head>
+
+<body data-original="true" data-mef-backend="true"
+	th:attr="data-mef-profile-name=${#authentication.principal.usuario.nome},data-mef-profile-phone=${#authentication.principal.usuario.telefone},data-mef-user-id=${#authentication.principal.usuario.id}">
+	<form id="mef-logout-form" method="post" th:action="@{/logout}" action="/logout" hidden>
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+	<div class="app-layout">
+
+		<aside class="sidebar" id="sidebar">
+			<script src="/script/menu.js" th:src="@{/script/menu.js}"></script>
+			<div class="sidebar-header">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav">
+				<a href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}" class="nav-link">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+				<a href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" class="nav-link"
+					title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}"
+					class="nav-link active">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="settings-container">
+				<h1 class="page-title">Ajustes</h1>
+
+				<div class="config-section">
+					<h2 class="section-title">Informações Pessoais</h2>
+					<div class="config-card-group">
+
+						<div class="config-item">
+							<div class="config-info-text">
+								<span class="config-label">Foto de Perfil</span>
+								<div class="profile-avatar-large" style="margin-top: 6px;">
+									<i data-lucide="user"></i>
+								</div>
+							</div>
+							<button class="btn-config-edit"
+								onclick="openEditModal('Foto de Perfil', '')">Editar</button>
+						</div>
+
+						<div class="config-item">
+							<div class="config-info-text">
+								<span class="config-label">Telefone</span>
+								<span class="config-value" id="val-phone">+55 11 98765-4321</span>
+							</div>
+							<button class="btn-config-edit"
+								onclick="openEditModal('Telefone', 'val-phone')">Editar</button>
+						</div>
+
+						<div class="config-item">
+							<div class="config-info-text">
+								<span class="config-label">Nome</span>
+								<span class="config-value" id="val-name">Cauê Campos Fraga</span>
+							</div>
+							<button class="btn-config-edit" onclick="openEditModal('Nome', 'val-name')">Editar</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="config-section">
+					<h2 class="section-title">Aparência</h2>
+					<div class="config-card-group">
+						<div class="config-item">
+							<span class="config-label">Esquema de cores</span>
+
+							<div class="custom-dropdown" id="theme-dropdown">
+								<button class="custom-dropdown-btn" onclick="toggleThemeDropdown()">
+									<span id="theme-btn-label">Claro</span>
+									<i data-lucide="chevron-down"></i>
+								</button>
+								<div class="custom-dropdown-menu">
+									<div class="custom-dropdown-option selected" id="opt-claro"
+										onclick="selectTheme('claro')">
+										<span>Claro</span>
+									</div>
+									<div class="custom-dropdown-option" id="opt-escuro" onclick="selectTheme('escuro')">
+										<span>Escuro</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="config-section">
+					<h2 class="section-title">Notificações</h2>
+					<div class="config-card-group">
+						<div class="config-item">
+							<span class="config-label">Notificações gerais</span>
+							<button class="btn-toggle-status" onclick="toggleStatus(this)">Ativado</button>
+						</div>
+						<div class="config-item">
+							<span class="config-label">Status de atividades</span>
+							<button class="btn-toggle-status" onclick="toggleStatus(this)">Ativado</button>
+						</div>
+						<div class="config-item">
+							<span class="config-label">Novidades do Mente em Foco</span>
+							<button class="btn-toggle-status disabled" onclick="toggleStatus(this)">Desativado</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="config-section">
+					<h2 class="section-title">Segurança</h2>
+					<div class="config-card-group">
+						<div class="config-item">
+							<span class="config-label">Senha</span>
+							<button class="btn-config-edit" onclick="openEditModal('Senha', '')">Editar</button>
+						</div>
+						<div class="config-item">
+							<span class="config-label">Excluir conta</span>
+							<button class="btn-config-delete" onclick="openDeleteModal()">Excluir</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</main>
+	</div>
+
+	<div class="modal-overlay" id="logout-modal">
+		<div class="modal-card">
+			<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+			<div class="modal-actions">
+				<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
+				<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="button">Sair</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="edit-modal">
+		<div class="modal-card">
+			<h3 class="modal-title" id="modal-title-text">Editar Informação</h3>
+			<input type="text" class="modal-input" id="modal-field-input" placeholder="Digite aqui...">
+			<div class="modal-actions">
+				<button class="btn-modal btn-modal-cancel" onclick="closeEditModal()">Cancelar</button>
+				<button class="btn-modal btn-modal-save" onclick="saveEditModal()">Salvar</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="delete-modal">
+		<div class="delete-modal-card">
+			<h3 class="delete-modal-title">Tem certeza que deseja excluir a conta?</h3>
+			<p class="delete-modal-subtitle">Todos seus dados serão perdidos.</p>
+			<div class="delete-modal-actions">
+				<button class="btn-delete-cancel" onclick="closeDeleteModal()">Cancelar</button>
+				<button class="btn-delete-confirm" onclick="confirmDeleteAccount()">Excluir</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		(function initTheme() {
+			if (localStorage.getItem('theme') === 'escuro') {
+				document.body.classList.add('dark-mode');
+			}
+		})();
+		lucide.createIcons();
+
+		const sidebar = document.getElementById('sidebar');
+		const toggleBtn = document.getElementById('toggle-btn');
+		toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+		const logoutModal = document.getElementById('logout-modal');
+		const btnOpenLogout = document.getElementById('btn-open-logout');
+		const btnCancelLogout = document.getElementById('btn-cancel-logout');
+		const btnConfirmLogout = document.getElementById('btn-confirm-logout');
+
+		btnOpenLogout.addEventListener('click', (e) => {
+			e.preventDefault();
+			logoutModal.classList.add('active');
+		});
+
+		btnCancelLogout.addEventListener('click', () => {
+			logoutModal.classList.remove('active');
+		});
+
+		btnConfirmLogout.addEventListener('click', () => {
+			window.location.href = '../login/login.html';
+		});
+
+		const themeDropdown = document.getElementById('theme-dropdown');
+		const themeBtnLabel = document.getElementById('theme-btn-label');
+
+		function toggleThemeDropdown() {
+			themeDropdown.classList.toggle('open');
+		}
+
+		function selectTheme(theme) {
+			themeDropdown.classList.remove('open');
+			document.querySelectorAll('.custom-dropdown-option').forEach(opt => opt.classList.remove('selected'));
+
+			if (theme === 'escuro') {
+				document.getElementById('opt-escuro').classList.add('selected');
+				themeBtnLabel.textContent = 'Escuro';
+				document.body.classList.add('dark-mode');
+			} else {
+				document.getElementById('opt-claro').classList.add('selected');
+				themeBtnLabel.textContent = 'Claro';
+				document.body.classList.remove('dark-mode');
+			}
+		}
+
+		window.addEventListener('click', (e) => {
+			if (!themeDropdown.contains(e.target)) {
+				themeDropdown.classList.remove('open');
+			}
+		});
+
+		function toggleStatus(btn) {
+			if (btn.classList.contains('disabled')) {
+				btn.classList.remove('disabled');
+				btn.textContent = 'Ativado';
+			} else {
+				btn.classList.add('disabled');
+				btn.textContent = 'Desativado';
+			}
+		}
+
+		const editModal = document.getElementById('edit-modal');
+		const modalTitleText = document.getElementById('modal-title-text');
+		const modalFieldInput = document.getElementById('modal-field-input');
+		let currentTargetId = '';
+
+		function openEditModal(label, targetId) {
+			currentTargetId = targetId;
+			modalTitleText.textContent = `Editar ${label}`;
+
+			if (targetId) {
+				const currentVal = document.getElementById(targetId).textContent;
+				modalFieldInput.value = currentVal;
+			} else {
+				modalFieldInput.value = '';
+			}
+
+			editModal.classList.add('active');
+		}
+
+		function closeEditModal() {
+			editModal.classList.remove('active');
+		}
+
+		function saveEditModal() {
+			if (currentTargetId && modalFieldInput.value.trim() !== '') {
+				document.getElementById(currentTargetId).textContent = modalFieldInput.value.trim();
+			}
+			closeEditModal();
+		}
+
+		const deleteModal = document.getElementById('delete-modal');
+
+		function openDeleteModal() {
+			deleteModal.classList.add('active');
+		}
+
+		function closeDeleteModal() {
+			deleteModal.classList.remove('active');
+		}
+
+		function confirmDeleteAccount() {
+			closeDeleteModal();
+			setTimeout(() => {
+				window.location.href = '../index.html';
+			}, 300);
+		}
+	</script>
+	<script src="/script/dados.js" th:src="@{/script/dados.js}"></script>
+	<script src="/script/cruzadas.js" th:src="@{/script/cruzadas.js}"></script>
+	<script src="/script/progresso.js" th:src="@{/script/progresso.js}"></script>
+	<script src="/script/documentos.js" th:src="@{/script/documentos.js}"></script>
+	<script src="/script/cruzadas-navegacao.js" th:src="@{/script/cruzadas-navegacao.js}"></script>
+	<script src="/script/recursos.js" th:src="@{/script/recursos.js}"></script>
+	<script src="/script/interface-original.js" th:src="@{/script/interface-original.js}"></script>
+	<script src="/script/popups.js" th:src="@{/script/popups.js}"></script>
+	<script src="/script/perfil-ajustes.js" th:src="@{/script/perfil-ajustes.js}"></script>
+	<script src="/script/convites.js" th:src="@{/script/convites.js}"></script>
+	<script src="/script/revisao.js" th:src="@{/script/revisao.js}"></script>
+	<script src="/script/escolhas.js" th:src="@{/script/escolhas.js}"></script>
+	<script src="/script/mef-configuracoes-psico.js" th:src="@{/script/mef-configuracoes-psico.js}"></script>
+</body>
+
 </html>

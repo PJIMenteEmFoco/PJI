@@ -87,9 +87,10 @@
       const result=await response.json().catch(()=>({}));
       if(!response.ok)throw Error(result.mensagem||`Falha ao registrar conclusão: ${response.status}`);
       clearInterval(timer);ready=false;
-      const banner=document.createElement('div');banner.className='mef-play-result';
-      banner.textContent=`Atividade concluída! Você acertou ${result.acertos} de ${result.total} (${result.percentual}%). Resultado registrado.`;
-      board.prepend(banner); submit.textContent='Concluída';
+      if (!result.tentativaId || !Number.isInteger(Number(result.tentativaId)) || Number(result.tentativaId) <= 0) {
+        throw Error('A atividade foi enviada, mas o servidor não retornou o identificador do resultado.');
+      }
+      window.location.assign(`/aluno/desempenho?tentativaId=${encodeURIComponent(result.tentativaId)}`);
     }catch(e){submit.disabled=false;error(e.message);}
   }
   submit.addEventListener('click',finish);

@@ -1,104 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Chat - Mente em Foco</title>
-<link href="/css/chat_psico.css" rel="stylesheet" th:href="@{/css/chat_psico.css}"/>
-<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
-<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
-<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head>
-<body data-original="true" th:attr="data-user-id=${usuarioLogadoId}">
-<div class="app-layout">
-<aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-</div>
-<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-<i data-lucide="chevron-right"></i>
-</div>
-<nav class="sidebar-nav">
-<a class="nav-link" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}">
-<i data-lucide="home"></i>
-<span class="nav-title">Início</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}">
-<i data-lucide="book-open"></i>
-<span class="nav-title">Atividades</span>
-</a>
-<a class="nav-link active" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}">
-<i data-lucide="message-square"></i>
-<span class="nav-title">Chat</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}">
-<i data-lucide="calendar"></i>
-<span class="nav-title">Calendário</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}">
-<i data-lucide="users"></i>
-<span class="nav-title">Minhas Turmas</span>
-</a>
-<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a></nav>
-<div class="sidebar-footer">
-<a class="nav-link" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}">
-<i data-lucide="settings"></i>
-<span class="nav-title">Ajustes</span>
-</a>
-<button class="nav-link" id="btn-open-logout">
-<i data-lucide="log-out"></i>
-<span class="nav-title">Sair</span>
-</button>
-</div>
-</aside>
-<div class="modal-overlay" id="logout-modal">
-<div class="modal-card">
-<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
-<div class="modal-actions">
-<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout">Cancelar</button>
-<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="button">Sair</button>
-</div>
-</div>
-</div>
-<div class="chat-container">
-<div class="chat-sidebar">
-<div class="chat-sidebar-header">
-<h2 class="chat-sidebar-title">Chat</h2>
-<span aria-hidden="true" class="chat-heading-icon"><i data-lucide="message-square"></i></span>
-</div>
-<div class="contacts-list" id="contacts-list"><div class="contact-item" th:attr="data-id=${contato.id},data-nome=${contato.nome}" th:each="contato : ${alunos}">
-<div class="avatar-box"><i data-lucide="user"></i></div><div class="contact-info"><span class="contact-name" th:text="${contato.nome}">Contato</span><span class="contact-role-badge" th:text="${contato.perfil}">Contato</span></div></div></div>
-</div>
-<div class="chat-main">
-<div class="chat-main-header">
-<div class="active-user-info">
-<div class="avatar-box" id="active-avatar-box" style="width:38px; height:38px; border:none;">
-<i data-lucide="user-check"></i>
-</div>
-<div>
-<span class="active-contact-title" id="active-contact-name" th:text="${#lists.isEmpty(alunos) ? 'Nenhum contato' : 'Selecione um contato'}">—</span>
-</div>
-</div>
-</div>
-<div class="messages-wrapper" id="messages-wrapper">
-</div>
-<div class="chat-input-bar">
-<div class="input-group">
-<button class="btn-plus-attach" title="Anexar arquivo ou imagem">
-<i data-lucide="plus"></i>
-</button>
-<input class="chat-text-input" id="chat-input" onkeypress="handleKeyPress(event)" placeholder="Mensagem..." type="text"/>
-<button class="btn-send-msg" onclick="sendMessage()" title="Enviar mensagem">
-<i data-lucide="send"></i>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-<script defer="defer" src="/script/mef-comum.js"></script><script defer="defer" src="/script/mef-chat.js"></script><script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script></body>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chat - Mente em Foco</title>
+	<link rel="stylesheet" href="../style/chat_psico.css" th:href="@{/css/chat_psico.css}">
+	<link rel="stylesheet" href="../style/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script src="../js/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="../style/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="../style/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="../style/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="../style/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="../js/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="../style/escolhas.css" th:href="@{/css/escolhas.css}">
+</head>
+
+<body data-original="true" data-chat-mode="backend" th:attr="data-user-id=${usuarioLogadoId}">
+	<!-- Logout por POST para respeitar a proteção CSRF do Spring Security. -->
+	<form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<script src="../js/menu.js" th:src="@{/script/menu.js}"></script>
+			<div class="sidebar-header">
+				<img src="../imagens/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+				<img src="../imagens/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu">
+				<i data-lucide="chevron-right"></i>
+			</div>
+
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a href="dashboard_psico.html" th:href="@{/psicopedagogo/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a href="tarefas_psico.html" th:href="@{/psicopedagogo/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a href="chat_psico.html" th:href="@{/psicopedagogo/chat}" class="nav-link active" aria-current="page">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a href="calendario_psico.html" th:href="@{/psicopedagogo/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a href="turmas_psico.html" th:href="@{/psicopedagogo/turmas}" class="nav-link">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Minhas Turmas</span>
+				</a>
+				<a href="notificacoes.html" th:href="@{/psicopedagogo/notificacoes}" class="nav-link"
+					title="Notificações">
+					<i data-lucide="bell"></i><span class="nav-title">Notificações</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a href="configuracoes_psico.html" th:href="@{/psicopedagogo/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<div class="modal-overlay" id="logout-modal" aria-hidden="true">
+			<div class="modal-card">
+				<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+				<div class="modal-actions">
+					<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout" type="button">Cancelar</button>
+					<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="button">Sair</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="chat-container">
+			<div class="chat-sidebar">
+				<div class="chat-sidebar-header">
+					<h2 class="chat-sidebar-title">Chat</h2>
+					<span class="chat-heading-icon" aria-hidden="true"><i data-lucide="message-square"></i></span>
+				</div>
+
+				<div class="contacts-list" id="contacts-list">
+					<div class="contact-item" th:each="aluno, iter : ${alunos}"
+						th:class="${iter.first ? 'contact-item active' : 'contact-item'}"
+						th:attr="data-id=${aluno.id},data-nome=${aluno.nome}" onclick="selectContact(this)">
+						<div class="avatar-box">
+							<i data-lucide="user"></i>
+						</div>
+						<div class="contact-info">
+							<span class="contact-name" th:text="${aluno.nome}">Nome do aluno</span>
+							<span class="contact-role-badge">Aluno</span>
+						</div>
+					</div>
+					<p class="contact-name" th:if="${#lists.isEmpty(alunos)}" style="padding: 1rem;">Nenhum aluno
+						vinculado às suas turmas.</p>
+				</div>
+			</div>
+
+			<div class="chat-main">
+				<div class="chat-main-header">
+					<div class="active-user-info">
+						<div class="avatar-box" style="width:38px; height:38px; border:none;" id="active-avatar-box">
+							<i data-lucide="user-check"></i>
+						</div>
+						<div>
+							<span class="active-contact-title" id="active-contact-name"
+								th:text="${#lists.isEmpty(alunos) ? 'Nenhum contato disponível' : 'Selecione um contato'}">Selecione
+								um contato</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="messages-wrapper" id="messages-wrapper"></div>
+
+				<div class="chat-input-bar">
+					<div class="input-group">
+						<button class="btn-plus-attach" title="Anexar arquivo ou imagem" type="button">
+							<i data-lucide="plus"></i>
+						</button>
+						<input type="text" class="chat-text-input" id="chat-input" placeholder="Mensagem..."
+							onkeypress="handleKeyPress(event)" autocomplete="off">
+						<button class="btn-send-msg" onclick="sendMessage()" title="Enviar mensagem" type="button">
+							<i data-lucide="send"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- A lógica de chat do professor é compartilhada; somente o endpoint de histórico muda. -->
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+	<script th:inline="javascript">
+		window.MEF_CHAT_CONFIG = {
+			usuarioLogadoId: /*[[${usuarioLogadoId}]]*/ null,
+			wsUrl: /*[[@{/ws}]]*/ '/ws',
+			historicoBase: /*[[@{/psicopedagogo/chat/historico/}]]*/ '/psicopedagogo/chat/historico/'
+		};
+	</script>
+	<script src="../js/chat-ajustes.js" th:src="@{/script/chat-ajustes.js}"></script>
+	<script src="../js/chat-professor-backend.js" th:src="@{/script/chat-professor-backend.js}"></script>
+</body>
+
 </html>

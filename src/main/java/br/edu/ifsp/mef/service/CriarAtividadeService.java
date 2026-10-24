@@ -6,6 +6,7 @@ import br.edu.ifsp.mef.model.CriarAtividadeRequest.ParInput;
 import br.edu.ifsp.mef.model.CriarAtividadeRequest.PalavraInput;
 import br.edu.ifsp.mef.model.*;
 import br.edu.ifsp.mef.repository.AtividadeRepository;
+import br.edu.ifsp.mef.repository.TurmaRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -29,6 +31,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * Persiste atividade + conteúdo específico numa única transação. Os dados de
+ * demonstração do ZIP nunca são persistidos automaticamente.
+ */
 @Service
 public class CriarAtividadeService {
 
@@ -42,6 +48,8 @@ public class CriarAtividadeService {
 	@Autowired
 	ProfessorService professorService;
 	@Autowired
+	TurmaRepository turmaRepository;
+	@Autowired
 	EntityManager em;
 	@Autowired
 	NotificacaoService notificacaoService;
@@ -50,10 +58,12 @@ public class CriarAtividadeService {
 	private String pastaPdf;
 
 	public CriarAtividadeService(AtividadeRepository atividadeRepository, UsuarioDetailsService usuarioService,
-			ProfessorService professorService, EntityManager em, NotificacaoService notificacaoService) {
+			ProfessorService professorService, TurmaRepository turmaRepository, EntityManager em,
+			NotificacaoService notificacaoService) {
 		this.atividadeRepository = atividadeRepository;
 		this.usuarioService = usuarioService;
 		this.professorService = professorService;
+		this.turmaRepository = turmaRepository;
 		this.em = em;
 		this.notificacaoService = notificacaoService;
 	}
@@ -73,8 +83,11 @@ public class CriarAtividadeService {
 			throw new IllegalArgumentException("Envie os dados da atividade.");
 
 		Usuario usuario = usuarioService.getByEmail(emailAutenticado);
-		if (!(usuario instanceof Professor professor)) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Somente professores podem criar atividades.");
+		Professor professor = usuario instanceof Professor p ? p : null;
+		Psicopedagogo psicopedagogo = usuario instanceof Psicopedagogo p ? p : null;
+		if (professor == null && psicopedagogo == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"Somente professores e psicopedagogos podem criar atividades.");
 		}
 
 		boolean publicar;
@@ -111,9 +124,13 @@ public class CriarAtividadeService {
 		if (publicar && ids.isEmpty())
 			throw new IllegalArgumentException("Selecione pelo menos um aluno.");
 
+		// Verifique permissão com o serviço do projeto ANTES de associar os alunos.
+		// Não confie no ID fornecido pelo navegador.
 		if (!ids.isEmpty()) {
 			Set<Long> permitidos = new HashSet<>();
-			for (Usuario aluno : professorService.buscarAlunosTurma(professor.getId())) {
+			List<Usuario> alunosAutorizados = professor != null ? professorService.buscarAlunosTurma(professor.getId())
+					: turmaRepository.buscarAlunosDoMembro(psicopedagogo.getId());
+			for (Usuario aluno : alunosAutorizados) {
 				permitidos.add(aluno.getId());
 			}
 			if (!permitidos.containsAll(ids)) {
@@ -122,6 +139,7 @@ public class CriarAtividadeService {
 			}
 		}
 
+		// Validar o conteúdo inteiro antes de começar a gravação.
 		switch (tipo) {
 		case QUIZ -> validarQuiz(req.perguntas(), publicar);
 		case JOGO_DA_MEMORIA -> validarMemoria(req.pares(), publicar);
@@ -136,7 +154,7 @@ public class CriarAtividadeService {
 		} else {
 			atividade = atividadeRepository.findById(idParaEditar)
 					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rascunho não encontrado."));
-			if (atividade.getProfessor() == null || !atividade.getProfessor().getId().equals(professor.getId())) {
+			if (!pertenceAoAutor(atividade, usuario)) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não pode editar essa atividade.");
 			}
 			if (atividade.getStatus() != StatusAtividade.NAO_VINCULADO) {
@@ -148,16 +166,21 @@ public class CriarAtividadeService {
 				if (anterior != null)
 					pdfAnterior = anterior.getArquivoPdf();
 			}
-
+			// @MapsId: remover o conteúdo anterior e descarregar a exclusão antes do novo
+			// INSERT.
 			removerConteudo(atividade);
 		}
 		atividade.setNome(nome);
 		atividade.setDescricao(descricao);
 		atividade.setPrazo(req.prazo());
 		atividade.setTipoAtividade(tipo);
+		// Apenas um autor fica associado à atividade: professor OU psicopedagogo.
 		atividade.setProfessor(professor);
+		atividade.setPsicopedagogo(psicopedagogo);
+		// O enum existente não tem RASCUNHO: NAO_VINCULADO é o estado reservado.
 		atividade.setStatus(publicar ? StatusAtividade.NAO_ACESSADO : StatusAtividade.NAO_VINCULADO);
 
+		// Guardar seleção de rascunhos em tabela própria, sem atribuir aos alunos.
 		atividade.getDestinatariosRascunho().clear();
 		if (!publicar)
 			atividade.getDestinatariosRascunho().addAll(ids);
@@ -170,7 +193,7 @@ public class CriarAtividadeService {
 				atividade.getAlunos().add(aluno);
 			}
 
-		atividadeRepository.saveAndFlush(atividade);
+		atividadeRepository.saveAndFlush(atividade); // id necessário ao @MapsId
 		switch (tipo) {
 		case QUIZ -> salvarQuiz(atividade, req.perguntas());
 		case JOGO_DA_MEMORIA -> salvarMemoria(atividade, req.pares());
@@ -183,6 +206,19 @@ public class CriarAtividadeService {
 		return new Resultado(atividade.getId(), publicar ? "Ativa" : "Rascunho",
 				publicar ? "Atividade publicada e atribuída aos alunos."
 						: "Rascunho salvo. Você pode reabri-lo para editar ou publicar.");
+	}
+
+	private boolean pertenceAoAutor(Atividade atividade, Usuario autor) {
+		if (autor instanceof Professor professor) {
+			return atividade.getProfessor() != null && atividade.getProfessor().getId().equals(professor.getId())
+					&& atividade.getPsicopedagogo() == null;
+		}
+		if (autor instanceof Psicopedagogo psicopedagogo) {
+			return atividade.getPsicopedagogo() != null
+					&& atividade.getPsicopedagogo().getId().equals(psicopedagogo.getId())
+					&& atividade.getProfessor() == null;
+		}
+		return false;
 	}
 
 	private void salvarQuiz(Atividade a, List<PerguntaInput> itens) {
@@ -205,11 +241,12 @@ public class CriarAtividadeService {
 					default -> throw new IllegalArgumentException("Máximo de 5 alternativas por pergunta.");
 					}
 				}
+				// Editor envia base 0; entidade usa alternativas numeradas de 1 a 5.
 				int indice = item.correta() == null ? -1 : item.correta();
 				pergunta.setAlternativaCorreta(indice >= 0 && indice < opcoes.size() ? indice + 1 : 0);
 				quiz.addPergunta(pergunta);
 			}
-		em.persist(quiz);
+		em.persist(quiz); // cascade=ALL grava Pergunta
 	}
 
 	private void salvarMemoria(Atividade a, List<ParInput> itens) {
@@ -300,13 +337,13 @@ public class CriarAtividadeService {
 	@Transactional(readOnly = true)
 	public CriarAtividadeRequest buscarRascunho(Long id, String emailAutenticado) {
 		Usuario usuario = usuarioService.getByEmail(emailAutenticado);
-		if (!(usuario instanceof Professor professor)) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso exclusivo a professores.");
+		if (!(usuario instanceof Professor) && !(usuario instanceof Psicopedagogo)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso exclusivo a professores e psicopedagogos.");
 		}
 		Atividade a = atividadeRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rascunho não encontrado."));
-		if (a.getProfessor() == null || !professor.getId().equals(a.getProfessor().getId())) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Rascunho de outro professor.");
+		if (!pertenceAoAutor(a, usuario)) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Rascunho de outro usuário.");
 		}
 		if (a.getStatus() != StatusAtividade.NAO_VINCULADO) {
 			throw new IllegalArgumentException("A atividade já foi publicada e não pode ser editada nesta tela.");
@@ -377,11 +414,12 @@ public class CriarAtividadeService {
 	@Transactional
 	public void anexarPdf(Long id, MultipartFile arquivo, String emailAutenticado) {
 		Usuario usuario = usuarioService.getByEmail(emailAutenticado);
-		if (!(usuario instanceof Professor professor))
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas professores podem anexar PDFs.");
+		if (!(usuario instanceof Professor) && !(usuario instanceof Psicopedagogo))
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+					"Apenas professores e psicopedagogos podem anexar PDFs.");
 		Atividade a = atividadeRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rascunho não encontrado."));
-		if (a.getProfessor() == null || !a.getProfessor().getId().equals(professor.getId()))
+		if (!pertenceAoAutor(a, usuario))
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não é autor desta atividade.");
 		if (a.getStatus() != StatusAtividade.NAO_VINCULADO || a.getTipoAtividade() != TipoAtividade.LEITURA_GUIADA)
 			throw new IllegalArgumentException("PDF só pode ser anexado a um rascunho de Leitura Guiada.");

@@ -51,6 +51,18 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 			""")
 	List<Usuario> buscarProfessoresDoAluno(@Param("idAluno") Long idAluno);
 
+    @Query("""
+            SELECT DISTINCT contato
+            FROM Turma turma
+            JOIN turma.usuarios aluno
+            JOIN turma.usuarios contato
+            WHERE aluno.id = :idAluno
+              AND UPPER(aluno.perfil) = 'ALUNO'
+              AND UPPER(contato.perfil) IN ('PROFESSOR', 'PSICOPEDAGOGO')
+            ORDER BY contato.nome
+            """)
+    List<Usuario> buscarContatosChatDoAluno(@Param("idAluno") Long idAluno);
+
 	@Query("""
 			    SELECT DISTINCT t
 			    FROM Turma t

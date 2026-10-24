@@ -1,49 +1,83 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Mente em Foco</title>
-<link href="/css/detalhes-turma.css" rel="stylesheet" th:href="@{/css/detalhes-turma.css}"/>
-<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
-<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}"/><link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}"/><link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}"/><link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}"/><script src="/script/tema.js" th:src="@{/script/tema.js}"></script><link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}"/>
-<link href="/css/mef-integracao.css" rel="stylesheet"/><meta name="_csrf" th:content="${_csrf.token}"/><meta name="_csrf_parameter" th:content="${_csrf.parameterName}"/></head><body data-page="notificacoes"><div class="app-layout"><aside class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-<img alt="Mente em Foco" class="logo-full-white" src="/img/logo.png" th:src="@{/img/logo.png}"/>
-</div>
-<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
-<i data-lucide="chevron-left"></i>
-</div>
-<nav class="sidebar-nav">
-<a class="nav-link" href="/aluno/dashboard" th:href="@{/aluno/dashboard}">
-<i data-lucide="home"></i>
-<span class="nav-title">Início</span>
-</a>
-<a class="nav-link" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
-<i data-lucide="book-open"></i>
-<span class="nav-title">Atividades</span>
-</a>
-<a class="nav-link" href="/aluno/chat" th:href="@{/aluno/chat}">
-<i data-lucide="message-square"></i>
-<span class="nav-title">Chat</span>
-</a>
-<a class="nav-link" href="/aluno/calendario" th:href="@{/aluno/calendario}">
-<i data-lucide="calendar"></i>
-<span class="nav-title">Calendário</span>
-</a>
-</nav>
-<div class="sidebar-footer">
-<a class="nav-link" href="/aluno/configuracoes" th:href="@{/aluno/configuracoes}">
-<i data-lucide="settings"></i>
-<span class="nav-title">Ajustes</span>
-</a>
-<button class="nav-link" id="btn-open-logout">
-<i data-lucide="log-out"></i>
-<span class="nav-title">Sair</span>
-</button>
-</div>
-</aside><main class="main-content"><div class="mef-page" id="mef-root"></div></main></div><script defer="defer" src="/script/mef-comum.js"></script></body></html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mente em Foco</title>
+
+	<!-- Folhas de estilo preservadas do PJI-main. -->
+	<link rel="stylesheet" href="/css/detalhes-turma.css" th:href="@{/css/detalhes-turma.css}">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+
+	<meta name="_csrf" th:content="${_csrf.token}">
+	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}">
+	<meta name="_csrf_header" th:content="${_csrf.headerName}">
+</head>
+
+<body data-page="notificacoes">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a href="/aluno/dashboard" th:href="@{/aluno/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a href="/aluno/tarefas" th:href="@{/aluno/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a href="/aluno/chat" th:href="@{/aluno/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a href="/aluno/calendario" th:href="@{/aluno/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a href="/aluno/configuracoes" th:href="@{/aluno/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div id="mef-root" class="mef-page"></div>
+		</main>
+	</div>
+
+	<script defer src="/script/mef-notificacoes-backend.js" th:src="@{/script/mef-notificacoes-backend.js}"></script>
+</body>
+
+</html>
