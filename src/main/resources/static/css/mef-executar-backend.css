@@ -1,0 +1,15 @@
+/* Apenas complementos necessários ao Jogo da Memória e à cruzadinha; CSSs originais intactos. */
+.mef-play-help { color: #617989; margin: 8px 0 18px; }
+.mef-memory-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(124px,1fr)); gap: 12px; }
+.mef-flip { min-height: 94px; padding: 10px; border: 2px solid #c1d6e1; border-radius: 12px; color: #27516a; background: #edf6fa; font: inherit; font-weight: 700; cursor: pointer; overflow-wrap: anywhere; }
+.mef-flip.opened { background: #fff; border-color: #557d91; }
+.mef-flip.matched { background: #d8efe2; color: #23563a; cursor: default; }
+.mef-cross-scroll { overflow-x:auto; max-width:100%; padding:8px 0; }
+.mef-word-grid { display:grid; width:max-content; gap:2px; }
+.mef-word-cell { width:36px; height:36px; }
+.mef-word-cell input { width:100%; height:100%; text-align:center; text-transform:uppercase; font:700 16px Montserrat,sans-serif; background:white; border:1px solid #8ba8b9; border-radius:3px; color:#24435b; }
+.mef-clues { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px; margin-top:16px; }
+.mef-clues p { margin:0; line-height:1.5; }
+.mef-play-result { padding:16px; border-radius:12px; border:1px solid #98bdab; background:#e3f2e7; color:#1b5036; font-weight:700; margin-bottom:16px; }
+.dark-mode .mef-flip,.dark-mode .mef-word-cell input { color:#e8f2fa; background:#29455b; }
+.dark-mode .mef-flip.matched { background:#21503c; }

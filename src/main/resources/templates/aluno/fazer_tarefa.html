@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Realizar Atividade - Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="/css/fazer_tarefa.css" th:href="@{/css/fazer_tarefa.css}">
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+</head>
+
+<body data-original="true">
+	<div class="activity-container">
+		<header class="activity-header">
+			<a th:href="@{/aluno/tarefas}" href="/aluno/tarefas" class="btn-back">
+				<i data-lucide="arrow-left"></i> Voltar para Atividades
+			</a>
+			<div class="header-titles">
+				<span class="badge-tipo" id="atividade-tipo">Atividade</span>
+				<h1 id="atividade-titulo">Nenhuma atividade selecionada</h1>
+			</div>
+			<div class="user-badge">
+				<i data-lucide="user"></i>
+				<span id="atividade-aluno">Aluno</span>
+			</div>
+		</header>
+
+		<main class="activity-card">
+			<div class="question-box">
+				<span class="question-number">Antes de começar</span>
+				<h2 id="atividade-pergunta">Escolha uma atividade na sua lista para começar.</h2>
+			</div>
+			<div class="options-grid" id="options-container">
+				<p id="estado-sem-atividade">Esta página precisa receber uma atividade válida. Volte à lista de
+					atividades e selecione uma tarefa disponível para você.</p>
+				<a th:href="@{/aluno/tarefas}" href="/aluno/tarefas" class="option-card" id="btn-voltar-atividades">
+					<span>Voltar para Atividades</span>
+				</a>
+			</div>
+		</main>
+	</div>
+
+	<script src="/script/popups.js" th:src="@{/script/popups.js}"></script>
+	<script src="/script/convites.js" th:src="@{/script/convites.js}"></script>
+	<script src="/script/revisao.js" th:src="@{/script/revisao.js}"></script>
+	<script src="/script/escolhas.js" th:src="@{/script/escolhas.js}"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			if (window.lucide && typeof window.lucide.createIcons === 'function') {
+				window.lucide.createIcons();
+			}
+		});
+	</script>
+</body>
+
+</html>

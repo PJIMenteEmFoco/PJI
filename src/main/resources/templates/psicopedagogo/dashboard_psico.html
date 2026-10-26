@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Painel Psicopedagógico - Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="/css/dashboard_psico.css" th:href="@{/css/dashboard_psico.css}">
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+</head>
+
+<body data-original="true">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<script src="/script/menu.js" th:src="@{/script/menu.js}"></script>
+			<div class="sidebar-header">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu">
+				<i data-lucide="chevron-right"></i>
+			</div>
+
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}" class="nav-link active"
+					aria-current="page">
+					<i data-lucide="home"></i><span class="nav-title">Início</span>
+				</a>
+				<a href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i><span class="nav-title">Atividades</span>
+				</a>
+				<a href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}" class="nav-link">
+					<i data-lucide="message-square"></i><span class="nav-title">Chat</span>
+				</a>
+				<a href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i><span class="nav-title">Calendário</span>
+				</a>
+				<a href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}" class="nav-link">
+					<i data-lucide="users"></i><span class="nav-title">Minhas Turmas</span>
+				</a>
+				<a href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" class="nav-link"
+					title="Notificações">
+					<i data-lucide="bell"></i><span class="nav-title">Notificações</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i><span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i><span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="dashboard-container">
+				<div>
+					<h1 class="page-title">Painel Psicopedagógico</h1>
+					<p class="page-subtitle">Acompanhamento e suporte em Língua Portuguesa para alunos com TDAH</p>
+				</div>
+
+				<div class="stats-row">
+					<div class="stat-card">
+						<div class="stat-icon orange"><i data-lucide="user-check"></i></div>
+						<div>
+							<div class="stat-value" th:text="${quantidadeAlunos}">0</div>
+							<div class="stat-label">Alunos Vinculados (TDAH)</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon blue"><i data-lucide="file-text"></i></div>
+						<div>
+							<div class="stat-value" title="O backend atual ainda não registra relatórios pendentes.">—
+							</div>
+							<div class="stat-label">Relatórios Pendentes</div>
+						</div>
+					</div>
+					<div class="stat-card">
+						<div class="stat-icon dark"><i data-lucide="trending-up"></i></div>
+						<div>
+							<div class="stat-value" th:text="${taxaConclusaoJogos}">—</div>
+							<div class="stat-label">Taxa de Conclusão dos Jogos</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid-two-columns">
+					<div class="panel-card">
+						<div class="panel-header">
+							<h3>Acompanhamento Individual (Português)</h3>
+						</div>
+						<div class="students-list">
+							<div class="student-item-card" th:each="aluno, it : ${alunos}" th:if="${it.index < 6}">
+								<div class="student-details">
+									<div class="student-name">
+										<span class="tag-cid"
+											th:if="${aluno.hiperfoco != null and !#strings.isEmpty(aluno.hiperfoco)}"
+											th:text="${'Hiperfoco: ' + aluno.hiperfoco}">Hiperfoco</span>
+										<span th:text="${aluno.nome}">Nome do aluno</span>
+									</div>
+									<div class="student-meta" th:text="${aluno.email}">E-mail do aluno</div>
+								</div>
+								<a class="btn-view-profile" href="/psicopedagogo/relatorios"
+									th:href="@{/psicopedagogo/relatorios(aluno=${aluno.id})}"
+									th:aria-label="|Ver relatórios de ${aluno.nome}|">Ver Relatório</a>
+							</div>
+							<p class="student-meta" th:if="${#lists.isEmpty(alunos)}">Nenhum aluno está vinculado às
+								turmas deste psicopedagogo.</p>
+						</div>
+					</div>
+
+					<div class="panel-card">
+						<div class="panel-header">
+							<h3>Alertas de Aprendizagem</h3>
+						</div>
+						<div class="alerts-stack">
+							<div class="alert-card orange" th:each="alerta : ${alertasAtrasadas}">
+								<i data-lucide="alert-circle" class="alert-icon"></i>
+								<div class="alert-content">
+									<h4 th:text="${alerta.titulo}">Atividade com prazo vencido</h4>
+									<p th:text="${alerta.descricao}">Um aluno possui uma atividade atrasada.</p>
+								</div>
+							</div>
+							<div class="alert-card blue" th:each="alerta : ${alertasRecentes}">
+								<i data-lucide="check-circle-2" class="alert-icon"></i>
+								<div class="alert-content">
+									<h4 th:text="${alerta.titulo}">Atividade concluída recentemente</h4>
+									<p th:text="${alerta.descricao}">Uma atividade foi concluída recentemente.</p>
+								</div>
+							</div>
+							<p class="student-meta"
+								th:if="${#lists.isEmpty(alertasAtrasadas) and #lists.isEmpty(alertasRecentes)}">Nenhum
+								alerta de aprendizagem no momento.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<div class="modal-overlay" id="logout-modal" aria-hidden="true">
+		<div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="logout-title">
+			<h2 class="modal-title" id="logout-title">Tem certeza que deseja sair da sua conta?</h2>
+			<div class="modal-actions">
+				<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout" type="button">Cancelar</button>
+				<form th:action="@{/logout}" action="/logout" method="post" style="display: contents;">
+					<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="submit">Sair</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script defer src="/script/mef-dashboard-psico.js" th:src="@{/script/mef-dashboard-psico.js}"></script>
+</body>
+
+</html>

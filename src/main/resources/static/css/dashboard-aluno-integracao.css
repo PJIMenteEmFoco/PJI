@@ -1,0 +1,13 @@
+/* Complemento mínimo: estados vazios dos grids, sem alterar o CSS original do PJI-main. */
+.mef-vazio {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 14px 16px;
+    border: 1px dashed #CBDDE6;
+    border-radius: 12px;
+    background: #F7FBFD;
+    color: #557D91;
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.4;
+}

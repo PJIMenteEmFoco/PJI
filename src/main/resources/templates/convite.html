@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Convite — Mente em Foco</title>
+<style>body{font-family:system-ui;background:#f4f7fa;color:#19334d;margin:0;padding:3rem 1rem}main{max-width:38rem;margin:auto;background:white;padding:2rem;border-radius:16px}button,a{display:inline-block;padding:.8rem}button{background:#174d78;color:white;border:0;border-radius:8px;cursor:pointer}</style></head>
+<body><main><h1>Convite para uma turma</h1><p th:if="${erro}" th:text="${erro}" role="alert"></p>
+<section th:if="${turma}"><p>Você foi convidado(a) para <strong th:text="${turma.nome}">Turma</strong>.</p><p>Confirme para participar com sua conta atual.</p>
+<form method="post" th:action="@{/convite/{token}(token=${token})}"><button type="submit">Aceitar convite</button></form></section>
+<a th:href="@{/}">Voltar ao início</a><form method="post" th:action="@{/logout}"><button type="submit">Sair para usar outra conta</button></form></main></body></html>

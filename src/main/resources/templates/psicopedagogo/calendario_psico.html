@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<title>Calendário - Psicopedagogo | Mente em Foco</title>
+	<link href="/css/calendario_prof.css" rel="stylesheet" th:href="@{/css/calendario_prof.css}" />
+	<link href="/css/global.css" rel="stylesheet" th:href="@{/css/global.css}" />
+	<link href="https://fonts.googleapis.com" rel="preconnect" />
+	<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap"
+		rel="stylesheet" />
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link href="/css/recursos.css" rel="stylesheet" th:href="@{/css/recursos.css}" />
+	<link href="/css/correcoes.css" rel="stylesheet" th:href="@{/css/correcoes.css}" />
+	<link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}" />
+	<link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}" />
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}" />
+	<meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}" />
+	<meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : ''}" />
+	<meta name="mef-event-create-url" content="/psicopedagogo/calendario/eventos"
+		th:content="@{/psicopedagogo/calendario/eventos}" />
+</head>
+
+<body data-mef-role="psicopedagogo" data-original="true" data-mef-server="true">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img alt="Mente em Foco" class="logo-symbol-only" src="/img/logo_em_pe.svg"
+					th:src="@{/img/logo_em_pe.svg}" />
+				<img alt="Mente em Foco" class="logo-full-white" src="/img/logo_em_pe.svg"
+					th:src="@{/img/logo_em_pe.svg}" />
+			</div>
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu">
+				<i data-lucide="chevron-right"></i>
+			</div>
+			<nav class="sidebar-nav">
+				<a class="nav-link" href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a class="nav-link" href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a class="nav-link" href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a class="nav-link active" href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a class="nav-link" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+				<a class="nav-link" href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}"
+					title="Notificações"><i data-lucide="bell"></i><span class="nav-title">Notificações</span></a>
+			</nav>
+			<div class="sidebar-footer">
+				<a class="nav-link" href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+		<main class="main-content">
+			<div class="dashboard-calendar-container">
+				<div class="calendar-page-header">
+					<div>
+						<h1 class="page-title">Agenda do Psicopedagogo</h1>
+						<p class="page-subtitle">Organize suas sessões de acompanhamento, relatórios e intervenções</p>
+					</div>
+					<button class="btn-primary-action" id="btn-open-new-event">
+						<i data-lucide="plus"></i> Novo Evento
+					</button>
+				</div>
+				<div class="stats-overview-row">
+					<div class="stat-mini-card">
+						<div class="stat-icon-wrapper orange">
+							<i data-lucide="book-open-check"></i>
+						</div>
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-aulas" th:text="0">0</span>
+							<span class="stat-label">Sessões este mês</span>
+						</div>
+					</div>
+					<div class="stat-mini-card">
+						<div class="stat-icon-wrapper blue">
+							<i data-lucide="file-text"></i>
+						</div>
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-corrigir"
+								title="A contagem de relatórios a emitir ainda não está disponível no backend">—</span>
+							<span class="stat-label">Relatórios a emitir</span>
+						</div>
+					</div>
+					<div class="stat-mini-card">
+						<div class="stat-icon-wrapper dark">
+							<i data-lucide="alert-circle"></i>
+						</div>
+						<div class="stat-text-group">
+							<span class="stat-value" id="stat-pendentes" th:text="0">0</span>
+							<span class="stat-label">Alta prioridade</span>
+						</div>
+					</div>
+				</div>
+				<div class="main-calendar-grid">
+					<div class="calendar-card-panel">
+						<div class="calendar-toolbar-header">
+							<div class="month-navigation">
+								<button class="btn-month-nav" id="btn-prev-month"><i
+										data-lucide="chevron-left"></i></button>
+								<h2 id="calendar-month-year">Setembro 2026</h2>
+								<button class="btn-month-nav" id="btn-next-month"><i
+										data-lucide="chevron-right"></i></button>
+							</div>
+							<div class="legend-inline">
+								<span class="legend-chip high"><span class="dot-color"></span> Alta</span>
+								<span class="legend-chip medium"><span class="dot-color"></span> Média</span>
+								<span class="legend-chip low"><span class="dot-color"></span> Baixa</span>
+							</div>
+						</div>
+						<table class="grid-calendar-table">
+							<thead>
+								<tr>
+									<th>Dom</th>
+									<th>Seg</th>
+									<th>Ter</th>
+									<th>Qua</th>
+									<th>Qui</th>
+									<th>Sex</th>
+									<th>Sáb</th>
+								</tr>
+							</thead>
+							<tbody id="calendar-body">
+							</tbody>
+						</table>
+					</div>
+					<div class="agenda-sidebar-panel">
+						<div class="section-sub-header">
+							<h3>Sessões e Compromissos</h3>
+							<span id="agenda-month-label">Setembro</span>
+						</div>
+						<div class="events-stack-list" id="events-stack-list">
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+	<!-- MODAL VER DETALHES -->
+	<div class="modal-overlay" id="modal-view-event">
+		<div class="wireframe-popup-card">
+			<div class="wireframe-popup-inner">
+				<div class="wireframe-field">
+					<label>Título do compromisso</label>
+					<div class="wireframe-box-text" id="view-title">--</div>
+				</div>
+				<div class="wireframe-field">
+					<label>Descrição / Observações para o Atendimento</label>
+					<div class="wireframe-box-textarea" id="view-description">--</div>
+				</div>
+				<div class="wireframe-date-info">
+					<strong id="view-date">--</strong>
+				</div>
+				<div class="wireframe-actions-grid">
+					<button class="btn-popup-action btn-popup-secondary" id="btn-close-view-event">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- MODAL NOVO EVENTO -->
+	<div class="modal-overlay" id="modal-new-event">
+		<div class="wireframe-popup-card">
+			<div class="wireframe-popup-inner">
+				<h3 style="color:#0F2D3C; font-size:1.1rem; font-weight:800; margin-bottom: 16px;">Agendar Sessão /
+					Intervenção</h3>
+				<div class="wireframe-field">
+					<label for="new-event-title">Título do Evento</label>
+					<input class="wireframe-box-text" id="new-event-title"
+						placeholder="Ex: Sessão de Acompanhamento - Cauê" type="text" />
+				</div>
+				<div class="wireframe-row-2col">
+					<div class="wireframe-field">
+						<label for="new-event-date">Data</label>
+						<input class="wireframe-box-text" id="new-event-date" type="date" />
+					</div>
+					<div class="wireframe-field">
+						<label for="new-event-time">Horário</label>
+						<input class="wireframe-box-text" id="new-event-time" type="time" value="10:00" />
+					</div>
+				</div>
+				<div class="wireframe-field">
+					<label for="new-event-priority">Prioridade</label>
+					<select class="wireframe-box-text" id="new-event-priority">
+						<option value="high">Alta Prioridade</option>
+						<option selected="" value="medium">Média Prioridade</option>
+						<option value="low">Baixa Prioridade</option>
+					</select>
+				</div>
+				<div class="wireframe-field">
+					<label for="new-event-desc">Descrição</label>
+					<textarea class="wireframe-box-textarea" id="new-event-desc"
+						placeholder="Objetivos da sessão ou notas comportamentais..."></textarea>
+				</div>
+				<div class="wireframe-actions-grid">
+					<button class="btn-popup-action btn-popup-secondary" id="btn-cancel-new-event">Cancelar</button>
+					<button class="btn-popup-action btn-popup-primary" id="btn-save-new-event">Salvar Evento</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- MODAL LOGOUT -->
+	<div class="modal-overlay" id="logout-modal">
+		<div class="modal-card-logout">
+			<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+			<div class="modal-logout-actions">
+				<button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+				<button class="btn-logout-confirm" id="btn-confirm-logout" type="submit">Sair</button>
+			</div>
+		</div>
+	</div>
+	<!-- Os compromissos e feriados vêm do backend; estes elementos ficam ocultos e alimentam o calendário. -->
+	<div id="mef-eventos" hidden>
+		<span th:each="evento : ${eventos}"
+			th:attr="data-date=${evento.dataEvento},data-title=${evento.titulo},data-description=${evento.descricao},data-priority=${evento.prioridade},data-time=${evento.horario}"></span>
+	</div>
+	<div id="mef-feriados" hidden>
+		<span th:each="feriado : ${feriados}"
+			th:attr="data-date=${feriado.dataFeriado},data-title=${feriado.nome}"></span>
+	</div>
+	<form id="logoutForm" th:action="@{/logout}" method="post" hidden>
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+	</form>
+	<script defer="defer" src="/script/mef-calendario-psico.js" th:src="@{/script/mef-calendario-psico.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Cadastro - Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+</head>
+
+<body>
+	<div class="toast-notification" id="toast"
+		th:classappend="${erroCadastro != null or sucessoCadastro == true} ? 'show' : ''"
+		th:attr="data-sucesso=${sucessoCadastro},data-erro=${erroCadastro}">
+		<span id="toast-message"
+			th:text="${erroCadastro != null ? erroCadastro : 'Cadastro realizado com sucesso!'}">Cadastro realizado com
+			sucesso!</span>
+		<button class="toast-close-btn" onclick="hideToast()" aria-label="Fechar" type="button">
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+				stroke-linecap="round" stroke-linejoin="round">
+				<circle cx="12" cy="12" r="10"></circle>
+				<line x1="15" y1="9" x2="9" y2="15"></line>
+				<line x1="9" y1="9" x2="15" y2="15"></line>
+			</svg>
+		</button>
+	</div>
+
+	<div class="top-logo">
+		<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" />
+	</div>
+
+	<main class="register-container">
+		<form class="register-form" id="register-form" action="/cadastrar" th:action="@{/cadastrar}" method="post">
+			<div class="form-group">
+				<label for="fullName">Nome completo</label>
+				<input type="text" id="fullName" class="form-control" name="nome" autocomplete="off" required="required"/>
+			</div>
+
+			<div class="form-group">
+				<label for="email">Email</label>
+				<input type="email" id="email" class="form-control" name="email" autocomplete="email"
+					required="required"/>
+			</div>
+
+			<div class="form-group">
+				<label for="password">Senha</label>
+				<div class="input-wrapper">
+					<input type="password" autocomplete="new-password" id="password" class="form-control" name="senha"
+						required="required" />
+					<button type="button" class="password-toggle" onclick="togglePassword('password')"
+						aria-label="Mostrar senha">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+							<circle cx="12" cy="12" r="3"></circle>
+						</svg>
+					</button>
+				</div>
+				<div class="password-rules">
+					A senha deve conter ao menos:
+					<ul>
+						<li id="rule-uppercase">Uma letra maiúscula;</li>
+						<li id="rule-lowercase">Uma letra minúscula;</li>
+						<li id="rule-number">Um número;</li>
+						<li id="rule-special">Um caractere especial; e</li>
+						<li id="rule-length">Oito caracteres</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="confirmPassword">Repetir senha</label>
+				<div class="input-wrapper">
+					<input type="password" autocomplete="new-password" id="confirmPassword" class="form-control"
+						name="confirmarSenha" required="required" />
+					<button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')"
+						aria-label="Mostrar senha">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+							<circle cx="12" cy="12" r="3"></circle>
+						</svg>
+					</button>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="phone">Telefone</label>
+				<input type="tel" id="phone" class="form-control" name="telefone" placeholder="(00) 00000-0000"
+					maxlength="15" autocomplete="tel" required="required" />
+			</div>
+
+			<div class="form-group">
+				<label for="birthDate">Data de nascimento</label>
+				<input type="text" id="birthDate" class="form-control" name="dataNascimento" placeholder="dd/mm/aaaa"
+					maxlength="10" autocomplete="bday" required="required" />
+			</div>
+
+			<div class="role-group">
+				<label>Função</label>
+				<div class="role-options">
+					<label class="role-label">
+						<input type="radio" name="perfil" value="PSICOPEDAGOGO" />
+						Psicopedagogo
+					</label>
+					<label class="role-label">
+						<input type="radio" name="perfil" value="PROFESSOR" />
+						Professor
+					</label>
+					<label class="role-label">
+						<input type="radio" name="perfil" value="ALUNO" />
+						Aluno
+					</label>
+				</div>
+			</div>
+
+			<button class="btn btn-primary" id="register-submit" type="submit">Cadastrar-se</button>
+			<a href="/login" th:href="@{/login}" class="form-link">Já é cadastrado? Clique aqui para entrar!</a>
+		</form>
+	</main>
+	<script defer="defer" src="/script/mef-acesso.js" th:src="@{/script/mef-acesso.js}"></script>
+</body>
+
+</html>

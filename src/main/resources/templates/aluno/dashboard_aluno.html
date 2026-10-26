@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard Aluno - Mente em Foco</title>
+
+	<link rel="stylesheet" href="/css/dashboard_aluno.css" th:href="@{/css/dashboard_aluno.css}">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+	<link rel="stylesheet" href="/css/dashboard-aluno-integracao.css" th:href="@{/css/dashboard-aluno-integracao.css}">
+</head>
+
+<body data-original="true">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+				<img src="/img/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a href="/aluno/dashboard" th:href="@{/aluno/dashboard}" class="nav-link active" aria-current="page">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a href="/aluno/tarefas" th:href="@{/aluno/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a href="/aluno/chat" th:href="@{/aluno/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a href="/aluno/calendario" th:href="@{/aluno/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a href="/aluno/configuracoes" th:href="@{/aluno/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="dashboard-container">
+				<div class="top-header-row">
+					<h1 class="greeting-title"
+						th:text="${'Bem-vindo(a), ' + #authentication.principal.primeiroNome + '!'}">Bem-vindo(a)!</h1>
+
+					<div class="streak-card" title="Mantenha o foco diariamente!">
+						<div class="streak-icon-box">
+							<i data-lucide="flame"></i>
+						</div>
+						<div class="streak-info">
+							<span class="streak-count">— Dias</span>
+							<span class="streak-label">Sua sequência aparecerá aqui</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="content-columns">
+					<div class="column-left">
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Atividades pendentes</span>
+								<a href="/aluno/tarefas" th:href="@{/aluno/tarefas}" class="section-link">+ Ver
+									todas</a>
+							</div>
+
+							<div class="task-grid-4">
+								<a class="student-task-card" th:each="atividade, stat : ${atividadesPendentes}"
+									th:if="${stat.index &lt; 4}" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
+									<div class="task-card-header">
+										<span>ENTREGA</span>
+										<span
+											th:text="${atividade.prazo != null ? #temporals.format(atividade.prazo, 'dd/MM') : 'Sem prazo'}">Data</span>
+									</div>
+									<div class="task-card-body">
+										<h4 class="task-title" th:text="${atividade.nome}">Atividade</h4>
+										<span class="task-tag"
+											th:text="${atividade.tipoAtividade == T(br.edu.ifsp.mef.model.TipoAtividade).JOGO_DA_MEMORIA ? 'Jogo da Memória' : (atividade.tipoAtividade == T(br.edu.ifsp.mef.model.TipoAtividade).QUIZ ? 'Quiz' : (atividade.tipoAtividade == T(br.edu.ifsp.mef.model.TipoAtividade).CRUZADINHA ? 'Cruzadinha' : 'Leitura Guiada'))}">Tipo</span>
+									</div>
+								</a>
+								<p class="mef-vazio" th:if="${#lists.isEmpty(atividadesPendentes)}">Nenhuma atividade
+									pendente no momento.</p>
+							</div>
+						</div>
+
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Atividades atrasadas</span>
+							</div>
+
+							<div class="task-grid-4">
+								<a class="student-task-card" th:each="atividade, stat : ${atividadesAtrasadas}"
+									th:if="${stat.index &lt; 4}" href="/aluno/tarefas" th:href="@{/aluno/tarefas}">
+									<div class="task-card-header urgent">
+										<span>ATRASADA</span>
+										<span
+											th:text="${atividade.prazo != null ? #temporals.format(atividade.prazo, 'dd/MM') : 'Sem prazo'}">Prazo</span>
+									</div>
+									<div class="task-card-body">
+										<h4 class="task-title" th:text="${atividade.nome}">Atividade</h4>
+										<span class="task-tag"
+											th:text="${atividade.tipoAtividade == T(br.edu.ifsp.mef.model.TipoAtividade).JOGO_DA_MEMORIA ? 'Jogo da Memória' : (atividade.tipoAtividade == T(br.edu.ifsp.mef.model.TipoAtividade).QUIZ ? 'Quiz' : (atividade.tipoAtividade == T(br.edu.ifsp.mef.model.TipoAtividade).CRUZADINHA ? 'Cruzadinha' : 'Leitura Guiada'))}">Tipo</span>
+									</div>
+								</a>
+								<p class="mef-vazio" th:if="${#lists.isEmpty(atividadesAtrasadas)}">Você não tem
+									atividades atrasadas. Continue assim!</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="column-right">
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Calendário</span>
+							</div>
+							<div class="calendar-card-container">
+								<div class="calendar-header-bar">
+									<select class="cal-select" id="cal-month-select" aria-label="Mês">
+										<option selected value="8">Setembro</option>
+									</select>
+									<select class="cal-select" id="cal-year-select" aria-label="Ano">
+										<option selected value="2026">2026</option>
+									</select>
+								</div>
+								<table class="calendar-table" aria-label="Calendário mensal">
+									<thead>
+										<tr>
+											<th scope="col">Dom</th>
+											<th scope="col">Seg</th>
+											<th scope="col">Ter</th>
+											<th scope="col">Qua</th>
+											<th scope="col">Qui</th>
+											<th scope="col">Sex</th>
+											<th scope="col">Sáb</th>
+										</tr>
+									</thead>
+									<tbody id="calendar-body"></tbody>
+								</table>
+							</div>
+						</div>
+
+						<div class="goal-card">
+							<div class="goal-header">
+								<span class="goal-title">Progresso das atividades</span>
+								<span class="goal-count" th:text="${metaConcluidas + '/' + metaTotal + ' feitas'}">0/0
+									feitas</span>
+							</div>
+							<div class="progress-bar-track" role="progressbar"
+								aria-label="Progresso das atividades concluídas"
+								th:attr="aria-valuenow=${metaPorcentagem}" aria-valuemin="0" aria-valuemax="100">
+								<div class="progress-bar-fill" style="width: 0%;"
+									th:style="'width:' + ${metaPorcentagem} + '%'"></div>
+							</div>
+							<p class="goal-subtext"
+								th:text="${metaTotal == 0 ? 'As atividades atribuídas aparecerão aqui quando seus professores enviarem novas tarefas.' : (metaConcluidas >= metaTotal ? 'Parabéns! Você concluiu todas as atividades atribuídas.' : 'Continue no seu ritmo: faltam ' + (metaTotal - metaConcluidas) + ' atividade(s) para concluir todas as tarefas atribuídas.')}">
+								Continue realizando as atividades para avançar no seu progresso! 🏅
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<div class="modal-overlay" id="logout-modal" aria-hidden="true">
+		<div class="modal-card">
+			<h2 class="modal-title">Tem certeza que deseja sair da sua conta?</h2>
+			<div class="modal-actions">
+				<button class="btn-modal btn-modal-cancel" id="btn-cancel-logout" type="button">Cancelar</button>
+				<form th:action="@{/logout}" action="/logout" method="post" style="display: contents;">
+					<button class="btn-modal btn-modal-logout" id="btn-confirm-logout" type="submit">Sair</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script defer src="/script/mef-comum.js" th:src="@{/script/mef-comum.js}"></script>
+	<script defer src="/script/mef-dashboard-calendar.js" th:src="@{/script/mef-dashboard-calendar.js}"></script>
+</body>
+
+</html>
