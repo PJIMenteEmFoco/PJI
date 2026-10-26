@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+	<title>Login - Mente em Foco</title>
+	<link href="https://fonts.googleapis.com" rel="preconnect" />
+	<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+		rel="stylesheet" />
+	<link href="/css/style.css" rel="stylesheet" th:href="@{/css/style.css}" />
+	<link href="/css/popups.css" rel="stylesheet" th:href="@{/css/popups.css}">
+	<link href="/css/revisao.css" rel="stylesheet" th:href="@{/css/revisao.css}" />
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link href="/css/escolhas.css" rel="stylesheet" th:href="@{/css/escolhas.css}" />
+	</link>
+</head>
+
+<body>
+	<div id="password-reset-success" class="toast-notification" role="status" aria-live="polite"
+		th:classappend="${param.senhaAlterada} ? ' show' : ''" th:if="${param.senhaAlterada}">
+		<span>Senha alterada com sucesso. Entre com a nova senha.</span>
+		<button type="button" class="toast-close-btn" aria-label="Fechar"
+			onclick="document.getElementById('password-reset-success')?.classList.remove('show')">×</button>
+	</div>
+	<main class="login-container">
+		<img alt="Mente em Foco" class="brand-logo" src="/img/logo_deitada.svg" th:src="@{/img/logo_deitada.svg}" />
+		<form action="/login" class="login-form" id="loginForm" method="post" th:action="@{/login}">
+			<div class="form-group">
+				<label for="email">E-mail</label>
+				<div class="input-wrapper">
+					<input autocomplete="off" class="form-control" id="email" name="username" required="required"
+						type="text" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="password">Senha</label>
+				<div class="input-wrapper">
+					<input autocomplete="current-password" class="form-control" id="password" name="password"
+						required="required" type="password" />
+					<button aria-label="Mostrar senha" class="password-toggle" onclick="togglePassword('password')"
+						type="button">
+						<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round"
+							stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20">
+							<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+							<circle cx="12" cy="12" r="3"></circle>
+						</svg>
+					</button>
+				</div>
+				<div class="error-message" id="errorMessage" th:classappend="${param.error} ? ' show' : ''">Atenção!
+					Login ou senha incorretos!</div>
+			</div>
+			<a class="form-link" href="/email-verificacao" th:href="@{/email-verificacao}">Esqueceu a senha? Clique
+				aqui!</a>
+			<button class="btn btn-primary" type="submit">Entrar</button>
+			<a class="btn btn-secondary" href="/cadastro" th:href="@{/cadastro}">Cadastrar-se</a>
+		</form>
+	</main>
+	<script defer="defer" src="/script/mef-acesso.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const notice = document.getElementById('password-reset-success');
+			if (notice) window.setTimeout(() => notice.classList.remove('show'), 5000);
+		});
+	</script>
+</body>
+
+</html>

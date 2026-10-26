@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Redefinir Senha - Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}" />
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}" />
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}" />
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}" />
+	<script src="/script/senha-contexto.js" th:src="@{/script/senha-contexto.js}"></script>
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}" />
+</head>
+
+<body>
+	<div class="top-logo">
+		<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco" />
+	</div>
+
+	<main class="register-container">
+		<button type="button" class="review-back" data-review-back="true" aria-label="Voltar"
+			onclick="location.href='/codigo-verificacao'"><i data-lucide="arrow-left"></i><span>Voltar</span></button>
+		<form class="register-form" id="new-password-form" method="post" th:action="@{/nova-senha}">
+			<div class="error-message show" role="alert" aria-live="polite" th:if="${erroMensagem}"
+				th:text="${erroMensagem}"></div>
+			<div class="form-group">
+				<label for="newPassword">Nova senha</label>
+				<div class="input-wrapper">
+					<input type="password" id="newPassword" name="novaSenha" class="form-control"
+						autocomplete="new-password" minlength="8" required />
+				</div>
+			</div>
+
+			<div class="form-group" style="margin-bottom: 24px;">
+				<label for="confirmNewPassword">Repetir senha</label>
+				<div class="input-wrapper">
+					<input type="password" id="confirmNewPassword" name="confirmarSenha" class="form-control"
+						autocomplete="new-password" minlength="8" required />
+				</div>
+			</div>
+			<button type="submit" class="btn btn-secondary">Trocar senha</button>
+		</form>
+	</main>
+
+	<script>
+		(() => {
+			'use strict';
+			const form = document.getElementById('new-password-form');
+			const password = document.getElementById('newPassword');
+			const confirmation = document.getElementById('confirmNewPassword');
+			form.addEventListener('submit', (event) => {
+				if (password.value !== confirmation.value) {
+					event.preventDefault();
+					confirmation.setCustomValidity('As senhas não coincidem.');
+					confirmation.reportValidity();
+					confirmation.addEventListener('input', () => confirmation.setCustomValidity(''), {once: true});
+					return;
+				}
+				confirmation.setCustomValidity('');
+			});
+		})();
+	</script>
+	<script src="/script/popups.js" th:src="@{/script/popups.js}"></script>
+	<script src="/script/revisao.js" th:src="@{/script/revisao.js}"></script>
+	<script src="/script/escolhas.js" th:src="@{/script/escolhas.js}"></script>
+</body>
+
+</html>

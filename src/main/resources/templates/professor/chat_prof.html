@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chat - Mente em Foco</title>
+	<link rel="stylesheet" href="../style/global.css" th:href="@{/css/global.css}">
+	<link rel="stylesheet" href="../style/chat_professor.css" th:href="@{/css/chat_professor.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script src="../js/icones.js" th:src="@{/script/icones.js}"></script>
+	<style>
+
+	</style>
+	<link rel="stylesheet" href="../style/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="../style/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="../style/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="../style/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="../js/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="../style/escolhas.css" th:href="@{/css/escolhas.css}">
+</head>
+
+<body data-original="true" data-chat-mode="backend">
+	<!-- Formulário invisível, necessário para logout POST com CSRF do Spring Security. -->
+	<form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+
+	<div class="app-layout">
+		<!-- SIDEBAR DO PROFESSOR -->
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img src="../imagens/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+				<img src="../imagens/logo_solo.svg" th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-right"></i>
+			</div>
+
+			<nav class="sidebar-nav">
+				<a href="dashboard_prof.html" th:href="@{/professor/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a href="tarefas_prof.html" th:href="@{/professor/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a href="chat_prof.html" th:href="@{/professor/chat}" class="nav-link active">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a href="calendario_prof.html" th:href="@{/professor/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a href="turmas-prof.html" th:href="@{/professor/turmas}" class="nav-link">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a href="configuracoes_prof.html" th:href="@{/professor/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<div class="chat-container">
+			<div class="chat-sidebar">
+				<div class="chat-sidebar-header">
+					<h2 class="chat-sidebar-title">Chat</h2>
+					<span class="chat-heading-icon" aria-hidden="true"><i data-lucide="message-square"></i></span>
+				</div>
+
+				<div class="contacts-list" id="contacts-list">
+
+					<!-- A lista tem exatamente as classes/estrutura do ZIP original. -->
+					<div class="contact-item active" th:each="aluno, iter : ${alunos}"
+						th:class="${iter.first ? 'contact-item active' : 'contact-item'}" th:data-id="${aluno.id}"
+						th:data-nome="${aluno.nome}" onclick="selectContact(this)">
+						<div class="avatar-box">
+							<i data-lucide="user"></i>
+							<!-- Campo opcional do DTO para mensagens não lidas. -->
+							<span class="unread-dot"
+								th:if="${naoLidasPorAluno != null and naoLidasPorAluno[aluno.id] == true}"></span>
+						</div>
+						<div class="contact-info">
+							<span class="contact-name" th:text="${aluno.nome}">Cauê Campos</span>
+							<span class="contact-role-badge" th:text="${aluno.turma}">Turma 1</span>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="chat-main">
+				<div class="chat-main-header">
+					<div class="active-user-info">
+						<div class="avatar-box" style="width:38px; height:38px; border:none;" id="active-avatar-box">
+							<i data-lucide="user"></i>
+						</div>
+						<div>
+							<span class="active-contact-title" id="active-contact-name"
+								th:text="${#lists.isEmpty(alunos) ? 'Selecione um contato' : alunos[0].nome}">Cauê
+								Campos</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="messages-wrapper" id="messages-wrapper"></div>
+
+				<div class="chat-input-bar">
+					<div class="input-group">
+						<button class="btn-plus-attach" title="Anexar arquivo ou imagem">
+							<i data-lucide="plus"></i>
+						</button>
+						<input type="text" class="chat-text-input" id="chat-input" placeholder="Mensagem..."
+							onkeypress="handleKeyPress(event)">
+						<button class="btn-send-msg" onclick="sendMessage()" title="Enviar mensagem">
+							<i data-lucide="send"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="modal-overlay" id="logout-modal">
+		<div class="modal-card-logout">
+			<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+			<div class="modal-logout-actions">
+				<button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+				<button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		(function initTheme() {
+			if (localStorage.getItem('theme') === 'escuro') {
+				document.body.classList.add('dark-mode');
+			}
+		})();
+		lucide.createIcons();
+
+		const sidebar = document.getElementById('sidebar');
+		const toggleBtn = document.getElementById('toggle-btn');
+		toggleBtn.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+		const logoutModal = document.getElementById('logout-modal');
+		const btnOpenLogout = document.getElementById('btn-open-logout');
+		const btnCancelLogout = document.getElementById('btn-cancel-logout');
+		const btnConfirmLogout = document.getElementById('btn-confirm-logout');
+
+		btnOpenLogout.addEventListener('click', (e) => {
+			e.preventDefault();
+			logoutModal.classList.add('active');
+		});
+		btnCancelLogout.addEventListener('click', () => logoutModal.classList.remove('active'));
+		btnConfirmLogout.addEventListener('click', () => {
+			document.getElementById('logoutForm').submit();
+		});
+	</script>
+	<script src="../js/dados.js" th:src="@{/script/dados.js}"></script>
+	<script src="../js/cruzadas.js" th:src="@{/script/cruzadas.js}"></script>
+	<script src="../js/progresso.js" th:src="@{/script/progresso.js}"></script>
+	<script src="../js/documentos.js" th:src="@{/script/documentos.js}"></script>
+	<script src="../js/cruzadas-navegacao.js" th:src="@{/script/cruzadas-navegacao.js}"></script>
+	<script src="../js/recursos.js" th:src="@{/script/recursos.js}"></script>
+	<script src="../js/interface-original.js" th:src="@{/script/interface-original.js}"></script>
+	<script src="../js/popups.js" th:src="@{/script/popups.js}"></script>
+	<script src="../js/chat-ajustes.js" th:src="@{/script/chat-ajustes.js}"></script>
+	<script src="../js/convites.js" th:src="@{/script/convites.js}"></script>
+	<script src="../js/revisao.js" th:src="@{/script/revisao.js}"></script>
+	<script src="../js/escolhas.js" th:src="@{/script/escolhas.js}"></script>
+	<!-- Bibliotecas do WebSocket usadas pelo chat Thymeleaf de referência. -->
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+	<script th:inline="javascript">
+		// Estes são os mesmos dados exigidos pelo JavaScript do chat funcional já existente.
+		window.MEF_CHAT_CONFIG = {
+			usuarioLogadoId: /*[[${usuarioLogadoId}]]*/ null,
+			wsUrl: /*[[@{/ws}]]*/ '/ws',
+			historicoBase: /*[[@{/professor/chat/historico/}]]*/ '/professor/chat/historico/'
+		};
+	</script>
+	<script src="../js/chat-professor-backend.js" th:src="@{/script/chat-professor-backend.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+/* Complementos pequenos da integração; os estilos principais permanecem nos CSS originais. */
+.mef-integracao-alerta {
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.mef-integracao-alerta.sucesso {
+    background: #e8f5ed;
+    color: #245b3b;
+    border: 1px solid #b8dec6;
+}
+.mef-integracao-alerta.erro {
+    background: #fff0ef;
+    color: #8a2822;
+    border: 1px solid #efc0bc;
+}
+.mef-sem-resultados {
+    grid-column: 1 / -1;
+    color: #557D91;
+    font-weight: 700;
+    padding: 20px;
+    text-align: center;
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Página Não Encontrada | Mente em Foco</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@700;800;900&display=swap"
+		rel="stylesheet">
+
+	<link rel="stylesheet" th:href="@{/css/erro.css}">
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="stylesheet" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" th:href="@{/css/revisao.css}">
+	<link rel="stylesheet" th:href="@{/css/escolhas.css}">
+
+	<script th:src="@{/script/icones.js}"></script>
+	<script th:src="@{/script/tema.js}"></script>
+</head>
+
+<body>
+	<div class="error-container">
+		<div class="error-outer-card">
+			<div class="error-inner-card">
+				<div class="error-badge">
+					<i data-lucide="compass"></i>
+				</div>
+
+				<h1 class="error-code" th:text="${codigoErro}">404</h1>
+				<h2 class="error-title">Página não encontrada</h2>
+				<p class="error-message">
+					Ops! A página que você tentou acessar não existe ou foi movida. Não se preocupe, você pode voltar ao
+					seu painel em segurança.
+				</p>
+
+				<div class="error-actions">
+					<button type="button" class="btn-error-primary" onclick="window.history.back()">
+						<i data-lucide="arrow-left"></i> Voltar página
+					</button>
+
+					<a th:if="${perfilUsuario == 'PROFESSOR'}" th:href="@{/professor/dashboard}"
+						class="btn-error-secondary">
+						<i data-lucide="home"></i> Ir para o Início
+					</a>
+					<a th:if="${perfilUsuario == 'PSICOPEDAGOGO'}" th:href="@{/psicopedagogo/dashboard}"
+						class="btn-error-secondary">
+						<i data-lucide="home"></i> Ir para o Início
+					</a>
+					<a th:if="${perfilUsuario == 'ALUNO'}" th:href="@{/aluno/dashboard}" class="btn-error-secondary">
+						<i data-lucide="home"></i> Ir para o Início
+					</a>
+					<a th:unless="${perfilUsuario == 'PROFESSOR' or perfilUsuario == 'PSICOPEDAGOGO' or perfilUsuario == 'ALUNO'}"
+						th:href="@{/login}" class="btn-error-secondary">
+						<i data-lucide="home"></i> Ir para o Início
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		if (window.lucide) {
+			window.lucide.createIcons();
+		}
+	</script>
+	<script th:src="@{/script/popups.js}"></script>
+	<script th:src="@{/script/revisao.js}"></script>
+	<script th:src="@{/script/escolhas.js}"></script>
+</body>
+
+</html>

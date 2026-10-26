@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Desempenho da Atividade - Mente em Foco</title>
+	<link rel="stylesheet" href="/css/relatorio_desempenho.css" th:href="@{/css/relatorio_desempenho.css}">
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}">
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}">
+	<meta name="_csrf" th:content="${_csrf != null ? _csrf.token : ''}">
+	<meta name="_csrf_header" th:content="${_csrf != null ? _csrf.headerName : 'X-CSRF-TOKEN'}">
+</head>
+
+<body data-original="true">
+	<form id="mef-logout-form" th:action="@{/logout}" method="post" hidden>
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-symbol-only">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a href="/aluno/dashboard" th:href="@{/aluno/dashboard}" class="nav-link">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a href="/aluno/tarefas" th:href="@{/aluno/tarefas}" class="nav-link active" aria-current="page">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a href="/aluno/chat" th:href="@{/aluno/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a href="/aluno/calendario" th:href="@{/aluno/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a href="/aluno/configuracoes" th:href="@{/aluno/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="result-container">
+				<a href="/aluno/tarefas" th:href="@{/aluno/tarefas}" class="btn-back">
+					<i data-lucide="arrow-left"></i>
+					<span>Voltar para Tarefas</span>
+				</a>
+
+				<div class="result-card">
+					<div class="trophy-badge">
+						<i data-lucide="trophy"></i>
+					</div>
+
+					<div>
+						<h1 class="result-title" id="res-greeting" th:text="${tituloResultado}">Atividade concluída!
+						</h1>
+						<p id="res-subtitle" style="color:#637783; font-weight:700; font-size:0.9rem; margin-top:4px;"
+							th:text="|Atividade: ${nomeAtividade}|">Atividade concluída</p>
+					</div>
+
+					<div class="result-stats-row">
+						<div class="result-stat-box">
+							<span>Pontuação</span>
+							<div class="result-score" style="color:#E69C2E;" id="res-score" th:text="${pontuacao}">—
+							</div>
+						</div>
+						<div class="result-stat-box">
+							<span>Tempo Gasto</span>
+							<div class="result-score" id="res-time" th:text="${tempoGasto}">—</div>
+						</div>
+						<div class="result-stat-box">
+							<span title="XP recebido nesta tentativa">XP Ganho</span>
+							<div class="result-score" style="color:#27ae60;" id="res-xp" th:text="${xpGanho}"
+								title="Pontos de experiência recebidos nesta conclusão">—</div>
+						</div>
+					</div>
+
+					<div class="result-actions">
+						<button class="btn-action btn-retry" id="btn-retry" type="button"
+							th:attr="data-atividade-id=${atividadeId}">
+							<i data-lucide="rotate-ccw"></i>
+							<span>Praticar Novamente</span>
+						</button>
+						<a href="/aluno/tarefas" th:href="@{/aluno/tarefas}" class="btn-action btn-finish">
+							<span>Concluir</span>
+							<i data-lucide="check"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<div class="modal-overlay" id="logout-modal" aria-hidden="true">
+		<div class="modal-card-logout">
+			<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+			<div class="modal-logout-actions">
+				<button class="btn-logout-cancel" id="btn-cancel-logout" type="button">Cancelar</button>
+				<button class="btn-logout-confirm" id="btn-confirm-logout" type="button">Sair</button>
+			</div>
+		</div>
+	</div>
+
+	<script defer src="/script/mef-comum.js" th:src="@{/script/mef-comum.js}"></script>
+	<script defer src="/script/mef-relatorio-desempenho.js" th:src="@{/script/mef-relatorio-desempenho.js}"></script>
+</body>
+
+</html>

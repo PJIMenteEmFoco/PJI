@@ -1,0 +1,110 @@
+/* Pop-ups no mesmo padrão do diálogo de sair. Estilos limitados aos pop-ups. */
+.modal-overlay {
+  padding:20px; box-sizing:border-box;
+  background:rgba(15,45,60,.45); backdrop-filter:blur(4px);
+}
+.mef-popup {
+  display:block !important;
+  box-sizing:border-box; width:min(420px,calc(100vw - 40px)) !important;
+  max-width:420px !important; max-height:calc(100dvh - 40px) !important;
+  padding:32px 28px !important; border:0 !important; border-radius:20px !important;
+  background:#CBDDE6 !important; color:#0F2D3C !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.22) !important;
+  text-align:center; font-family:'Lato',Arial,sans-serif;
+  overflow-y:auto; overscroll-behavior:contain;
+}
+dialog.mef-popup { margin:auto; }
+dialog.mef-popup:not([open]) { display:none !important; }
+dialog.mef-popup::backdrop { background:rgba(15,45,60,.45); backdrop-filter:blur(4px); }
+.mef-popup.mef-popup--wide { width:min(620px,calc(100vw - 40px)) !important; max-width:620px !important; }
+.mef-popup > :is(.vincular-inner-card,.create-turma-inner-card,.wireframe-popup-inner) {
+  display:block !important;
+  padding:0 !important; margin:0 !important; border:0 !important;
+  border-radius:0 !important; background:transparent !important; box-shadow:none !important;
+}
+.mef-popup .mef-popup-title {
+  margin:0 0 20px !important; padding:0 !important; color:#0F2D3C !important;
+  font:800 1.15rem/1.4 'Montserrat',Arial,sans-serif !important;
+  text-align:center; overflow-wrap:anywhere;
+}
+.mef-popup .modal-header { margin:0 0 22px; padding:0; text-align:center; }
+.mef-popup .modal-header .mef-popup-title { margin-bottom:10px !important; }
+.mef-popup :is(p,.mef-popup-text) {
+  color:#0F2D3C; font-size:.9rem; line-height:1.6; overflow-wrap:anywhere;
+}
+.mef-popup > p { margin:0 0 20px; }
+.mef-popup .mef-popup-actions {
+  display:flex !important; flex-wrap:wrap; align-items:stretch; justify-content:center;
+  gap:12px !important; margin:24px 0 0 !important; width:100%;
+}
+.mef-popup .mef-popup-button {
+  box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center;
+  flex:1 1 120px; min-width:0; min-height:44px; max-width:100%;
+  padding:12px 16px !important; border:2px solid transparent !important;
+  border-radius:24px !important; margin:0; box-shadow:none !important;
+  font:800 .88rem/1.4 'Montserrat',Arial,sans-serif !important;
+  text-align:center; text-decoration:none; white-space:normal; cursor:pointer;
+  transition:background-color .15s,border-color .15s;
+}
+.mef-popup .mef-popup-button[data-popup-action="primary"] {
+  background:#E69C2E !important; color:#fff !important; border-color:#E69C2E !important;
+}
+.mef-popup .mef-popup-button[data-popup-action="secondary"] {
+  background:#fff !important; color:#557D91 !important; border-color:#557D91 !important;
+}
+.mef-popup .mef-popup-button[data-popup-action="primary"]:hover { background:#d98c18 !important; border-color:#d98c18 !important; }
+.mef-popup .mef-popup-button[data-popup-action="secondary"]:hover { background:#f1f5f8 !important; }
+.mef-popup .mef-popup-button:focus-visible { outline:2px solid #557D91; outline-offset:3px; }
+.mef-popup .mef-popup-button:disabled { opacity:.55; cursor:not-allowed; }
+.mef-popup :is(form,.mef-field,.form-group,.wireframe-field,.ficha-corpo,.relatorio-corpo) { text-align:left; }
+.mef-popup :is(.form-group,.mef-field,.wireframe-field) { margin-bottom:16px; }
+.mef-popup label { display:block; line-height:1.5; margin-bottom:6px; color:#0F2D3C; }
+.mef-popup :is(input:not([type="checkbox"]):not([type="radio"]),textarea,select) {
+  box-sizing:border-box; max-width:100%; border:1px solid #b5ccda !important;
+  border-radius:10px; color:#0F2D3C !important; background:#fff !important; font:inherit;
+}
+.mef-popup :is(.mef-field input,.mef-field textarea,.mef-field select,.form-control,.modal-input,.wireframe-box-text,.wireframe-box-textarea) {
+  width:100%; padding:11px 13px; line-height:1.5; border-radius:10px;
+}
+.mef-popup :is(.wireframe-box-text,.wireframe-box-textarea) { overflow-wrap:anywhere; white-space:pre-wrap; }
+.mef-popup :is(.relatorio-texto,.ficha-texto) { line-height:1.6; }
+.mef-popup .mef-card { text-align:left; }
+.mef-popup .mef-card h2 { line-height:1.4; }
+.mef-popup > .mef-popup-button { width:100%; margin-top:24px; }
+.mef-popup .warning-icon-circle { margin:0 auto 18px; }
+.mef-popup .mef-error { text-align:left; }
+.mef-popup :is([hidden],.hidden) { display:none !important; }
+.toast-notification,.mef-toast {
+  background:#CBDDE6; color:#0F2D3C; border-radius:16px;
+  box-shadow:0 8px 24px rgba(15,45,60,.15); line-height:1.5;
+}
+
+/* Estado vazio das atrasadas: cores, cantos e ícones já usados na aplicação. */
+.mef-overdue-empty {
+  grid-column:1 / -1; display:flex; align-items:center; gap:16px;
+  padding:22px 24px; border:1px solid #d9e3eb; border-radius:20px;
+  background:#fff; color:#0F2D3C; box-shadow:0 4px 12px rgba(15,39,53,.02);
+}
+.mef-overdue-empty-icon {
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  width:48px; height:48px; background:#CBDDE6; color:#557D91; border-radius:14px;
+}
+.mef-overdue-empty-icon svg { width:24px; height:24px; }
+.mef-overdue-empty h3 { font:800 .95rem/1.4 'Montserrat',Arial,sans-serif; margin:0 0 6px; }
+.mef-overdue-empty p { margin:0; font:.88rem/1.6 'Lato',Arial,sans-serif; color:#557D91; }
+body.dark-mode .mef-overdue-empty { background:#122834; color:#fff; border-color:#1e3c4d; }
+body.dark-mode .mef-overdue-empty p { color:#b3c8d4; }
+@media(max-width:600px) {
+  .modal-overlay { padding:16px; }
+  .mef-popup,.mef-popup.mef-popup--wide {
+    width:calc(100vw - 32px) !important; max-height:calc(100dvh - 32px) !important;
+    padding:26px 20px !important;
+  }
+  .mef-popup :is(.form-row-two,.wireframe-row-2col,.mef-fields) { display:grid; grid-template-columns:minmax(0,1fr); gap:0; }
+  .mef-popup .mef-popup-actions { gap:10px !important; }
+  .mef-popup .mef-popup-button { flex-basis:110px; padding:11px 12px !important; font-size:.8rem !important; }
+  .mef-overdue-empty { padding:18px 16px; align-items:flex-start; gap:12px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .modal-overlay,.mef-popup,.mef-popup-button { transition:none !important; animation:none !important; }
+}

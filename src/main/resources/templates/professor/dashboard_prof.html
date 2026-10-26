@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard - Mente em Foco</title>
+	<link rel="stylesheet" th:href="@{/css/dashboard_prof.css}">
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet">
+	<script th:src="@{/script/icones.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/recursos.css}">
+	<link rel="stylesheet" th:href="@{/css/correcoes.css}">
+	<link rel="stylesheet" th:href="@{/css/popups.css}">
+	<link rel="stylesheet" th:href="@{/css/revisao.css}">
+	<script th:src="@{/script/tema.js}"></script>
+	<link rel="stylesheet" th:href="@{/css/escolhas.css}">
+</head>
+
+<body data-original="true" data-thymeleaf="true">
+
+	<!-- Logout via Spring Security; não participa do layout. -->
+	<form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+		<input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+	</form>
+
+	<!-- Dados para o calendário; invisível e sem alterar dimensões do layout. -->
+	<div id="atividades-prof-data" style="display:none;" th:attr="data-rendered=${atividadesDoProfessor != null}">
+		<div class="atividade-prof-item" th:each="atividade : ${atividadesDoProfessor}"
+			th:if="${atividade.prazo != null}"
+			th:attr="data-year=${atividade.prazo.year}, data-month=${atividade.prazo.monthValue - 1}, data-day=${atividade.prazo.dayOfMonth}">
+		</div>
+	</div>
+
+	<div class="app-layout">
+
+		<aside class="sidebar" id="sidebar">
+			<div class="sidebar-header">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-symbol-only">
+				<img th:src="@{/img/logo_solo.svg}" alt="Mente em Foco" class="logo-full-white">
+			</div>
+
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu">
+				<i data-lucide="chevron-left"></i>
+			</div>
+
+			<nav class="sidebar-nav">
+				<a th:href="@{/professor/dashboard}" class="nav-link active">
+					<i data-lucide="home"></i>
+					<span class="nav-title">Início</span>
+				</a>
+				<a th:href="@{/professor/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i>
+					<span class="nav-title">Atividades</span>
+				</a>
+				<a th:href="@{/professor/chat}" class="nav-link">
+					<i data-lucide="message-square"></i>
+					<span class="nav-title">Chat</span>
+				</a>
+				<a th:href="@{/professor/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i>
+					<span class="nav-title">Calendário</span>
+				</a>
+				<a th:href="@{/professor/turmas}" class="nav-link">
+					<i data-lucide="users"></i>
+					<span class="nav-title">Turmas</span>
+				</a>
+			</nav>
+
+			<div class="sidebar-footer">
+				<a th:href="@{/professor/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i>
+					<span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout">
+					<i data-lucide="log-out"></i>
+					<span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<div class="modal-overlay" id="logout-modal">
+			<div class="modal-card-logout">
+				<h3 class="modal-logout-title">Tem certeza que deseja sair da sua conta?</h3>
+				<div class="modal-logout-actions">
+					<button class="btn-logout-cancel" id="btn-cancel-logout">Cancelar</button>
+					<button class="btn-logout-confirm" id="btn-confirm-logout">Sair</button>
+				</div>
+			</div>
+		</div>
+
+		<main class="main-content">
+			<div class="dashboard-container">
+
+				<h1 class="greeting-title" th:text="|Bem vindo(a), ${#authentication.principal.primeiroNome}!|">Bem
+					vindo(a), Professor!</h1>
+
+				<div class="metrics-row">
+					<div class="metric-card">
+						<div class="metric-text-group">
+							<span class="metric-label">Alunos em Acompanhamento</span>
+							<span class="metric-value" th:text="${quantidadeAlunos ?: 0}">0</span>
+						</div>
+						<div class="metric-badge-icon sand"><i data-lucide="user"></i></div>
+					</div>
+
+					<div class="metric-card">
+						<div class="metric-text-group">
+							<span class="metric-label">Atividades publicadas</span>
+							<span class="metric-value" th:text="${quantidadeAtividadesPublicadas ?: 0}">0</span>
+						</div>
+						<div class="metric-badge-icon blue"><i data-lucide="book-open"></i></div>
+					</div>
+
+					<div class="metric-card">
+						<div class="metric-text-group">
+							<span class="metric-label">Relatórios e Feedbacks</span>
+							<span class="metric-value" th:text="${quantidadeRelatoriosFeedbacks ?: 0}">0</span>
+						</div>
+						<div class="metric-badge-icon sand"><i data-lucide="file-text"></i></div>
+					</div>
+				</div>
+
+				<div class="content-columns">
+					<div class="column-left">
+						<div>
+							<div class="section-header-flex">
+								<span class="section-title">Atividades recentes</span>
+								<a th:href="@{/professor/tarefas}" class="section-link">+ Ver todas</a>
+							</div>
+							<div class="cards-grid-3 dashboard-activities">
+								<a th:href="@{/professor/tarefas/nova}" class="dashboard-create-card">
+									<i data-lucide="plus-circle"></i><strong>Criar atividade</strong>
+								</a>
+								<!-- Exibe somente atividades reais carregadas pelo backend. -->
+								<th:block th:if="${atividadesRecentes != null}">
+									<a th:href="@{/professor/tarefas/editar/{id}(id=${atividade.id})}"
+										class="task-card dashboard-activity-card"
+										th:each="atividade, iter : ${atividadesRecentes}" th:if="${iter.index < 2}">
+										<div class="task-card-header">
+											<span class="task-type-tag"
+												th:text="${atividade.tipo == 'quiz' ? 'Quiz' : (atividade.tipo == 'memoria' ? 'Jogo da Memória' : (atividade.tipo == 'cruzadas' ? 'Palavras Cruzadas' : (atividade.tipo == 'leitura' ? 'Leitura Guiada' : atividade.tipo)))}">Quiz</span>
+											<span class="task-status-dot"
+												th:classappend="${atividade.status == 'Rascunho' ? ' pending' : ' active'}"
+												th:title="${atividade.status}"></span>
+										</div>
+										<img class="activity-visual"
+											th:src="@{/img/atividade-{tipo}.svg(tipo=${atividade.tipo})}" alt=""
+											loading="lazy">
+										<h3 class="task-card-title" th:text="${atividade.titulo}">Título da atividade
+										</h3>
+										<div class="task-card-meta">
+											<p th:text="|${atividade.quantidadeAlunos} aluno(s)|">0 aluno(s)</p>
+											<p
+												th:text="${atividade.prazo != null ? 'Prazo: ' + #temporals.format(atividade.prazo, 'dd/MM/yyyy') : 'Prazo: Sem prazo'}">
+												Prazo: Sem prazo</p>
+										</div>
+									</a>
+								</th:block>
+								<div th:if="${atividadesRecentes == null or #lists.isEmpty(atividadesRecentes)}"
+									style="grid-column: 1 / -1; padding: 24px 16px; text-align: center;">
+									<i data-lucide="book-open" aria-hidden="true"></i>
+									<strong>Nenhuma atividade recente</strong>
+									<p>As atividades criadas aparecerão aqui.</p>
+								</div>
+							</div>
+						</div>
+
+						<div style="margin-top: 24px;">
+							<div class="section-header-flex">
+								<span class="section-title">Turmas</span>
+								<a href="../professor/turmas-prof.html" th:href="@{/professor/turmas}"
+									class="section-link">+ Ver todas</a>
+							</div>
+							<div class="cards-grid-3">
+								<th:block th:if="${turmasRecentes != null}" style="display:none">
+									<a th:href="@{/professor/turmas/{id}(id=${turma.id})}" class="dashboard-class-card"
+										th:each="turma, iter : ${turmasRecentes}" th:if="${iter.index < 3}">
+										<i data-lucide="users"></i>
+										<strong th:text="${turma.nome}">Turma</strong>
+										<span th:text="|${turma.quantidadeAlunos} alunos|">0 alunos</span>
+									</a>
+								</th:block>
+								<th:block th:if="${turmasRecentes == null}" style="display:contents">
+									<a href="detalhes-turma.html" class="dashboard-class-card">
+										<i data-lucide="users"></i>
+										<strong>Turma 2 - Ensino Médio</strong>
+										<span>0 alunos</span>
+									</a>
+								</th:block>
+							</div>
+						</div>
+
+						<div style="margin-top: 24px;">
+							<div class="section-header-flex">
+								<span class="section-title">Alertas e Observações</span>
+							</div>
+							<div class="alerts-wrapper">
+								<th:block th:if="${alertas != null}" style="display:none">
+									<div class="alert-card alert-yellow" th:each="alerta, iter : ${alertas}"
+										th:if="${iter.index < 4}"
+										th:class="|alert-card ${alerta.tipo == 'OBSERVACAO' ? 'alert-yellow' : 'alert-blue'}|">
+										<div class="alert-indicator"></div>
+										<i data-lucide="alert-circle" class="alert-icon"
+											th:attr="data-lucide=${alerta.tipo == 'OBSERVACAO' ? 'alert-circle' : 'clock'}"></i>
+										<div class="alert-texts">
+											<strong th:text="${alerta.titulo}">Aviso</strong>
+											<span th:text="${alerta.descricao}">Detalhes</span>
+										</div>
+									</div>
+								</th:block>
+								<th:block th:if="${alertas == null}" style="display:contents">
+									<div class="alert-card alert-yellow">
+										<div class="alert-indicator"></div>
+										<i data-lucide="alert-circle" class="alert-icon"></i>
+										<div class="alert-texts">
+											<strong>Lucas Bonetti (Psicopedagogo)</strong>
+											<span>Nova observação adicionada para o aluno Cauê (Turma 2) sobre
+												foco.</span>
+										</div>
+									</div>
+
+									<div class="alert-card alert-yellow">
+										<div class="alert-indicator"></div>
+										<i data-lucide="alert-circle" class="alert-icon"></i>
+										<div class="alert-texts">
+											<strong>Lucas Bonetti (Psicopedagogo)</strong>
+											<span>Nova observação adicionada para o aluno Cauê (Turma 2) sobre
+												foco.</span>
+										</div>
+									</div>
+
+								</th:block>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="column-right">
+						<div>
+							<div class="section-header-flex" style="margin-bottom: 12px;">
+								<span class="section-title">Calendário</span>
+							</div>
+							<div class="calendar-card-container">
+								<div class="calendar-header-bar"
+									style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 12px 20px;">
+									<div class="custom-dropdown" id="dropdown-month">
+										<button type="button" class="dropdown-trigger">
+											<span class="dropdown-selected">Setembro</span>
+											<svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+												stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+												stroke-linejoin="round" class="dropdown-arrow">
+												<polyline points="6 9 12 15 18 9"></polyline>
+											</svg>
+										</button>
+										<div class="dropdown-menu">
+											<div class="dropdown-option" data-value="0">Janeiro</div>
+											<div class="dropdown-option" data-value="1">Fevereiro</div>
+											<div class="dropdown-option" data-value="2">Março</div>
+											<div class="dropdown-option" data-value="3">Abril</div>
+											<div class="dropdown-option" data-value="4">Maio</div>
+											<div class="dropdown-option" data-value="5">Junho</div>
+											<div class="dropdown-option" data-value="6">Julho</div>
+											<div class="dropdown-option" data-value="7">Agosto</div>
+											<div class="dropdown-option" data-value="8">Setembro</div>
+											<div class="dropdown-option selected" data-value="9">Outubro</div>
+											<div class="dropdown-option" data-value="10">Novembro</div>
+											<div class="dropdown-option" data-value="11">Dezembro</div>
+										</div>
+									</div>
+
+									<div class="custom-dropdown" id="dropdown-year">
+										<button type="button" class="dropdown-trigger">
+											<span class="dropdown-selected">2026</span>
+											<svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+												stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+												stroke-linejoin="round" class="dropdown-arrow">
+												<polyline points="6 9 12 15 18 9"></polyline>
+											</svg>
+										</button>
+										<div class="dropdown-menu">
+											<div class="dropdown-option" data-value="2025">2025</div>
+											<div class="dropdown-option selected" data-value="2026">2026</div>
+											<div class="dropdown-option" data-value="2027">2027</div>
+											<div class="dropdown-option" data-value="2028">2028</div>
+										</div>
+									</div>
+								</div>
+								<table class="calendar-table">
+									<thead>
+										<tr>
+											<th>Domingo</th>
+											<th>Segunda</th>
+											<th>Terça</th>
+											<th>Quarta</th>
+											<th>Quinta</th>
+											<th>Sexta</th>
+											<th>Sábado</th>
+										</tr>
+									</thead>
+									<tbody id="calendar-body">
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+						<div style="margin-top: 36px;">
+							<div class="section-header-flex" style="margin-bottom: 12px;">
+								<span class="section-title">Resumo das Atividades</span>
+							</div>
+							<div class="summary-box">
+								<div class="summary-item">
+									<div class="summary-label">
+										<i data-lucide="check-circle-2"></i>
+										<span>Atividades terminadas:</span>
+									</div>
+									<span class="summary-count" th:text="${atividadesTerminadas ?: 0}">0</span>
+								</div>
+								<div class="summary-item">
+									<div class="summary-label">
+										<i data-lucide="check"></i>
+										<span>Em andamento:</span>
+									</div>
+									<span class="summary-count" th:text="${atividadesIniciadas ?: 0}">0</span>
+								</div>
+								<div class="summary-item">
+									<div class="summary-label">
+										<i data-lucide="x-circle"></i>
+										<span>Atividades não iniciadas:</span>
+									</div>
+									<span class="summary-count" th:text="${atividadesNaoIniciadas ?: 0}">0</span>
+								</div>
+							</div>
+						</div>
+
+						<div style="margin-top: 36px;">
+							<div class="section-header-flex" style="margin-bottom: 12px;">
+								<span class="section-title">Lembretes</span>
+							</div>
+							<div class="reminders-box">
+								<th:block th:if="${lembretes != null}" style="display:none">
+									<div class="reminder-row" th:each="lembrete, iter : ${lembretes}"
+										th:if="${iter.index < 3}">
+										<span class="reminder-time" th:text="${lembrete.horario}">14:00</span>
+										<span class="reminder-text" th:text="${lembrete.descricao}">Lembrete</span>
+									</div>
+								</th:block>
+								<th:block th:if="${lembretes == null}" style="display:contents">
+									<div class="reminder-row">
+										<span class="reminder-time">14:00</span>
+										<span class="reminder-text">Entregar atividades para turma 1</span>
+									</div>
+									<div class="reminder-row">
+										<span class="reminder-time">15:00</span>
+										<span class="reminder-text">Alinhamento Pedagógico com Lucas Bonetti</span>
+									</div>
+									<div class="reminder-row">
+										<span class="reminder-time">16:30</span>
+										<span class="reminder-text">Avaliação de Desempenho - Turma 2</span>
+									</div>
+								</th:block>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+
+	<script>
+		(function initTheme() {
+			if (localStorage.getItem('theme') === 'escuro') {
+				document.body.classList.add('dark-mode');
+			}
+		})();
+
+		lucide.createIcons();
+
+		const sidebar = document.getElementById('sidebar');
+		const toggleBtn = document.getElementById('toggle-btn');
+
+		toggleBtn.addEventListener('click', () => {
+			sidebar.classList.toggle('expanded');
+		});
+
+		const logoutModal = document.getElementById('logout-modal');
+		const btnOpenLogout = document.getElementById('btn-open-logout');
+		const btnCancelLogout = document.getElementById('btn-cancel-logout');
+		const btnConfirmLogout = document.getElementById('btn-confirm-logout');
+
+		btnOpenLogout.addEventListener('click', (e) => {
+			e.preventDefault();
+			logoutModal.classList.add('active');
+		});
+
+		btnCancelLogout.addEventListener('click', () => {
+			logoutModal.classList.remove('active');
+		});
+
+		btnConfirmLogout.addEventListener('click', () => {
+			document.getElementById('logoutForm').submit();
+		});
+
+		let currentMonth = 8;
+		let currentYear = 2026;
+
+		const calendarBody = document.getElementById('calendar-body');
+
+		const badgesConfig = {};
+		const atividadesData = document.getElementById('atividades-prof-data');
+		if (atividadesData?.dataset.rendered === 'true') {
+			Object.keys(badgesConfig).forEach(key => delete badgesConfig[key]);
+			atividadesData.querySelectorAll('.atividade-prof-item').forEach(el => {
+				badgesConfig[`${el.dataset.year}-${el.dataset.month}-${el.dataset.day}`] = 'orange';
+			});
+		}
+
+		function generateCalendar(month, year) {
+			calendarBody.innerHTML = '';
+
+			const firstDayIndex = new Date(year, month, 1).getDay();
+			const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+			const prevMonthDays = new Date(year, month, 0).getDate();
+
+			let dayCounter = 1;
+			let nextMonthCounter = 1;
+
+			for (let r = 0; r < Math.ceil((firstDayIndex + totalDaysInMonth) / 7); r++) {
+				const row = document.createElement('tr');
+
+				for (let d = 0; d < 7; d++) {
+					const cell = document.createElement('td');
+					const cellIndex = r * 7 + d;
+
+					if (cellIndex < firstDayIndex) {
+						cell.classList.add('muted');
+						cell.textContent = prevMonthDays - (firstDayIndex - 1 - cellIndex);
+					} else if (dayCounter <= totalDaysInMonth) {
+						const dateKey = `${year}-${month}-${dayCounter}`;
+
+						if (badgesConfig[dateKey]) {
+							const badge = document.createElement('span');
+							badge.className = `day-badge ${badgesConfig[dateKey]}`;
+							badge.textContent = dayCounter;
+							cell.appendChild(badge);
+						} else {
+							cell.textContent = dayCounter;
+						}
+						dayCounter++;
+					} else {
+						cell.classList.add('muted');
+						cell.textContent = nextMonthCounter++;
+					}
+
+					row.appendChild(cell);
+				}
+
+				calendarBody.appendChild(row);
+			}
+		}
+
+		function setupDropdown(dropdownId, onChangeCallback) {
+			const dropdown = document.getElementById(dropdownId);
+			const trigger = dropdown.querySelector('.dropdown-trigger');
+			const selectedText = dropdown.querySelector('.dropdown-selected');
+			const options = dropdown.querySelectorAll('.dropdown-option');
+
+			trigger.addEventListener('click', (e) => {
+				e.stopPropagation();
+				document.querySelectorAll('.custom-dropdown').forEach(d => {
+					if (d !== dropdown) d.classList.remove('open');
+				});
+				dropdown.classList.toggle('open');
+			});
+
+			options.forEach(option => {
+				option.addEventListener('click', () => {
+					options.forEach(opt => opt.classList.remove('selected'));
+					option.classList.add('selected');
+					selectedText.textContent = option.textContent;
+					dropdown.classList.remove('open');
+					onChangeCallback(parseInt(option.getAttribute('data-value')));
+				});
+			});
+		}
+
+		setupDropdown('dropdown-month', (val) => {
+			currentMonth = val;
+			generateCalendar(currentMonth, currentYear);
+		});
+
+		setupDropdown('dropdown-year', (val) => {
+			currentYear = val;
+			generateCalendar(currentMonth, currentYear);
+		});
+
+		document.addEventListener('click', () => {
+			document.querySelectorAll('.custom-dropdown').forEach(dropdown => {
+				dropdown.classList.remove('open');
+			});
+		});
+
+		generateCalendar(currentMonth, currentYear);
+	</script>
+	<script th:src="@{/script/dados.js}"></script>
+	<script th:src="@{/script/cruzadas.js}"></script>
+	<script th:src="@{/script/progresso.js}"></script>
+	<script th:src="@{/script/documentos.js}"></script>
+	<script th:src="@{/script/cruzadas-navegacao.js}"></script>
+	<script th:src="@{/script/recursos.js}"></script>
+	<script th:src="@{/script/interface-original.js}"></script>
+	<script th:src="@{/script/popups.js}"></script>
+	<script th:src="@{/script/convites.js}"></script>
+	<script th:src="@{/script/revisao.js}"></script>
+	<script th:src="@{/script/escolhas.js}"></script>
+</body>
+
+</html>

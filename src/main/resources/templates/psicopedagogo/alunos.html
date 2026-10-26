@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Alunos | Mente em Foco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Montserrat:wght@600;700;800;900&display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="/css/global.css" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" href="/css/detalhes-turma.css" th:href="@{/css/detalhes-turma.css}" />
+	<link rel="stylesheet" href="/css/recursos.css" th:href="@{/css/recursos.css}" />
+	<link rel="stylesheet" href="/css/correcoes.css" th:href="@{/css/correcoes.css}" />
+	<link rel="stylesheet" href="/css/popups.css" th:href="@{/css/popups.css}" />
+	<link rel="stylesheet" href="/css/revisao.css" th:href="@{/css/revisao.css}" />
+	<link rel="stylesheet" href="/css/escolhas.css" th:href="@{/css/escolhas.css}" />
+	<script src="/script/icones.js" th:src="@{/script/icones.js}"></script>
+	<script src="/script/tema.js" th:src="@{/script/tema.js}"></script>
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+
+<body data-page="alunos">
+	<div class="app-layout">
+		<aside class="sidebar" id="sidebar">
+			<script src="/script/menu.js" th:src="@{/script/menu.js}"></script>
+			<div class="sidebar-header">
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-symbol-only" />
+				<img src="/img/logo_em_pe.svg" th:src="@{/img/logo_em_pe.svg}" alt="Mente em Foco"
+					class="logo-full-white" />
+			</div>
+			<div class="sidebar-toggle-badge" id="toggle-btn" title="Expandir/Recolher Menu" role="button" tabindex="0"
+				aria-label="Expandir ou recolher menu">
+				<i data-lucide="chevron-right"></i>
+			</div>
+			<nav class="sidebar-nav" aria-label="Navegação principal">
+				<a href="/psicopedagogo/dashboard" th:href="@{/psicopedagogo/dashboard}" class="nav-link">
+					<i data-lucide="home"></i><span class="nav-title">Início</span>
+				</a>
+				<a href="/psicopedagogo/tarefas" th:href="@{/psicopedagogo/tarefas}" class="nav-link">
+					<i data-lucide="book-open"></i><span class="nav-title">Atividades</span>
+				</a>
+				<a href="/psicopedagogo/chat" th:href="@{/psicopedagogo/chat}" class="nav-link">
+					<i data-lucide="message-square"></i><span class="nav-title">Chat</span>
+				</a>
+				<a href="/psicopedagogo/calendario" th:href="@{/psicopedagogo/calendario}" class="nav-link">
+					<i data-lucide="calendar"></i><span class="nav-title">Calendário</span>
+				</a>
+				<a href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}" class="nav-link">
+					<i data-lucide="users"></i><span class="nav-title">Minhas Turmas</span>
+				</a>
+				<a href="/psicopedagogo/notificacoes" th:href="@{/psicopedagogo/notificacoes}" class="nav-link"
+					title="Notificações">
+					<i data-lucide="bell"></i><span class="nav-title">Notificações</span>
+				</a>
+			</nav>
+			<div class="sidebar-footer">
+				<a href="/psicopedagogo/configuracoes" th:href="@{/psicopedagogo/configuracoes}" class="nav-link">
+					<i data-lucide="settings"></i><span class="nav-title">Ajustes</span>
+				</a>
+				<button class="nav-link" id="btn-open-logout" type="button">
+					<i data-lucide="log-out"></i><span class="nav-title">Sair</span>
+				</button>
+			</div>
+		</aside>
+
+		<main class="main-content">
+			<div class="mef-page" id="mef-root">
+				<header class="mef-header">
+					<div>
+						<h1>Alunos</h1>
+						<p class="mef-sub">Ficha individual e acompanhamento escolar.</p>
+					</div>
+					<div class="mef-actions">
+						<a class="mef-btn primary" href="/psicopedagogo/turmas" th:href="@{/psicopedagogo/turmas}"
+							title="Novos alunos entram por convite de turma.">Gerenciar turmas</a>
+					</div>
+				</header>
+
+				<p class="mef-note">Os alunos aparecem aqui quando estão vinculados a uma das suas turmas. Para incluir
+					alguém, acesse Minhas Turmas e utilize o fluxo de convites.</p>
+
+				<div class="mef-filters">
+					<label class="mef-field" for="search">Buscar por nome ou turma
+						<input id="search" type="search" maxlength="150" autocomplete="off"
+							placeholder="Nome, e-mail ou turma" />
+					</label>
+					<label class="mef-field" for="class-filter">Turma
+						<select id="class-filter">
+							<option value="">Todas</option>
+							<option th:each="turma : ${turmas}" th:value="${turma.id}" th:text="${turma.nome}">Turma
+							</option>
+						</select>
+					</label>
+				</div>
+
+				<p class="mef-muted" id="students-count" aria-live="polite"
+					th:text="${quantidadeAlunos == 1 ? '1 aluno encontrado' : quantidadeAlunos + ' alunos encontrados'}">
+					0 alunos encontrados</p>
+
+				<div class="mef-grid" id="student-list">
+					<article class="mef-card aluno-card" th:each="aluno : ${alunosCards}"
+						th:attr="data-search=${aluno.textoBusca},data-turmas=${aluno.idsTurmas}">
+						<span class="mef-tag" th:each="turma : ${aluno.turmas}" th:text="${turma.nome}">Turma</span>
+						<span class="mef-tag" th:if="${#lists.isEmpty(aluno.turmas)}">Sem turma identificada</span>
+						<h2
+							th:text="${aluno.nome != null and !#strings.isEmpty(aluno.nome) ? aluno.nome : 'Aluno sem nome cadastrado'}">
+							Nome do aluno</h2>
+						<p class="mef-muted"
+							th:text="${aluno.email != null and !#strings.isEmpty(aluno.email) ? aluno.email : 'E-mail não informado'}">
+							E-mail</p>
+						<div class="mef-actions">
+							<a class="mef-btn primary" href="/psicopedagogo/alunos/0/ficha"
+								th:href="@{/psicopedagogo/alunos/{id}/ficha(id=${aluno.id})}">Ver ficha</a>
+							<button class="mef-btn" type="button" disabled
+								title="Relatórios para psicopedagogos ainda não possuem uma rota persistente no backend.">Relatórios</button>
+						</div>
+					</article>
+				</div>
+				<p class="mef-empty" id="students-no-data" th:if="${#lists.isEmpty(alunosCards)}">Nenhum aluno vinculado
+					às suas turmas.</p>
+				<p class="mef-empty" id="students-no-match" hidden>Nenhum aluno corresponde aos filtros.</p>
+			</div>
+		</main>
+	</div>
+
+	<dialog class="mef-dialog" id="logout-dialog" aria-labelledby="logout-title">
+		<h2 id="logout-title">Sair da sua conta?</h2>
+		<p>Tem certeza de que deseja encerrar sua sessão?</p>
+		<div class="mef-actions">
+			<button class="mef-btn" id="cancel-logout" type="button">Cancelar</button>
+			<form th:action="@{/logout}" action="/logout" method="post">
+				<button class="mef-btn primary" type="submit">Sair</button>
+			</form>
+		</div>
+	</dialog>
+	<script defer src="/script/mef-alunos-psico.js" th:src="@{/script/mef-alunos-psico.js}"></script>
+</body>
+
+</html>
